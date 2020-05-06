@@ -1,4 +1,4 @@
-# Corpus Paralelo (Backend)
+# Esquite: framework para administrar corpus paralelos
 
 ## Dependencias
 
