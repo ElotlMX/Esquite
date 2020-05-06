@@ -1,0 +1,73 @@
+em{
+    background: yellow;
+    font-style: italic;
+}
+
+a.navbar-brand{
+    font-size: 1.7em;
+}
+
+a.nav-link{
+    font-size: 1em;
+}
+
+hr{
+  border: 1px;
+  height: 1px;
+  width: 80%;
+  background-image: linear-gradient(to right, transparent, rgba(95,33,95,0.75), transparent);
+}
+
+#form-container{
+    font-size: 1.3em;
+}
+
+.select2 {
+    width: 100% !important;
+}
+
+.label-variante{
+    font-size: 0.8em;
+}
+
+#id_variante, .select2-container--default.select2-container--focus .select2-selection--multiple{
+    caret-color: transparent;
+}
+
+.btn-keyboard{
+    font-size: 1.4em;
+}
+
+code{
+    font-size: 1.1em;
+}
+
+#query-text {
+    color: black;
+    font-weight: bold;
+    font-family: "Roboto", "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
+    font-size: 1.5em;
+}
+
+span.small-icon{
+    font-size: 0.9rem;
+}
+
+.select2-selection__rendered {
+    line-height: 23px !important;
+}
+.select2-container .select2-selection--single {
+    height: 25px !important;
+}
+.select2-selection__arrow {
+    height: 24px !important;
+}
+
+.messages {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+button#variants-btn{
+  font-size: 1.0em;
+}

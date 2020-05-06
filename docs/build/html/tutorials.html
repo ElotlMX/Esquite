@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutoriales &#8212; documentación de Corpus Paralelo Backend - </title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="elotl app" href="elotl.html" />
+    <link rel="prev" title="Instalación" href="install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tutoriales">
+<h1>Tutoriales<a class="headerlink" href="#tutoriales" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="subida-de-documentos">
+<h2>Subida de documentos<a class="headerlink" href="#subida-de-documentos" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>La aplicación provee una interface interna de <em>administración del corpus</em> que
+puede encontrarse en la url <code class="docutils literal notranslate"><span class="pre">https://miproyecto.com/corpus-admin/</span></code>.
+Si se quiere subir material al corpus deberá ser en formato <code class="docutils literal notranslate"><span class="pre">.csv</span></code>
+(<em>separado por comas</em>).</p>
+<p>Es <strong>indispensable</strong> que exista la cabecera ya que la primer línea
+del archivo se <strong>ignora</strong> por defecto. Actualmente se tiene la siguiente
+convención para la subida de nuevos documentos</p>
+<img alt="_images/corpus_table.png" src="_images/corpus_table.png" />
+<p>Primera columna la lengua l1 (en este ejemplo español), segunda columna la
+lengua l2 (en este ejemplo otomí) y en la última columna la variante. Además,
+cada documento deberá tener asociado un archivo <code class="docutils literal notranslate"><span class="pre">.PDF</span></code> con fines ilustrativos
+para lxs usuarixs.</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>En caso de que la variante tenga ISO se requiere que venga entre
+paréntesis al final del nombre de la variante como se muestra en la tabla
+anterior.</p>
+<p>Si no existe variante para el documento dicha columna <strong>deberá</strong> existir pero
+estará vacía.</p>
+</div>
+</div>
+<div class="section" id="agregar-teclado-personalizado">
+<h2>Agregar teclado personalizado<a class="headerlink" href="#agregar-teclado-personalizado" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>El corpus permite agregar teclas personalizadas para la lenguas con
+caracteres que no estén en el teclado o que sean difíciles de poner. Para
+agregar teclas personalizadas se debe modificar la variable <code class="docutils literal notranslate"><span class="pre">KEYBOARD</span></code> del
+archivo <code class="docutils literal notranslate"><span class="pre">env.yaml</span></code> agregando cada tecla en un renglón. A continuación se
+muestra un ejemplo</p>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Se debe agregar el guión antes de cada letra para que se pueda interpretar
+como una lista de caractéres.</p>
+</div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">KEYBOARD</span><span class="p">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">u̱</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">e̱</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">a̱</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">i̱</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">o̱</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ŭ</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ä</span>
+<span class="p p-Indicator">-</span> <span class="s">&quot;&#39;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="agregar-datos-de-contacto">
+<h2>Agregar datos de contacto<a class="headerlink" href="#agregar-datos-de-contacto" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Se pueden agregar las redes sociales y datos de contacto de la organización.
+Dicho datos aparecen en la vista de <code class="docutils literal notranslate"><span class="pre">participantes</span></code>. Para agregar estos datos
+se debe modificar la variable <code class="docutils literal notranslate"><span class="pre">SOCIAL</span></code>. Esta variable tiene un formato de
+diccionario.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">SOCIAL</span><span class="p">:</span>
+  <span class="nt">site</span><span class="p">:</span> <span class="s">&#39;https://mi_sitio.mx/&#39;</span>
+  <span class="nt">blog</span><span class="p">:</span> <span class="s">&#39;https://mi_sitio.mx/blog/&#39;</span>
+  <span class="nt">email</span><span class="p">:</span> <span class="s">&#39;contacto@mi_sitio.mx&#39;</span>
+  <span class="nt">facebook</span><span class="p">:</span> <span class="s">&#39;https://facebook.com/mi_sitio&#39;</span>
+  <span class="nt">github</span><span class="p">:</span> <span class="s">&#39;https://github.com/mi_sitio&#39;</span>
+  <span class="nt">twitter</span><span class="p">:</span> <span class="s">&#39;https://twitter.com/mi_sitio&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="modificacion-del-banner">
+<h2>Modificación del banner<a class="headerlink" href="#modificacion-del-banner" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>El banner por defecto puede ser remplazado modificando el archivo
+que se encuentra en la ruta <code class="docutils literal notranslate"><span class="pre">static/img/banner.png/</span></code>. El archivo <strong>debe</strong>
+llamarse <code class="docutils literal notranslate"><span class="pre">banner.png</span></code></p>
+</div>
+<div class="section" id="configuracion-del-indice-de-elasticsearch">
+<span id="elastic-configuration"></span><h2>Configuración del índice de elasticsearch<a class="headerlink" href="#configuracion-del-indice-de-elasticsearch" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Esta configuración es la utilizada actualmente en el índice de elasticsearch
+para hacer el preprocesamiento del español tomando en cuenta las <em>stopwords</em>.</p>
+<div class="section" id="index-settings">
+<h3>Index settings<a class="headerlink" href="#index-settings" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;number_of_shards&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;analysis&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;filter&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;spanish_stop&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span>       <span class="s2">&quot;stop&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;stopwords&quot;</span><span class="p">:</span>  <span class="s2">&quot;_none_&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;spanish_stemmer&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;stemmer&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;light_spanish&quot;</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;analyzer&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;rebuilt_spanish&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;tokenizer&quot;</span><span class="p">:</span>  <span class="s2">&quot;standard&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;filter&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;lowercase&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;spanish_stop&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;spanish_stemmer&quot;</span>
+          <span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="mapping">
+<h3>Mapping<a class="headerlink" href="#mapping" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;document_file&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;keyword&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;document_id&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;keyword&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;document_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;keyword&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;lang_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;analyzer&quot;</span><span class="p">:</span><span class="s2">&quot;rebuilt_spanish&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;lang_2&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;variante&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;keyword&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ingest-pipeline">
+<h3>Ingest Pipeline<a class="headerlink" href="#ingest-pipeline" title="Enlazar permanentemente con este título">¶</a></h3>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Ingest pipeline created by file structure finder&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;processors&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Corpus Paralelo Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Aplicaciones:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalación</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutoriales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subida-de-documentos">Subida de documentos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#agregar-teclado-personalizado">Agregar teclado personalizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#agregar-datos-de-contacto">Agregar datos de contacto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modificacion-del-banner">Modificación del banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuracion-del-indice-de-elasticsearch">Configuración del índice de elasticsearch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="elotl.html">elotl app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="searcher.html">searcher app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="corpus_admin.html">corpus_admin app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wizard.html">Programa de intalación wizard.py</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="install.html" title="capítulo anterior">Instalación</a></li>
+      <li>Next: <a href="elotl.html" title="próximo capítulo">elotl app</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Comunidad Elotl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/tutorials.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

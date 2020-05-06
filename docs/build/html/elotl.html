@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>elotl app &#8212; documentación de Corpus Paralelo Backend - </title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="searcher app" href="searcher.html" />
+    <link rel="prev" title="Tutoriales" href="tutorials.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="elotl-app">
+<h1>elotl app<a class="headerlink" href="#elotl-app" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="variables-de-entorno">
+<h2>Variables de entorno<a class="headerlink" href="#variables-de-entorno" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-elotl.context_processors">
+<span id="elotl-context-processors"></span><h3>elotl.context_processors<a class="headerlink" href="#module-elotl.context_processors" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="function">
+<dt id="elotl.context_processors.colors">
+<code class="sig-prename descclassname">elotl.context_processors.</code><code class="sig-name descname">colors</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.context_processors.colors" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Configura variables de entorno para los colores</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.context_processors.google_analytics">
+<code class="sig-prename descclassname">elotl.context_processors.</code><code class="sig-name descname">google_analytics</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.context_processors.google_analytics" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Configura variables de entorno de google analytics</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.context_processors.keyboard">
+<code class="sig-prename descclassname">elotl.context_processors.</code><code class="sig-name descname">keyboard</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.context_processors.keyboard" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Configura variable de entorno para teclaod personalizado</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.context_processors.languages">
+<code class="sig-prename descclassname">elotl.context_processors.</code><code class="sig-name descname">languages</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.context_processors.languages" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Configura variables de entorno de las lenguas</strong></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.context_processors.project_info">
+<code class="sig-prename descclassname">elotl.context_processors.</code><code class="sig-name descname">project_info</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.context_processors.project_info" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Configura variables de entorno con información del proyecto</strong></p>
+<p>La información que se establece es <em>nombre</em>, <em>nombre de la organización</em>,
+<em>colaboradoras</em> y <em>redes sociales</em>. Las últimas dos son listas de python.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="configuraciones-generales">
+<h2>Configuraciones generales<a class="headerlink" href="#configuraciones-generales" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-elotl.settings">
+<span id="elotl-settings"></span><h3>elotl.settings<a class="headerlink" href="#module-elotl.settings" title="Enlazar permanentemente con este título">¶</a></h3>
+<p>Generadas por <code class="docutils literal notranslate"><span class="pre">django-admin</span> <span class="pre">startproject</span></code> usando Django <code class="docutils literal notranslate"><span class="pre">2.2.2</span></code>.</p>
+</div>
+</div>
+<div class="section" id="rutas">
+<h2>Rutas<a class="headerlink" href="#rutas" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-elotl.urls">
+<span id="elotl-urls"></span><h3>elotl.urls<a class="headerlink" href="#module-elotl.urls" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="function">
+<dt id="elotl.urls.path">
+<code class="sig-prename descclassname">elotl.urls.</code><code class="sig-name descname">path</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">view</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*</em>, <em class="sig-param">Pattern=&lt;class 'django.urls.resolvers.RoutePattern'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.urls.path" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="elotl.urls.re_path">
+<code class="sig-prename descclassname">elotl.urls.</code><code class="sig-name descname">re_path</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">view</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*</em>, <em class="sig-param">Pattern=&lt;class 'django.urls.resolvers.RegexPattern'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.urls.re_path" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="vistas">
+<h2>Vistas<a class="headerlink" href="#vistas" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-elotl.views">
+<span id="elotl-views"></span><h3>elotl.views<a class="headerlink" href="#module-elotl.views" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="function">
+<dt id="elotl.views.about">
+<code class="sig-prename descclassname">elotl.views.</code><code class="sig-name descname">about</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.views.about" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Muestra la página acerca del corpus</strong></p>
+<p>Vista encargada de mostrar la sección de acerca del corpus motivación del
+corpus y descripción general de la comunidad Elotl. Además, muestra la
+información actual del corpus como número de documentos, parrafos por
+documentos y pdfs asociados.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – Objeto <code class="docutils literal notranslate"><span class="pre">HttpRequets</span></code> para pasar el estado de la app a
+través del sistema</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">HttpRequest</span></code></p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Vista de acerca del corpus</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.views.ayuda">
+<code class="sig-prename descclassname">elotl.views.</code><code class="sig-name descname">ayuda</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.views.ayuda" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Muestra la página de ayuda</strong></p>
+<p>Vista encargada de mostrar la sección de ayuda con las operaciones
+soportadas, como realizar busquedas y recomendaciones generales.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – Objeto <code class="docutils literal notranslate"><span class="pre">HttpRequets</span></code> para pasar el estado de la
+app a través del sistema</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">HttpRequest</span></code></p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Vista de ayuda</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.views.index">
+<code class="sig-prename descclassname">elotl.views.</code><code class="sig-name descname">index</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.views.index" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Muestra la vista raíz del corpus paralelo</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – Objeto <code class="docutils literal notranslate"><span class="pre">HttpRequets</span></code> para pasar el estado de la app
+a través del sistema</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">HttpRequest</span></code></p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Vista principal</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.views.links">
+<code class="sig-prename descclassname">elotl.views.</code><code class="sig-name descname">links</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.views.links" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Muestra la página de enlaces de interés</strong></p>
+<p>Vista encargada de mostrar la sección de ligas de interés con la página de
+Elotl, el blog de Elotl y el diccionario del otomi</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – Objeto <code class="docutils literal notranslate"><span class="pre">HttpRequets</span></code> para pasar el estado de
+la app a través del sistema</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">HttpRequest</span></code></p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Vista de enlaces de interés</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.views.participants">
+<code class="sig-prename descclassname">elotl.views.</code><code class="sig-name descname">participants</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.views.participants" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Muestra la página de participantes</strong></p>
+<p>Vista encargada de mostrar la sección de participantes con los nombres de
+los participantes y ligas de contacto con la comunidad Elotl</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>request</strong> – Objeto <code class="docutils literal notranslate"><span class="pre">HttpRequets</span></code> para pasar el estado de la app a
+través del sistema</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">HttpRequest</span></code></p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Vista de participantes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="elotl.views.pdf_view">
+<code class="sig-prename descclassname">elotl.views.</code><code class="sig-name descname">pdf_view</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#elotl.views.pdf_view" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Muestra archivos PDF con base en el nombre</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>request</strong> – Objeto <code class="docutils literal notranslate"><span class="pre">HttpRequets</span></code> para pasar el estado de la app a
+través del sistema</p></li>
+<li><p><strong>file_name</strong> – Nombre del <code class="docutils literal notranslate"><span class="pre">PDF</span></code> a mostrar</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">HttpRequest</span></code></p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>Archivo <code class="docutils literal notranslate"><span class="pre">PDF</span></code> para ser visto en el navegador</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="configuracion-de-servidor-web">
+<h2>Configuración de servidor web<a class="headerlink" href="#configuracion-de-servidor-web" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Advertencia</p>
+<p>Para producción no se recomienda utilizar el servidor web que <code class="docutils literal notranslate"><span class="pre">django</span></code>
+tiene por defecto ya que este es solo para el ambiente de desarrollo</p>
+</div>
+<div class="section" id="module-elotl.wsgi">
+<span id="elotl-wsgi"></span><h3>elotl.wsgi<a class="headerlink" href="#module-elotl.wsgi" title="Enlazar permanentemente con este título">¶</a></h3>
+<p>Configuración de WSGI para el proyecto.</p>
+<p>Para mas información consulta la documentación de django <cite>aqui
+&lt;https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/&gt;</cite></p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Corpus Paralelo Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Aplicaciones:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutoriales</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">elotl app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#variables-de-entorno">Variables de entorno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuraciones-generales">Configuraciones generales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rutas">Rutas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vistas">Vistas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuracion-de-servidor-web">Configuración de servidor web</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="searcher.html">searcher app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="corpus_admin.html">corpus_admin app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wizard.html">Programa de intalación wizard.py</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tutorials.html" title="capítulo anterior">Tutoriales</a></li>
+      <li>Next: <a href="searcher.html" title="próximo capítulo">searcher app</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Comunidad Elotl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/elotl.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

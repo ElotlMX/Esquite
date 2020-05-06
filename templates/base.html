@@ -1,0 +1,139 @@
+{% load static %}
+{% load google_analytics_tags %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
+  <meta content='Tsu̱nkua es un corpus paralelo español-otomí que permite búsquedas de palabras o frases dentro de una
+  colección de documentos bilingües digitalizados (traducciones).' name='description'>
+  <title>Corpus Paralelo {{ PROJECT_NAME }}</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
+  <link rel="stylesheet" href="{% static 'fork-awesome/css/fork-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'data-tables/datatables.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/sweetalert2.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}">
+  <style type="text/css" media="screen">
+    /* Colores del proyecto */
+
+    /* Colores del formulario de búsqueda */
+    #form-container{
+        color: {{ TEXT_COLOR }};
+        background: {{ PRIMARY_COLOR }};
+    }
+
+    nav > a.navbar-brand, .nav-link{
+      color: {{ TEXT_COLOR }} !important;
+    }
+
+    /* Colores del boton que realiza la búsqueda */
+    #search-btn, .buttons-csv, .buttons-excel, .btn-keyboard{
+        background-color: {{ SECONDARY_COLOR }};
+        border: 3px {{ PRIMARY_COLOR }};
+        color: {{ ALT_TEXT }};
+    }
+
+
+    /* Colores del teclado */
+    .btn-keyboard:hover, #search-btn:hover{
+        font-weight: bold;
+        color: {{ ALT_TEXT }};
+    }
+
+    /* Colores del resultado de busqueda en forma textual */
+    .result-notify{
+        color: {{ SECONDARY_COLOR }};
+        font-style: italic;
+    }
+
+    /* Botones de la pagina de Participantes */
+    .contact-btn:hover{
+        background-color: {{ SECONDARY_COLOR }};
+        color: {{ TEXT_COLOR }};
+    }
+
+    /* El texto resaltado en general */
+    b{
+      color: {{ SECONDARY_COLOR }};
+    }
+
+    /* Colores de la línea separador */
+    hr{
+      background-image: linear-gradient(to right, transparent, rgba(0,0,0,0.75), transparent);
+    }
+  </style>
+</head>
+<body>
+  {% if google_analytics_id %}
+  <div style="display:none">
+    <img src="{% google_analytics %}" width="0" height="0"/>
+  </div>
+  {% endif %}
+<div class="container">
+  <img class="img-fluid" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
+  <nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-light" style="background: {{ PRIMARY_COLOR }}">
+    <a href="{% url 'index' %}" class="navbar-brand">{{ PROJECT_NAME }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tsunkua-navbar"
+            aria-controls="tsunkua-navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="tsunkua-navbar">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item {% if request.resolver_match.url_name == 'ayuda' %} active {% endif %}">
+          <a href="{% url 'ayuda' %}" class="nav-link">Ayuda <i class="fa fa-life-saver"></i></a>
+        </li>
+        <li class="nav-item {% if request.resolver_match.url_name == 'links' %} active {% endif %}">
+          <a href="{% url 'links' %}" class="nav-link">Ligas de interés <i class="fa fa-external-link"></i></a>
+        </li>
+        <li class="nav-item dropdown {% if request.resolver_match.url_name == 'about' or request.resolver_match.url_name == 'participantes' %} active {% endif %}">
+          <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Acerca de
+          </a>
+          <div class="dropdown-menu" aria-labelledby="about-dropdown">
+            <a class="dropdown-item" href="{% url 'about' %}">Acerca del Corpus <i class="fa fa-info-circle"></i></a>
+            <a class="dropdown-item" href="{% url 'participantes' %}">Participantes <i class="fa fa-group"></i></a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mt-3 alert messages {{ message.tags }} alert-dissmisible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+          <i class="fa fa-times-rectangle-o"></i> {{ message|safe }}
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+          <i class="fa fa-warning"></i> {{ message|safe }}
+        {% else %}
+          <i class="fa fa-info-circle"></i> {{ message|safe }}
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% block content %}
+  {% endblock %}
+</div>
+
+<hr >
+<footer class="text-center">
+  <br>
+  {{ PROJECT_NAME }} 2020 | Hecho con <i class="fa fa-heart"></i> por <a href="https://elotl.mx">Comunidad Elotl</a>
+</footer>
+</body>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'data-tables/datatables.min.js' %}"></script>
+<script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
+<script src="{% static 'js/select2.full.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
+{% block javascript %}{% endblock %}
+</html>

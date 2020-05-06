@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<h1 class="mt-3">Participantes</h1>
+		</div>
+	</div>
+	<hr />
+	<div class="row">
+		<div class="col-12">
+			<p>El proyecto <b>{{ PROJECT_NAME }}</b> es un corpus paralelo <b>{{ LANG_1 }}-{{ LANG_2 }}</b> mantenido por <b>{{ ORG_NAME }}</b></p>
+			{% if COLABS %}
+			<p>En particular, agradecemos la asesoría y participación de las siguientes estudiantes e investigadoras:</p>
+			<p><b>{% for colab in COLABS %} {{colab}}, {% endfor %}</b></p>
+			{% endif %}
+			<p>Esta plataforma digital fue originalmente creada por colaboradores y voluntarios de la
+			<a href="https://elotl.mx" target="_blank">Comunidad Elotl</a>; está destinada a personas que deseen poner en línea corpus
+			paralelos para las lenguas habladas en México.</p>
+			<p>El código de este proyecto tiene una licencia MPL 2.0. <a href="https://www.mozilla.org/en-US/MPL/" target="_blank">Consúltala aquí</a></p>
+		</div>
+	</div>
+	<h3 class="mt-2">Contacto</h3>
+	<div class="row">
+		<div class="col text-center">
+			<div class="btn-group btn-group-lg" role="group" aria-label="Botones de contacto">
+				<a type="button" class="btn btn-default contact-btn" href="{{SOCIAL.site}}" data-toggle="tooltip" data-placement="top"
+										title="sitio web" aria-label="test"> <i class="fa fa-globe-w"></i></a>
+				<a type="button" class="btn btn-default contact-btn" href="{{SOCIAL.blog}}" data-toggle="tooltip" data-placement="top"
+										title="blog"> <i class="fa fa-book"></i></a>
+				<a type="button" class="btn btn-default contact-btn" href="mailto:{{SOCIAL.email}}" data-toggle="tooltip" data-placement="top"
+										title="email"> <i class="fa fa-envelope"></i></a>
+				<a type="button" class="btn btn-default contact-btn" href="{{SOCIAL.facebook}}" data-toggle="tooltip" data-placement="top"
+										title="facebook"> <i class="fa fa-facebook"></i></a>
+				<a type="button" class="btn btn-default contact-btn" href="{{SOCIAL.twitter}}" data-toggle="tooltip" data-placement="top"
+										title="twitter"> <i class="fa fa-twitter"></i></a>
+				<a type="button" class="btn btn-default contact-btn" href="{{SOCIAL.github}}" data-toggle="tooltip" data-placement="top"
+										title="github"> <i class="fa fa-github"></i></a>
+			</div>
+		</div>
+  </div>
+</div>
+{% endblock %}

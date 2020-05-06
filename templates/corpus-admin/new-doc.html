@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1 class="my-4">Nuevo documento</h1>
+  <hr class="mb-3">
+  <div class="jumbotron pt-5 pb-2" id="new-doc-form-container">
+    <form action="{% url 'new-doc' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group row">
+        <label for="id_nombre" class="col-sm-2 col-form-label text-right">{{ form.nombre.label }}</label>
+        <div class="col-sm-10">
+          {{ form.nombre }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="id_csv" class="col-sm-2 col-form-label text-right">{{ form.csv.label }}</label>
+        <div class="col-sm-10">
+          {{ form.csv }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="id_pdf" class="col-sm-2 col-form-label text-right">{{ form.pdf.label }}</label>
+        <div class="col-sm-10">
+          {{ form.pdf }}
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-2 pt-2">
+          <a href="{% url 'list-docs' %}" class="badge badge-light">
+            <i class="fa fa-arrow-left"></i> Regresar
+          </a>
+        </div>
+        <div class="col-sm-8 col-md-2">
+          <button type="submit" class="btn btn-primary" id="new-doc-btn">Guardar <i class="fa fa-save"></i></button>
+        </div>
+        <div class="col-sm-3">
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#csv-format">Ayuda
+            <i class="fa fa-file-excel-o"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+<!-- Modal -->
+<div class="modal fade" id="csv-format" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-diaog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Formato de los archivos CSV</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Esta aplicación provee una interface interna de administración de documentos. Si se quiere subir material al
+        corpus deberá ser en formato <b>.csv</b> separado por comas. Es <b>indispensable </b>que exista la cabecera ya que la primer
+        línea del archivo se ignora por defecto. Actualmente se tiene la siguiente convención para la subida de nuevos
+        documentos</p>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>lang_1</th>
+              <th>lang_2</th>
+              <th>variante</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Una vez una señora se emborrachó</td>
+              <td>xu̱tu̱ bimáyóhthó 'á ngŭ ra bésíno</td>
+              <td>Otomí del Estado de México (ots)</td>
+            </tr>
+            <tr>
+              <td>Luego se fue a dormir a la casa del vecino</td>
+              <td>nándi na ra t'u̱xú bintí</td>
+              <td>Otomí del Estado de México (ots)</td>
+            </tr>
+            <tr>
+              <td>Después que se durmió</td>
+              <td>despwés ya biyóbí</td>
+              <td>Otomí del Estado de México (ots)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><b>NOTA:</b> En caso de que la variante tenga ISO se requiere que venga entre parentesis al final del nombre de la
+        variante como se muestra en la tabla anterior. De no existir variante dicho campo <b>deberá</b> estar vacío</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

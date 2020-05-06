@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="mt-3">Ayuda</h1>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-12">
+        <p>Para realizar una <code>búsqueda</code>, simplemente es necesario ingresar una palabra o frase. Sin embargo,
+          el motor de búsqueda permite el uso de operadores avanzados para enriquecer las búsquedas. Por ejemplo los que
+          se listan a continuación:</p>
+        <h4>Operadores generales</h4>
+        <ul>
+          <li><code>~</code>  Búsqueda difusa para incluir en los resultados a palabras que tengan similitud
+            ortográfica. El operador <code>~</code> se debe agregar después del término buscado.
+            Por ejemplo si se busca: <code>jamadi~</code>, los resultados incluirán las palabras
+            <code>jämadi, dabadi, ...</code><br>
+            Se puede especificar el grado de similitud agregando un número entre 1 y 2 después del operador.
+            Por defecto la distancia es 2. Por ejemplo: <code>jamadi~1</code>. A menor distancia menores resultados.
+          </li>
+          <li><code>" "</code> Si se encierra la búsqueda entre comillas se ejecutará siguiendo el orden exacto de las
+            palabras
+          </li>
+          <li><code>*</code> Comodín que reemplaza cero o más caracteres. Por ejemplo: <code>mexic*</code> <b>NOTA: Las consultas con este operador pueden tardar más tiempo</b></li>
+          <li><code>?</code> Comodín que reemplaza un caracter. Por ejemplo: <code>niñ?s</code></li>
+          <!--<li>Más información de comandos de búsqueda</li>-->
+        </ul>
+        <h4>Operadores booleanos</h4>
+        <p>Por defecto, todos los terminos son opcionales, siempre que coincida un termino. La búsqueda
+          <code>memorias academia mexico</code> encontrará cualquier documento que contenga una o más coinicidencias con
+          <code>memorias</code> o <code>academia</code> o <code>mexico</code>. Los operadores booleanos se
+          <b>deben</b> agregar antes de los terminos de búsqueda</p>
+        <ul>
+          <li><code>+</code> significa que el término <b>debe</b> estar presente</li>
+          <li><code>-</code> significa que el término <b>no debe</b> estar presente</li>
+          <li>Por ejemplo la búsqueda: <code>calzada +mexico -tacuba</code></li>
+          <ul>
+            <li><code>mexico</code> debe estar presente</li>
+            <li><code>tacuba</code> no debe estar presente</li>
+            <li><code>calzada</code> es opcional</li>
+          </ul>
+        </ul>
+        <p>Recuerda que las las lenguas tienen diferentes normas de escritura
+        y grafías. Debes tomar en cuenta los caracteres especiales específicos
+        de cada lengua al hacer una búsqueda.</p>
+        <p>Los resultados pueden descargarse en formato <code>.csv</code> <i class="fa fa-file-text-o"></i>  y
+        <code>.xlsx</code> <i class="fa fa-file-excel-o"></i></p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

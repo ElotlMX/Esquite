@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Instalación &#8212; documentación de Corpus Paralelo Backend - </title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Tutoriales" href="tutorials.html" />
+    <link rel="prev" title="Documentación del Backend de Corpus Paralelo" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="instalacion">
+<h1>Instalación<a class="headerlink" href="#instalacion" title="Enlazar permanentemente con este título">¶</a></h1>
+<ol class="arabic">
+<li><p>Clona el repositorio:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone esquite
+</pre></div>
+</div>
+</li>
+<li><p>Crea un entorno virtual de <code class="docutils literal notranslate"><span class="pre">python</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ virtualenv env -p /usr/bin/python3
+</pre></div>
+</div>
+</li>
+<li><p>Activar el entorno:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ source env/bin/activate
+</pre></div>
+</div>
+</li>
+<li><p>Instalar las dependencias:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(env)$ pip install -r requeriments.txt
+</pre></div>
+</div>
+</li>
+<li><p>Iniciar el asistente de instalación e ingresar los datos requeridos. Ver
+<a class="reference internal" href="wizard.html#module-wizard" title="wizard"><code class="xref py py-func docutils literal notranslate"><span class="pre">wizard()</span></code></a></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(env)$ python wizard.py
+</pre></div>
+</div>
+</li>
+<li><p>Correr <code class="docutils literal notranslate"><span class="pre">django</span></code> en segundo plano:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(env)$ python manage.py runserver 0.0.0.0:3000 &amp;
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Nota</p>
+<p>Se requiere un índice de Elasticsearch previamente configurado como se ve en
+la <a class="reference internal" href="tutorials.html#elastic-configuration"><span class="std std-ref">Configuración del índice de elasticsearch</span></a> para ser indicado en la configuración de
+<a class="reference internal" href="wizard.html#module-wizard" title="wizard"><code class="xref py py-func docutils literal notranslate"><span class="pre">wizard()</span></code></a></p>
+<p>El <a class="reference internal" href="wizard.html#config-file"><span class="std std-ref">Archivo de configuración</span></a> es creado automáticamente por el asistente de
+instalación <a class="reference internal" href="wizard.html#module-wizard" title="wizard"><code class="xref py py-func docutils literal notranslate"><span class="pre">wizard()</span></code></a>. Este archivo debe estar en la raíz del
+proyecto.</p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Corpus Paralelo Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Aplicaciones:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutoriales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elotl.html">elotl app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="searcher.html">searcher app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="corpus_admin.html">corpus_admin app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wizard.html">Programa de intalación wizard.py</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="capítulo anterior">Documentación del Backend de Corpus Paralelo</a></li>
+      <li>Next: <a href="tutorials.html" title="próximo capítulo">Tutoriales</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Comunidad Elotl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/install.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

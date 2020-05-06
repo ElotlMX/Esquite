@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Documentación del Backend de Corpus Paralelo &#8212; documentación de Corpus Paralelo Backend - </title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Instalación" href="install.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="documentacion-del-backend-de-corpus-paralelo">
+<h1>Documentación del Backend de Corpus Paralelo<a class="headerlink" href="#documentacion-del-backend-de-corpus-paralelo" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Se rescatan ciertas consideraciones importantes</p>
+<ul class="simple">
+<li><p><strong>Vistas</strong>: Estas funciones se encargan de procesar los datos que otorgan
+las usuarias para ser procesados y posteriorimente <em>renderean</em> los archivos
+<code class="docutils literal notranslate"><span class="pre">html</span></code> con la información solicitada. Ej: Una consulta al índice de
+Elasticsearch, las personas involucradas en el proyecto, etc.</p></li>
+<li><p><strong>Rutas</strong>: En esta sección se configuran el nombre de las rutas del proyecto.
+Las rutas son el texto que aparece en la parte superior del navegador.
+Por ejemplo las que se muestran a continuación:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">https://tsunkua.elot.mx/about/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">https://tsunkua.elotl.mx/media/visiondelosvencidoshnahnu.pdf/</span></code></p></li>
+</ul>
+</li>
+<li><p><strong>Formularios</strong>: Los formularios mostrados en las vistas son generados por
+medio de las clases de <code class="docutils literal notranslate"><span class="pre">django</span></code> ya que brindan ventajas conrespecto a
+validaciones, paso de datos de las vistas a los controladores, etc.</p></li>
+<li><p><strong>Funciones auxiliares</strong>: Funciones que son útiles en diversos escenarios.
+Sobre todo es un archivo para organizar funciones con diversos propositos.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Aplicaciones:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutoriales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#subida-de-documentos">Subida de documentos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#agregar-teclado-personalizado">Agregar teclado personalizado</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#agregar-datos-de-contacto">Agregar datos de contacto</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#modificacion-del-banner">Modificación del banner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials.html#configuracion-del-indice-de-elasticsearch">Configuración del índice de elasticsearch</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="elotl.html">elotl app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="elotl.html#variables-de-entorno">Variables de entorno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elotl.html#configuraciones-generales">Configuraciones generales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elotl.html#rutas">Rutas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elotl.html#vistas">Vistas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="elotl.html#configuracion-de-servidor-web">Configuración de servidor web</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="searcher.html">searcher app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="searcher.html#formularios">Formularios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searcher.html#funciones-auxiliares">Funciones auxiliares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searcher.html#rutas">Rutas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="searcher.html#vistas">Vistas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="corpus_admin.html">corpus_admin app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="corpus_admin.html#formularios">Formularios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corpus_admin.html#funciones-auxiliares">Funciones auxiliares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corpus_admin.html#rutas-del-corpus-admin">Rutas del corpus_admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="corpus_admin.html#vistas-del-corpus-admin">Vistas del corpus_admin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wizard.html">Programa de intalación wizard.py</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="wizard.html#configuraciones">Configuraciones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wizard.html#module-wizard">Funciones del script</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Enlazar permanentemente con este título">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Índice</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Índice de Módulos</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Página de Búsqueda</span></a></p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Corpus Paralelo Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Aplicaciones:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutoriales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elotl.html">elotl app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="searcher.html">searcher app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="corpus_admin.html">corpus_admin app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wizard.html">Programa de intalación wizard.py</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="install.html" title="próximo capítulo">Instalación</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Comunidad Elotl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,543 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>corpus_admin app &#8212; documentación de Corpus Paralelo Backend - </title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="index" title="Índice" href="genindex.html" />
+    <link rel="search" title="Búsqueda" href="search.html" />
+    <link rel="next" title="Programa de intalación wizard.py" href="wizard.html" />
+    <link rel="prev" title="searcher app" href="searcher.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="corpus-admin-app">
+<h1>corpus_admin app<a class="headerlink" href="#corpus-admin-app" title="Enlazar permanentemente con este título">¶</a></h1>
+<div class="section" id="formularios">
+<h2>Formularios<a class="headerlink" href="#formularios" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-corpus_admin.forms">
+<span id="corpus-admin-forms"></span><h3>corpus_admin.forms<a class="headerlink" href="#module-corpus_admin.forms" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="class">
+<dt id="corpus_admin.forms.AddDocumentDataForm">
+<em class="property">class </em><code class="sig-prename descclassname">corpus_admin.forms.</code><code class="sig-name descname">AddDocumentDataForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">field_order=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.forms.AddDocumentDataForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
+<p><strong>Clase encargada de generar de forma dinámica el formulario que
+permite agregar nuevos renglones a un documento particular del
+corpus</strong></p>
+<p><em>Atributos</em></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>csv: Objeto de django forms que renderea un elemento input de html</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">form.FileField</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="attribute">
+<dt id="corpus_admin.forms.AddDocumentDataForm.base_fields">
+<code class="sig-name descname">base_fields</code><em class="property"> = {'csv': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#corpus_admin.forms.AddDocumentDataForm.base_fields" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="corpus_admin.forms.AddDocumentDataForm.declared_fields">
+<code class="sig-name descname">declared_fields</code><em class="property"> = {'csv': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#corpus_admin.forms.AddDocumentDataForm.declared_fields" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="corpus_admin.forms.AddDocumentDataForm.media">
+<em class="property">property </em><code class="sig-name descname">media</code><a class="headerlink" href="#corpus_admin.forms.AddDocumentDataForm.media" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="corpus_admin.forms.DocumentEditForm">
+<em class="property">class </em><code class="sig-prename descclassname">corpus_admin.forms.</code><code class="sig-name descname">DocumentEditForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">field_order=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.forms.DocumentEditForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
+<p><strong>Clase encargada de generar de forma dinámica el formulario que
+permite modificar el nombre y el PDF de un documento existente</strong></p>
+<p><em>Atributos</em></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>placeholder: Variable que modifica el placeholder del input para el nuevo nombre del documento</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>nombre: Objeto de django forms que renderea un elemento input de html</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">form.CharField</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>pdf: Objeto de django forms que renderea un elemento input de html</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">form.FileField</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="attribute">
+<dt id="corpus_admin.forms.DocumentEditForm.base_fields">
+<code class="sig-name descname">base_fields</code><em class="property"> = {'nombre': &lt;django.forms.fields.CharField object&gt;, 'pdf': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#corpus_admin.forms.DocumentEditForm.base_fields" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="corpus_admin.forms.DocumentEditForm.declared_fields">
+<code class="sig-name descname">declared_fields</code><em class="property"> = {'nombre': &lt;django.forms.fields.CharField object&gt;, 'pdf': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#corpus_admin.forms.DocumentEditForm.declared_fields" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="corpus_admin.forms.DocumentEditForm.media">
+<em class="property">property </em><code class="sig-name descname">media</code><a class="headerlink" href="#corpus_admin.forms.DocumentEditForm.media" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="corpus_admin.forms.DocumentEditForm.placeholder">
+<code class="sig-name descname">placeholder</code><em class="property"> = 'Ingresa el nuevo nombre del documento'</em><a class="headerlink" href="#corpus_admin.forms.DocumentEditForm.placeholder" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="corpus_admin.forms.NewDocumentForm">
+<em class="property">class </em><code class="sig-prename descclassname">corpus_admin.forms.</code><code class="sig-name descname">NewDocumentForm</code><span class="sig-paren">(</span><em class="sig-param">data=None</em>, <em class="sig-param">files=None</em>, <em class="sig-param">auto_id='id_%s'</em>, <em class="sig-param">prefix=None</em>, <em class="sig-param">initial=None</em>, <em class="sig-param">error_class=&lt;class 'django.forms.utils.ErrorList'&gt;</em>, <em class="sig-param">label_suffix=None</em>, <em class="sig-param">empty_permitted=False</em>, <em class="sig-param">field_order=None</em>, <em class="sig-param">use_required_attribute=None</em>, <em class="sig-param">renderer=None</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.forms.NewDocumentForm" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.forms.forms.Form</span></code></p>
+<p><strong>Clase encargada de generar de forma dinámica el formulario
+que permite cargar nuevos documentos al corpus</strong></p>
+<p><em>Atributos</em></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>VARIANTS: Lista de variantes disponibles con el formato <code class="docutils literal notranslate"><span class="pre">(KEY,</span> <span class="pre">VALUE)</span></code></dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>nombre: Objeto de django forms que renderea un elemento input de html</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">form.CharField</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>csv: Objeto de django forms que renderea un elemento input de html</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">form.FileField</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>pdf: Objeto de django forms que renderea un elemento input de html</dt><dd><dl class="field-list simple">
+<dt class="field-odd">type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">form.FileField</span></code></p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="attribute">
+<dt id="corpus_admin.forms.NewDocumentForm.base_fields">
+<code class="sig-name descname">base_fields</code><em class="property"> = {'csv': &lt;django.forms.fields.FileField object&gt;, 'nombre': &lt;django.forms.fields.CharField object&gt;, 'pdf': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#corpus_admin.forms.NewDocumentForm.base_fields" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="corpus_admin.forms.NewDocumentForm.declared_fields">
+<code class="sig-name descname">declared_fields</code><em class="property"> = {'csv': &lt;django.forms.fields.FileField object&gt;, 'nombre': &lt;django.forms.fields.CharField object&gt;, 'pdf': &lt;django.forms.fields.FileField object&gt;}</em><a class="headerlink" href="#corpus_admin.forms.NewDocumentForm.declared_fields" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="corpus_admin.forms.NewDocumentForm.media">
+<em class="property">property </em><code class="sig-name descname">media</code><a class="headerlink" href="#corpus_admin.forms.NewDocumentForm.media" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="funciones-auxiliares">
+<h2>Funciones auxiliares<a class="headerlink" href="#funciones-auxiliares" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-corpus_admin.helpers">
+<span id="corpus-admin-helpers"></span><h3>corpus_admin.helpers<a class="headerlink" href="#module-corpus_admin.helpers" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="function">
+<dt id="corpus_admin.helpers.csv_uploader">
+<code class="sig-prename descclassname">corpus_admin.helpers.</code><code class="sig-name descname">csv_uploader</code><span class="sig-paren">(</span><em class="sig-param">csv_file</em>, <em class="sig-param">doc_name</em>, <em class="sig-param">file_name</em>, <em class="sig-param">doc_id=''</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.helpers.csv_uploader" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Función encargada de cargar nuevas líneas al corpus</strong></p>
+<p>Manipula los archivos mandados desde formulario y los carga al
+corpus de Tsunkua por medio del API de elasticsearch. Se espera que
+la primera columna del archivo csv sea el texto en español, la
+segunda columna sea el texto en otomí y la tercera columna sea la
+variante(s)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_file</strong> – Archivo csv con el texto alineado</p></li>
+<li><p><strong>doc_name</strong> – Nombre del documento a cargar</p></li>
+<li><p><strong>file_name</strong> – Nombre del archivo PDF del documento</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>File</p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Número de líneas cargadas al corpus</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.helpers.csv_writer">
+<code class="sig-prename descclassname">corpus_admin.helpers.</code><code class="sig-name descname">csv_writer</code><span class="sig-paren">(</span><em class="sig-param">csv_file</em>, <em class="sig-param">file_name</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.helpers.csv_writer" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Escribe un archivo ``csv`` de forma temporal</strong></p>
+<p>Esta función escribe el <code class="docutils literal notranslate"><span class="pre">csv</span></code> en disco para posteriormente
+subirlo al indice de <code class="docutils literal notranslate"><span class="pre">Elasticsearch</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>csv_file</strong> – <code class="docutils literal notranslate"><span class="pre">csv</span></code> enviado por medio del objeto <code class="docutils literal notranslate"><span class="pre">request</span></code></p></li>
+<li><p><strong>file_name</strong> – Nombre del archivo <code class="docutils literal notranslate"><span class="pre">csv</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">FileField</span></code></p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> si se guardo correctamente</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.helpers.get_corpus_info">
+<code class="sig-prename descclassname">corpus_admin.helpers.</code><code class="sig-name descname">get_corpus_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.helpers.get_corpus_info" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Función que obtiene la información general del corpus</strong></p>
+<p>Está función utiliza el framework de <code class="docutils literal notranslate"><span class="pre">Elasticsearch</span></code> llamado
+<em>aggregations</em> para obtener los ids del corpus. Con cada uno se
+obtienen los nombres de documentos, nombres de archivos y total.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>El total de documentos y una lista con información de los documentos</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>int, list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.helpers.get_document_info">
+<code class="sig-prename descclassname">corpus_admin.helpers.</code><code class="sig-name descname">get_document_info</code><span class="sig-paren">(</span><em class="sig-param">_id</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.helpers.get_document_info" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Obtiene información de un documento de Elasticsearch</strong></p>
+<p>Función encargada de obtener el nombre de documento,
+nombre del archivo asociado al documento e identificador
+por medio del id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><p><strong>_id</strong> – Identificador del documento</p>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Devuelve</dt>
+<dd class="field-odd"><p>Diccionario con nombre, archivo e identificador</p>
+</dd>
+<dt class="field-even">Tipo del valor devuelto</dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.helpers.pdf_uploader">
+<code class="sig-prename descclassname">corpus_admin.helpers.</code><code class="sig-name descname">pdf_uploader</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.helpers.pdf_uploader" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Función encargada de cargar y guardar el archivo pdf de un nuevo
+documento</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parámetros</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> – <code class="docutils literal notranslate"><span class="pre">pdf</span></code> enviado por medio del objeto <code class="docutils literal notranslate"><span class="pre">request</span></code></p></li>
+<li><p><strong>name</strong> – Nombre del archivo PDF</p></li>
+</ul>
+</dd>
+<dt class="field-even">Type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">FileField</span></code></p>
+</dd>
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+<dt class="field-even">Devuelve</dt>
+<dd class="field-even"><p>Verdadero si se pudo cargar el archivo, falso en caso
+contrario</p>
+</dd>
+<dt class="field-odd">Tipo del valor devuelto</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="rutas-del-corpus-admin">
+<h2>Rutas del corpus_admin<a class="headerlink" href="#rutas-del-corpus-admin" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-corpus_admin.urls">
+<span id="corpus-admin-urls"></span><h3>corpus_admin.urls<a class="headerlink" href="#module-corpus_admin.urls" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="function">
+<dt id="corpus_admin.urls.path">
+<code class="sig-prename descclassname">corpus_admin.urls.</code><code class="sig-name descname">path</code><span class="sig-paren">(</span><em class="sig-param">route</em>, <em class="sig-param">view</em>, <em class="sig-param">kwargs=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">*</em>, <em class="sig-param">Pattern=&lt;class 'django.urls.resolvers.RoutePattern'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.urls.path" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+<div class="section" id="vistas-del-corpus-admin">
+<h2>Vistas del corpus_admin<a class="headerlink" href="#vistas-del-corpus-admin" title="Enlazar permanentemente con este título">¶</a></h2>
+<div class="section" id="module-corpus_admin.views">
+<span id="corpus-admin-views"></span><h3>corpus_admin.views<a class="headerlink" href="#module-corpus_admin.views" title="Enlazar permanentemente con este título">¶</a></h3>
+<dl class="function">
+<dt id="corpus_admin.views.add_doc_data">
+<code class="sig-prename descclassname">corpus_admin.views.</code><code class="sig-name descname">add_doc_data</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">_id</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.views.add_doc_data" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Vista que muestra un formulario para añadir líneas a un documento
+existente</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>:param request:</cite> Objeto <em>HttpRequets</em> para pasar el estado de la app a</dt><dd><p>través del sistema</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>:type:</cite> <em>HttpRequest</em></p></li>
+<li><p><cite>:param _id:</cite> identificador del documento a visualizar</p></li>
+<li><p><cite>:type:</cite> <em>str</em></p></li>
+<li><p><cite>:return:</cite> Formulario para agregar líneas a un documento existente</p></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.views.delete_doc">
+<code class="sig-prename descclassname">corpus_admin.views.</code><code class="sig-name descname">delete_doc</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.views.delete_doc" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Vista encargada de eliminar documentos del corpus</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>:param request:</cite> Objeto <em>HttpRequets</em> para pasar el estado de la app a</dt><dd><p>través del sistema</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>:type:</cite> <em>HttpRequest</em></p></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.views.doc_edit">
+<code class="sig-prename descclassname">corpus_admin.views.</code><code class="sig-name descname">doc_edit</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">_id</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.views.doc_edit" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Vista que muestra el formulario para editar el nombre y pdf de un
+documento</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>:param request:</cite> Objeto <em>HttpRequets</em> para pasar el estado de la app a</dt><dd><p>través del sistema</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>:type:</cite> <em>HttpRequest</em></p></li>
+<li><p><cite>:param _id:</cite> Identificador de documento</p></li>
+<li><p><cite>:type:</cite> <em>str</em></p></li>
+<li><p><cite>:return:</cite> Formulario para editar el nombre y pdf de un documento</p></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.views.doc_preview">
+<code class="sig-prename descclassname">corpus_admin.views.</code><code class="sig-name descname">doc_preview</code><span class="sig-paren">(</span><em class="sig-param">request</em>, <em class="sig-param">_id</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.views.doc_preview" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Vista que muestra el contenido de un documento particular</strong></p>
+<p>Muestra los renglones alineados que componen un documento en
+particular del corpus. Cada renglon tiene dos acciones, eliminar y
+editar.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>:param request:</cite> Objeto <em>HttpRequets</em> para pasar el estado de la app a</dt><dd><p>través del sistema</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>:type:</cite> <em>HttpRequest</em></p></li>
+<li><p><cite>:param _id:</cite> identificador del documento a visualizar</p></li>
+<li><p><cite>:type:</cite> <em>str</em></p></li>
+<li><p><cite>:return:</cite> Contenido de un documento</p></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.views.list_docs">
+<code class="sig-prename descclassname">corpus_admin.views.</code><code class="sig-name descname">list_docs</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.views.list_docs" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Esta vista muestra todos los documentos que conforman el corpus
+paralelo</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>:param request:</cite> Objeto <em>HttpRequets</em> para pasar el estado de la app a</dt><dd><p>través del sistema</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>:type:</cite> <em>HttpRequest</em></p></li>
+<li><p><cite>:return:</cite> Lista de documentos del corpus con acciones por documento</p></li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="corpus_admin.views.new_doc">
+<code class="sig-prename descclassname">corpus_admin.views.</code><code class="sig-name descname">new_doc</code><span class="sig-paren">(</span><em class="sig-param">request</em><span class="sig-paren">)</span><a class="headerlink" href="#corpus_admin.views.new_doc" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p><strong>Vista que muestra el formulario para cargar nuevos documentos al
+corpus</strong></p>
+<p>Vista encargada de mostrar el formulario para agregar nuevo
+documentos al corpus. El documento se compone de archivo <cite>CSV</cite>
+alineado, PDF como portada del corpus y el nombre del archivo. En
+caso de éxito al subir el documento se redirige a la lista de
+documentos.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>:param request:</cite> Objeto <em>HttpRequets</em> para pasar el estado de la app a</dt><dd><p>través del sistema</p>
+</dd>
+</dl>
+</li>
+<li><p><cite>:type:</cite> <em>HttpRequest</em></p></li>
+<li><p><cite>:return:</cite> Vista con formulario para nuevos documentos</p></li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Corpus Paralelo Backend</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Aplicaciones:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutoriales</a></li>
+<li class="toctree-l1"><a class="reference internal" href="elotl.html">elotl app</a></li>
+<li class="toctree-l1"><a class="reference internal" href="searcher.html">searcher app</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">corpus_admin app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#formularios">Formularios</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#funciones-auxiliares">Funciones auxiliares</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rutas-del-corpus-admin">Rutas del corpus_admin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vistas-del-corpus-admin">Vistas del corpus_admin</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="wizard.html">Programa de intalación wizard.py</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="searcher.html" title="capítulo anterior">searcher app</a></li>
+      <li>Next: <a href="wizard.html" title="próximo capítulo">Programa de intalación wizard.py</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Búsqueda rápida</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Ir a" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Comunidad Elotl.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/corpus_admin.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
