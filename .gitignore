@@ -13,4 +13,4 @@ __pycache__/
 
 # Enviroment Variables
 *.yaml
-
+!.readthedocs.yaml
