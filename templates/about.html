@@ -55,10 +55,12 @@
         </table>
       </div>
     </div>
+    {% if commit %}
     <div class="row">
       <div class="col-12">
-        <p class="text-right text-monospace">Versión: <b>{{ version }}</b></p>
+        <p class="text-right text-monospace"><i class="fa fa-github"></i> <b>{{ commit|slice:":7" }}</b></p>
       </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
