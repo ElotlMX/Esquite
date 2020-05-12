@@ -1,5 +1,5 @@
 import logging
-from git import Repo
+from git import Repo, exc
 from django.shortcuts import render
 from corpus_admin.helpers import get_corpus_info, get_variants
 from django.http import FileResponse, Http404
@@ -86,9 +86,15 @@ def about(request):
     """
     LOGGER.info("Entrando a about")
     total, docs = get_corpus_info()
-    version = Repo('./').tags[-1]
+    try:
+        repo = Repo('.')
+        commits = list(repo.iter_commits('master'))
+        last_commit = commits[0].hexsha
+    except exc.InvalidGitRepositoryError:
+        LOGGER.error("No se encontró repositorio de git")
+        last_commit = ""
     return render(request, "about.html",
-                  {"total": total, "docs": docs, "version": version})
+                  {"total": total, "docs": docs, "commit": last_commit})
 
 # === Participantes ===
 
