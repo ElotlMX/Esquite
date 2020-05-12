@@ -1,0 +1,18 @@
+# Archivo de configuración para Read The Docs
+
+# Required
+version: 2
+
+# Ruta del script de Sphinx
+sphinx:
+  configuration: docs/source/conf.py
+
+# Generando la documentación en otros formatos como PDF o ePub
+formats: all
+
+# Version de python del proyecto y dependencias
+python:
+  version: 3.7
+  install:
+    - requirements: requirements.txt
+    - method: pip
