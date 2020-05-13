@@ -1,5 +1,12 @@
 # Esquite: framework para administrar corpus paralelos
 
+Este framework está destinado para las personas que poseen corpus paralelos (textos bilingües) y deseen generar un sistema web que les permita subir los documentos, administrarlos y realizar búsquedas de palabras y frases en las dos lenguas.
+
+
+Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
+
+
+
 ## Dependencias
 
 * [Elasticsearch 7.0](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-install.html)
