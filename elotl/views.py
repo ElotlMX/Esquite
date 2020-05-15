@@ -88,7 +88,11 @@ def about(request):
     total, docs = get_corpus_info()
     try:
         repo = Repo('.')
-        commits = list(repo.iter_commits('master'))
+        git = repo.git
+        branches = git.branch().split("\n")
+        current_branch = [branch for branch in branches if "*" in branch]
+        current_branch = current_branch[0].strip("*").strip(" ")
+        commits = list(repo.iter_commits(current_branch))
         last_commit = commits[0].hexsha
     except exc.InvalidGitRepositoryError:
         LOGGER.error("No se encontró repositorio de git")
