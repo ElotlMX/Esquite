@@ -93,11 +93,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'elotl.context_processors.user_templates',
+                'elotl.context_processors.keyboard',
+                'elotl.context_processors.languages',
                 'elotl.context_processors.colors',
                 'elotl.context_processors.project_info',
                 'elotl.context_processors.google_analytics',
-                'elotl.context_processors.languages',
-                'elotl.context_processors.keyboard',
+
             ],
         },
     },
@@ -163,7 +165,6 @@ STATIC_ROOT = BASE_DIR + '/site/assets/'
 
 MEDIA_ROOT = '/media/'
 
-
 GOOGLE_ANALYTICS = {
     'google_analytics_id': env["GOOGLE_ANALYTICS"]
 }
@@ -206,7 +207,7 @@ LOGGING = {
             'formatter': 'verbose'
         },
         'requests': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/tsunkua_errors.log'),
             'maxBytes': 1024*1024*5,  # 5 MB
