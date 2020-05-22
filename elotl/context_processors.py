@@ -11,7 +11,7 @@ def keyboard(request):
 
 def languages(request):
     """**Configura variables de entorno de las lenguas**"""
-    return {'LANG_1': settings.LANG_1, 'LANG_2': settings.LANG_2}
+    return {'L1': settings.L1, 'L2': settings.L2}
 
 
 def colors(request):

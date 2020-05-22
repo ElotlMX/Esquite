@@ -21,8 +21,8 @@ def set_project_info(config):
     social = ["site", "blog", "email", "facebook", "twitter", "github"]
     config['ORG_NAME'] = input("Nombre de la organización>> ").upper()
     config['NAME'] = input("Nombre del proyecto>> ").upper()
-    config['LANG_1'] = input("Primera lengua del corpus (lang_1)>> ").title()
-    config['LANG_2'] = input("Segunda lengua del corpus (lang_2)>> ").title()
+    config['L1'] = input("Primera lengua del corpus (l1)>> ").title()
+    config['L2'] = input("Segunda lengua del corpus (l2)>> ").title()
     # Colaboradoras vacio por defecto
     config['COLABS'] = []
     config['SOCIAL'] = {k: "" for k in social}

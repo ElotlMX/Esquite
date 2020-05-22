@@ -3,11 +3,11 @@ $(document).ready(function () {
 
   function keyboard_display_control(){
     let languageSelector = $('#id_idioma');
-      if(languageSelector.val() === "LANG_2") {
+      if(languageSelector.val() === "L2") {
         $('#keyboard-container').collapse('show');
       }
       languageSelector.change(() => {
-        if(languageSelector.val() === "LANG_2"){
+        if(languageSelector.val() === "L2"){
           $('#keyboard-container').collapse('show');
         }else{
           $('#keyboard-container').collapse('hide');

@@ -40,9 +40,9 @@ ALT_TEXT = env['ALT_TEXT']
 
 # Lenguas
 
-LANG_1 = env['LANG_1']
+L1 = env['L1']
 
-LANG_2 = env['LANG_2']
+L2 = env['L2']
 
 INDEX = env["INDEX"]
 

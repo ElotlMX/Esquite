@@ -46,9 +46,9 @@
     {% if doc_data %}
       let data_s = {{ doc_data|safe }};
       {% if total_variants %}
-      let columns = [{data: "lang_1"}, {data: "lang_2"}, {data: "variante"}, {data: "actions"}]
+      let columns = [{data: "l1"}, {data: "l2"}, {data: "variante"}, {data: "actions"}]
       {% else %}
-      let columns = [{data: "lang_1"}, {data: "lang_2"}, {data: "actions"}]
+      let columns = [{data: "l1"}, {data: "l2"}, {data: "actions"}]
       {% endif %}
       let table = $("#corpus-table").DataTable({
         data: data_s,
