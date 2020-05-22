@@ -1,9 +1,10 @@
 # --------------------------------------
 import logging
+import csv
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from .forms import NewDocumentForm, DocumentEditForm, AddDocumentDataForm
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info)
@@ -227,3 +228,36 @@ def delete_doc(request):
         notification = f"{r['deleted']} líneas borradas de {document_id}"
         messages.info(request, notification)
         return HttpResponseRedirect("/corpus-admin/")
+
+
+def export_data(request):
+    project_name = settings.NAME
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = f"attachment; filename='{project_name}-data.csv'"
+    writer = csv.writer(response)
+    query = '{"query": {"match_all": {}}}'
+    r = es.search(index=settings.INDEX, body=query, scroll="1m", size=1000)
+    data_response = r["hits"]
+    scroll_id = r["_scroll_id"]
+    total_rows = data_response["total"]["value"]
+    rows_count = len(data_response["hits"])
+    while rows_count != total_rows:
+        sub_response = es.scroll(scroll_id=scroll_id, scroll="1m")
+        data_response["hits"] += sub_response["hits"]["hits"]
+        rows_count += len(sub_response["hits"]["hits"])
+        scroll_id = sub_response["_scroll_id"]
+    writer.writerow(["l1", "l2", "variant", "document_name", "pdf_file", "document_id"])
+    for hit in data_response["hits"]:
+        data = hit['_source']
+        try:
+            row = []
+            row.append(data["lang_1"])
+            row.append(data["lang_2"])
+            row.append(data["variante"])
+            row.append(data["document_name"])
+            row.append(data["document_file"])
+            row.append(data["document_id"])
+            writer.writerow(row)
+        except KeyError as e:
+            LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
+    return response

@@ -68,6 +68,6 @@ span.small-icon{
   font-weight: bold;
 }
 
-button#variants-btn{
+button#variants-btn, button#export-data{
   font-size: 1.0em;
 }

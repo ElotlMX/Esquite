@@ -17,6 +17,10 @@
                <button type="button" id="variants-btn" class="btn btn-light" data-toggle="modal"
                 data-target="#show-variants">
                 <b>{{ variants| length }}</b> Variantes <i class="fa fa-comments"></i></button>
+             </span> |
+             <span data-toggle="tooltip" data-placement="right" title="Respaldo de datos de Elasticseach">
+               <a href="{% url 'export-corpus-data' %}" id="export-data" class="btn btn-success" >
+                 Exportar <i class="fa fa-cloud-download"></i></a>
              </span>
            </h3>
        </div>
