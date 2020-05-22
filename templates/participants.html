@@ -11,6 +11,7 @@
 	<div class="row">
 		<div class="col-12">
 			<p>El proyecto <b>{{ PROJECT_NAME }}</b> es un corpus paralelo <b>{{ LANG_1 }}-{{ LANG_2 }}</b> mantenido por <b>{{ ORG_NAME }}</b></p>
+      {{ PARTICIPANTS_USER|safe }}
 			{% if COLABS %}
 			<p>En particular, agradecemos la asesoría y participación de las siguientes estudiantes e investigadoras:</p>
 			<p><b>{% for colab in COLABS %} {{colab}}, {% endfor %}</b></p>

@@ -1,5 +1,8 @@
+import logging
+import re
 from django.conf import settings
 
+LOGGER = logging.getLogger(__name__)
 
 def keyboard(request):
     """**Configura variable de entorno para teclaod personalizado**
@@ -31,3 +34,22 @@ def project_info(request):
 def google_analytics(request):
     """**Configura variables de entorno de google analytics**"""
     return settings.GOOGLE_ANALYTICS
+
+
+def user_templates(request):
+    views = ["about", "help", "links", "participants"]
+    regex = re.compile("[\w+\.\\n+\b+]$", re.MULTILINE)
+    user_views = {}
+    for view in views:
+        path = f"{settings.BASE_DIR}/templates/user/{view}-user.html"
+        try:
+            with open(path, 'r') as html:
+                html_view = html.read()
+                html_view = regex.sub("<br>", html_view)
+                html_view += "<br>"
+        except FileNotFoundError:
+            LOGGER.error("No se encontró el template de usuario", view)
+            html_view = ""
+        name = view.upper() + "_USER"
+        user_views[name] = html_view
+    return user_views
