@@ -16,8 +16,8 @@
         <table class="table table-striped table-hover" id="corpus-table" style="">
           <thead>
           <tr>
-            <th scope="col">{{ LANG_1 }}</th>
-            <th scope="col">{{ LANG_2 }}</th>
+            <th scope="col">{{ L1 }}</th>
+            <th scope="col">{{ L2 }}</th>
             {% if total_variants %}
             <th scope="col">Variante</th>
             {% endif %}
@@ -46,7 +46,7 @@
     {% if doc_data %}
       let data_s = {{ doc_data|safe }};
       {% if total_variants %}
-      let columns = [{data: "l1"}, {data: "l2"}, {data: "variante"}, {data: "actions"}]
+      let columns = [{data: "l1"}, {data: "l2"}, {data: "variant"}, {data: "actions"}]
       {% else %}
       let columns = [{data: "l1"}, {data: "l2"}, {data: "actions"}]
       {% endif %}
