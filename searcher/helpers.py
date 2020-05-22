@@ -30,10 +30,10 @@ def highlighter(hit, idioma, query):
     if "highlight" in hit:
         for key in hit['highlight'].keys():
             hit['_source'][key] = hit['highlight'][key].pop()
-    elif idioma == "lang_2" and "highlight" not in hit:
-        string = hit['_source']['lang_2']
+    elif idioma == "l2" and "highlight" not in hit:
+        string = hit['_source']['l2']
         # Resaltado manual la lengua 2
-        hit['_source']['lang_2'] = string.replace(query,
+        hit['_source']['l2'] = string.replace(query,
                                                   '<em>' + query + "</em>")
     return hit
 
@@ -62,21 +62,21 @@ def data_processor(raw_data, idioma, query):
         # TODO: corregir función
         hit = highlighter(hit, idioma, query)
         doc_name = hit['_source']['document_name']
-        doc_file = hit['_source']['document_file']
-        variant = hit['_source']['variante']
+        doc_file = hit['_source']['pdf_file']
+        variant = hit['_source']['variant']
         link = doc_file_to_link(doc_name, doc_file, settings.MEDIA_ROOT)
         if idioma == "NONE":
             # TODO: Este procesamiento es del preview del documento
             edit_btn = """<a href="#" class="btn btn-outline-info btn-block btn-sm disabled">Editar <i class="fa fa-edit"></i></a>"""
             delete_btn = """<a href="#" class="btn btn-outline-danger btn-block btn-sm disabled">Eliminar <i class="fa fa-close"></i></a>"""
             hit['_source']['actions'] = edit_btn + delete_btn
-            hit['_source']['document_file'] = link
+            hit['_source']['pdf_file'] = link
         else:
             hit['_source']['document_name'] = link
             if variant:
-                hit['_source']['variante'] = ethno_btn_maker(variant)
+                hit['_source']['variant'] = ethno_btn_maker(variant)
             else:
-                del hit['_source']['variante']
+                del hit['_source']['variant']
         data.append(hit['_source'])
     return data
 
@@ -276,7 +276,7 @@ def get_variants():
             "variants": {
                 "terms": {
                     # TODO: depende del header del CSV
-                    "field": "variante",
+                    "field": "variant",
                     "size": 100  # TODO: Cambiar dinamicamente
                 }
             }

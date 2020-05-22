@@ -251,11 +251,11 @@ def export_data(request):
         data = hit['_source']
         try:
             row = []
-            row.append(data["lang_1"])
-            row.append(data["lang_2"])
-            row.append(data["variante"])
+            row.append(data["l1"])
+            row.append(data["l2"])
+            row.append(data["variant"])
             row.append(data["document_name"])
-            row.append(data["document_file"])
+            row.append(data["pdf_file"])
             row.append(data["document_id"])
             writer.writerow(row)
         except KeyError as e:

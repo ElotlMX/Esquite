@@ -54,15 +54,15 @@ def search(request):
                         ', '.join(data_form['variante'])))
             if len(data_form['variante']) != 0:
                 q_variant = data_form['variante']
-                variantes = " AND variante:" + variant_to_query(q_variant)
+                variantes = " AND variant:" + variant_to_query(q_variant)
             else:
                 variantes = ""
-            if data_form["idioma"] == "LANG_1":
-                idioma = settings.LANG_1.lower()
-                lang_query = "lang_1"
-            elif data_form["idioma"] == "LANG_2":
-                idioma = settings.LANG_2.lower()
-                lang_query = "lang_2"
+            if data_form["idioma"] == "L1":
+                idioma = settings.L1.lower()
+                lang_query = "l1"
+            elif data_form["idioma"] == "L2":
+                idioma = settings.L2.lower()
+                lang_query = "l2"
 
             query = query_kreator(f'{lang_query}:({user_query}){variantes}')
             LOGGER.debug("Indice::" + settings.INDEX)

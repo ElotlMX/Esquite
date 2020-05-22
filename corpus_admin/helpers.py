@@ -137,12 +137,12 @@ def csv_uploader(csv_file, doc_name, file_name, doc_id=""):
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
         if text:
             if text[0] and text[1]:
-                document = {"document_file": file_name,
+                document = {"pdf_file": file_name,
                             "document_id": doc_id,
                             "document_name": doc_name,
-                            "lang_1": text[0],
-                            "lang_2": text[1],
-                            "variante": text[2]
+                            "l1": text[0],
+                            "l2": text[1],
+                            "variant": text[2]
                             }
                 LOGGER.debug("Subiendo linea #{}::{}".format(total_lines,
                                                              document))
@@ -188,9 +188,9 @@ def get_document_info(_id):
         data = r['hits']['hits'][0]['_source']
     else:
         LOGGER.error("Data not found ID::{}".format(_id))
-        data = {"name": "Not Found", "document_file": "Not Found",
+        data = {"name": "Not Found", "pdf_file": "Not Found",
                 "document_name": "Not_Found"}
     name = data['document_name']
-    file = data['document_file']
+    file = data['pdf_file']
     # TODO: Agregar mas información útil
     return {"name": name, "file": file, "id": _id}

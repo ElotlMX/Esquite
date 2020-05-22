@@ -26,7 +26,7 @@ class SearchPostForm(forms.Form):
         :type: ``form.MultipleChoiceField``
     """
     # Lenguajes soportados
-    LANGUAGES = [("LANG_1", settings.LANG_1), ("LANG_2", settings.LANG_2)]
+    LANGUAGES = [("L1", settings.L1), ("L2", settings.L2)]
     # Variantes actuales. Se requiere el formato de tupla (KEY, VALUE)
     variantes = get_variants()
     variants_attrs = {'class': 'form-control'}

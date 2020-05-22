@@ -110,8 +110,8 @@
       <table class="table table-striped table-hover" id="corpus-table">
         <thead>
           <tr>
-            <th scope="col">{{ LANG_1 }}</th>
-            <th scope="col">{{ LANG_2 }}</th>
+            <th scope="col">{{ L1 }}</th>
+            <th scope="col">{{ L2 }}</th>
             {% if total_variants %}
             <th scope="col">Variante</th>
             {% endif %}
@@ -201,9 +201,9 @@
       let data_s = {{ data|safe }};
       /*Columns depende de los headers del CSV*/
       {% if total_variants %}
-      let columns = [{data: "lang_1"}, {data: "lang_2"}, {data: "variante"}, {data: "document_name"}]
+      let columns = [{data: "l1"}, {data: "l2"}, {data: "variant"}, {data: "document_name"}]
       {% else %}
-      let columns = [{data: "lang_1"}, {data: "lang_2"}, {data: "document_name"}]
+      let columns = [{data: "l1"}, {data: "l2"}, {data: "document_name"}]
       {% endif %}
 
       let table = $("#corpus-table").DataTable({
