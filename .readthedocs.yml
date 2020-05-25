@@ -8,7 +8,8 @@ sphinx:
   configuration: docs/source/conf.py
 
 # Generando la documentación en otros formatos como PDF o ePub
-formats: all
+formats:
+  - pdf
 
 # Version de python del proyecto y dependencias
 python:
