@@ -9,8 +9,17 @@ from django.contrib.messages import constants as messages
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-with open(os.path.join(BASE_DIR, "env.yaml"), 'r') as e:
-    env = yaml.load(e, Loader=yaml.FullLoader)
+try:
+    with open(os.path.join(BASE_DIR, "env.yaml"), 'r') as e:
+        env = yaml.load(e, Loader=yaml.FullLoader)
+except FileNotFoundError:
+    print("[ERROR] Archivo de configuración env.yaml no encontrado")
+    # Setting dummy dict for build the docs correctly at Read The Docs
+    env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
+           "KEYBOARD": [], "PRIMARY_COLOR": "", "SECONDARY_COLOR": "",
+           "TEXT_COLOR": "", "ALT_TEXT": "", "L1": "", "L2": "",
+           "INDEX": "test", "SOCIAL": [], "URL": "localhost", "COLABS": [],
+           "NAME": "", "GOOGLE_ANALYTICS": ""}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(env['DEBUG'])
