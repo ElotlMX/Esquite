@@ -5,9 +5,9 @@ Subida de documentos
 --------------------
 
 La aplicación provee una interface interna de *administración del corpus* que
-puede encontrarse en la url ``https://miproyecto.com/corpus-admin/``.
+puede encontrarse en la url ``https://micorpus.com/corpus-admin/``.
 Si se quiere subir material al corpus deberá ser en formato ``.csv``
-(*separado por comas*).
+(**separado por comas**).
 
 Es **indispensable** que exista la cabecera ya que la primer línea
 del archivo se **ignora** por defecto. Actualmente se tiene la siguiente

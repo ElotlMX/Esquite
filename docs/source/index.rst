@@ -3,21 +3,25 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Documentación del Backend de Corpus Paralelo
-=============================================
+Bienvenidx a la documentación de Esquite
+========================================
 
-Se rescatan ciertas consideraciones importantes
+Framework para administrar corpus paralelos
+-------------------------------------------
+
+Este framework está destinado para las personas que poseen corpus paralelos (textos bilingües) y deseen generar un sistema web que les permita subir estos documentos, administrarlos y realizar búsquedas de palabras y frases en las dos lenguas. Se rescatan las siguientes consideraciones técnicas:
+
 
 * **Vistas**: Estas funciones se encargan de procesar los datos que otorgan
-  las usuarias para ser procesados y posteriorimente *renderean* los archivos
+  las usuarias para ser procesados y posteriormente *renderean* los archivos
   ``html`` con la información solicitada. Ej: Una consulta al índice de
   Elasticsearch, las personas involucradas en el proyecto, etc.
 * **Rutas**: En esta sección se configuran el nombre de las rutas del proyecto.
   Las rutas son el texto que aparece en la parte superior del navegador.
   Por ejemplo las que se muestran a continuación:
 
-  * ``https://tsunkua.elot.mx/about/``
-  * ``https://tsunkua.elotl.mx/media/visiondelosvencidoshnahnu.pdf/``
+  * ``https://micorpus/about/``
+  * ``https://micorpus/media/visiondelosvencidoshnahnu.pdf/``
 
 * **Formularios**: Los formularios mostrados en las vistas son generados por
   medio de las clases de ``django`` ya que brindan ventajas conrespecto a
