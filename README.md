@@ -5,8 +5,6 @@ Este framework está destinado para las personas que poseen corpus paralelos (te
 
 Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
-
-
 ## Dependencias
 
 * [Elasticsearch 7.0](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-install.html)
@@ -15,10 +13,10 @@ Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 * `virtualenv`
     * [Guía de instalación virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
 
-## Instalación de Tsunkua en servidor
+## Instalación en servidor
 
 1. Clona este repositorio
-2. Crea un entorno virual de python
+2. Crea un entorno virtual de `python`
 	* `$ virtualenv env -p /usr/bin/python3`
 3. Activar el entorno
 	* `$ source env/bin/activate`
@@ -28,48 +26,6 @@ Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
   * `(env)$ python wizard.py`
 6. Correr django en segundo plano
   * `(env)$ python manage.py runserver 0.0.0.0:3000 &`
-
-### NOTAS:
-
-* Se requiere un índice con las configuraciones que se muestran al final del
-documento para ser indicado al `wizard.py`.
-* El archivo `.env` es creado automáticamente por el asistente de instalación
-(`wizard.py`). Este archivo debe estar en la raíz del proyecto.
-* La variable llamada `DEBUG` está establecida por defecto en `FALSE`
-siguiendo las recomendaciones de seguridad de `django` para un entorno de **producción**.
-	* En este estado el servidor web de `django` no está habilitado, por lo que,
-	los archivos estáticos (`js`, `css`, imagenes, entre otros) no se cargarán.
-	Para ello se deberá configurar un servidor web externo como
-	[nginx](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/)
-	, [apache](https://httpd.apache.org/download.cgi) u otro.
-	* Si se está en un entorno de **desarrollo** se puede cambiar el valor
-	de la variable a `TRUE` con lo que se habilitará el servidor web de
-	`django`. Además, si existen excepciones se mostrará un detallado
-	*traceback*, que incluye muchos metadatos del entorno, en el navegador web.
-	* Recomendamos ampliamente leer la [documentación sobre esta variable](https://docs.djangoproject.com/en/2.2/ref/settings/#std:setting-DEBUG>)
-
-## Subida de documentos
-
-La aplicación provee una interface interna de *administración del corpus*.
-Si se quiere subir material al corpus deberá ser en formato `.csv` **separado
-por comas**. Es **indispensable** que exista la cabecera ya que la primer línea
-del archivo se **ignora** por defecto. Actualmente se tiene la siguiente
-convención para la subida de nuevos documentos
-
-| lang_1  | lang_2  | variante  |
-|----------|--------|-----------|
-| Una vez una señora se emborrachó | nándi na ra t'u̱xú bintí | Otomí del Estado de México (ots)|
-| Luego se fue a dormir a la casa del vecino | xu̱tu̱ bimáyóhthó 'á ngŭ ra bésíno | Otomí del Estado de México (ots)|
-| Después que se durmió | despwés ya biyóbí | Otomí del Estado de México (ots)|
-| En la mañana se levantó y se fue a su casa| na ra nchúdi ya binántsi bimá ra ngŭ | Otomí del Estado de México (ots)|
-
-Además, cada documento deberá tener asociado un archivo `.PDF` con fines
-ilustrativos para lxs usuarixs.
-
-**NOTA:** En caso de que la variante tenga ISO se requiere que venga entre
-paréntesis al final del nombre de la variante como se muestra en la tabla
-anterior. Si no existe variante para el documento dicha columna **deberá**
-estar vacía.
 
 ## Estructura general
 
