@@ -89,7 +89,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'elotl.urls'
+ROOT_URLCONF = 'esquite.urls'
 
 TEMPLATES = [
     {
@@ -102,19 +102,19 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'elotl.context_processors.user_templates',
-                'elotl.context_processors.keyboard',
-                'elotl.context_processors.languages',
-                'elotl.context_processors.colors',
-                'elotl.context_processors.project_info',
-                'elotl.context_processors.google_analytics',
+                'esquite.context_processors.user_templates',
+                'esquite.context_processors.keyboard',
+                'esquite.context_processors.languages',
+                'esquite.context_processors.colors',
+                'esquite.context_processors.project_info',
+                'esquite.context_processors.google_analytics',
 
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'elotl.wsgi.application'
+WSGI_APPLICATION = 'esquite.wsgi.application'
 
 
 # Database
@@ -207,7 +207,7 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/elotl.log'),
+            'filename': os.path.join(BASE_DIR, 'logs/esquite.log'),
             'formatter': 'verbose'
         },
         'console': {
@@ -225,7 +225,7 @@ LOGGING = {
         }
     },
     'loggers': {
-        'elotl': {
+        'esquite': {
             'handlers': ['console', 'file', 'requests'],
             'level': 'DEBUG',
             'propagate': True,

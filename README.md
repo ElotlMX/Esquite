@@ -22,7 +22,7 @@ Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 	* `$ source env/bin/activate`
 4. Instalar las dependencias
 	*	`(env)$ pip install -r requeriments.txt`
-5. Iniciar el asistente de instalación y e ingresar los datos que piden
+5. Iniciar el asistente de instalación e ingresar los datos que piden
   * `(env)$ python wizard.py`
 6. Correr django en segundo plano
   * `(env)$ python manage.py runserver 0.0.0.0:3000 &`
@@ -35,7 +35,7 @@ específica. A continuación se explicará la estructura del proyecto haciendo
 
 
 ```
-elotl-backend              # Carpeta raíz
+esquite-backend            # Carpeta raíz
 │   ├── db.sqlite3         # Archivo para bases de datos (No se utiliza)
 │   ├── corpus_admin/      # Modulo de administración de archivos
 │   ├── env/               # Entorno virtual para python
@@ -47,14 +47,14 @@ elotl-backend              # Carpeta raíz
 │   ├── searcher/          # Modulo de búsqueda
 │   ├── static/            # Archivos estáticos (css, js, img, ...)
 │   ├── templates/         # Vistas en .html
-│   ├── elotl/             # Modulo principal del proyecto
+│   ├── esquite/           # Modulo principal del proyecto
 │   └── wizard.py          # Asistente de instalación del proyecto
 ```
 
-### `elotl`
+### `esquite`
 
 ```
-elotl
+esquite
 ├── __init__.py
 ├── __pycache__/
 ├── settings.py  # Configuraciones globales
@@ -62,7 +62,7 @@ elotl
 ├── views.py     # Comportamiento de las vistas
 └── wsgi.py
 ```
-El modulo `elotl` contiene la base del proyecto. En este modulo se puede gestionar la **configuración global** del proyecto. Tambien, las **urls** generales y el comportamiento de la página de inicio y la forma en que se despliegan los **pdfs**.
+El modulo `esquite` contiene la base del proyecto. En este modulo se puede gestionar la **configuración global** del proyecto. Tambien, las **urls** generales y el comportamiento de la página de inicio y la forma en que se despliegan los **pdfs**.
 
 ### `searcher`
 

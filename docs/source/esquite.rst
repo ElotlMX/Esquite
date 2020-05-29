@@ -1,13 +1,13 @@
-elotl app
+esquite app
 =========
 
 Variables de entorno
 --------------------
 
-elotl.context\_processors
+esquite.context\_processors
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. automodule:: elotl.context_processors
+.. automodule:: esquite.context_processors
    :members:
    :undoc-members:
    :show-inheritance:
@@ -15,9 +15,9 @@ elotl.context\_processors
 Configuraciones generales
 -------------------------
 
-elotl.settings
+esquite.settings
 ^^^^^^^^^^^^^^
-.. automodule:: elotl.settings
+.. automodule:: esquite.settings
    :members:
    :undoc-members:
    :show-inheritance:
@@ -25,10 +25,10 @@ elotl.settings
 Rutas
 -----
 
-elotl.urls
+esquite.urls
 ^^^^^^^^^^
 
-.. automodule:: elotl.urls
+.. automodule:: esquite.urls
    :members:
    :undoc-members:
    :show-inheritance:
@@ -36,10 +36,10 @@ elotl.urls
 Vistas
 ------
 
-elotl.views
+esquite.views
 ^^^^^^^^^^^
 
-.. automodule:: elotl.views
+.. automodule:: esquite.views
    :members:
    :undoc-members:
    :show-inheritance:
@@ -52,10 +52,10 @@ Configuración de servidor web
     Para producción no se recomienda utilizar el servidor web que ``django``
     tiene por defecto ya que este es solo para el ambiente de desarrollo
 
-elotl.wsgi
+esquite.wsgi
 ^^^^^^^^^^
 
-.. automodule:: elotl.wsgi
+.. automodule:: esquite.wsgi
    :members:
    :undoc-members:
    :show-inheritance:
