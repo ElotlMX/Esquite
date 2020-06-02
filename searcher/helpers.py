@@ -63,7 +63,10 @@ def data_processor(raw_data, idioma, query):
         hit = highlighter(hit, idioma, query)
         doc_name = hit['_source']['document_name']
         doc_file = hit['_source']['pdf_file']
-        variant = hit['_source']['variant']
+        try:
+            variant = hit['_source']['variant']
+        except KeyError:
+            variant = ""
         link = doc_file_to_link(doc_name, doc_file, settings.MEDIA_ROOT)
         if idioma == "NONE":
             # TODO: Este procesamiento es del preview del documento
@@ -75,8 +78,6 @@ def data_processor(raw_data, idioma, query):
             hit['_source']['document_name'] = link
             if variant:
                 hit['_source']['variant'] = ethno_btn_maker(variant)
-            else:
-                del hit['_source']['variant']
         data.append(hit['_source'])
     return data
 
