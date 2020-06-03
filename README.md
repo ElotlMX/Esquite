@@ -1,9 +1,15 @@
 # Esquite: framework para administrar corpus paralelos
 
+[![Documentation Status](https://readthedocs.org/projects/esquite/badge/?version=latest)](https://esquite.readthedocs.io/es/latest/?badge=latest)
+
 Este framework está destinado para las personas que poseen corpus paralelos (textos bilingües) y deseen generar un sistema web que les permita subir estos documentos, administrarlos y realizar búsquedas de palabras y frases en las dos lenguas.
 
 
 Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
+
+## Documentación
+
+Puedes revisar nuestra [documentación](https://esquite.readthedocs.io/es/latest/) para más información.
 
 ## Dependencias
 
