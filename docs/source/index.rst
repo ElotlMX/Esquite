@@ -35,7 +35,7 @@ Este framework está destinado para las personas que poseen corpus paralelos (te
 
    install
    tutorials
-   elotl
+   esquite
    searcher
    corpus_admin
    wizard
