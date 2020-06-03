@@ -101,7 +101,10 @@ def doc_preview(request, _id):
     name = data['document_name']
     doc = get_document_info(_id)
     file = doc['file']
+    # TODO: Refactor variants across the backend
     current_variants = get_variants()
+    if len(current_variants) == 1:
+        current_variants = {}
     return render(request, "corpus-admin/doc-preview.html",
                   {
                       "doc_data": corpus, "doc_name": name,
