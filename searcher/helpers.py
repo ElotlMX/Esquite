@@ -59,7 +59,14 @@ def data_processor(raw_data, idioma, query):
     LOGGER.info("Procesando datos de Elasticsearch")
     data = []
     for hit in raw_data['hits']:
-        # TODO: corregir función
+        fields = hit["_source"].keys()
+        if "l1" not in fields and "l2" not in fields:
+            hit["_source"]["l1"] = ''
+            hit["_source"]["l2"] = ''
+        elif "l1" not in fields:
+            hit["_source"]["l1"] = ''
+        elif "l2" not in fields:
+            hit["_source"]["l2"] = ''
         hit = highlighter(hit, idioma, query)
         doc_name = hit['_source']['document_name']
         doc_file = hit['_source']['pdf_file']
