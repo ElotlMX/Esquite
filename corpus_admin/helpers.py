@@ -46,11 +46,8 @@ def get_corpus_info():
     for bucket in buckets:
         total += int(bucket["doc_count"])
         document = get_document_info(bucket['key'])
-        doc_description = {
-            'file': document['file'], 'name': document['name'],
-            'id': bucket['key'], 'count': bucket['doc_count']
-        }
-        docs.append(doc_description)
+        document['count'] = bucket['doc_count']
+        docs.append(document)
     return total, docs
 
 # === Cargador de PDFs ===
