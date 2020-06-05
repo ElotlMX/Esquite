@@ -104,6 +104,15 @@ def search(request):
                            'query_text': user_query,
                            'total_variants': len(current_variants)
                            })
+        else:
+            user_data = form.cleaned_data
+            notification = "En la búsqueda no se adminten consultas vacías :|"
+            if "query" not in user_data.keys():
+                messages.warning(request, notification)
+            else:
+                messages.error(request, "Error en el formulario de consulta.")
+            return render(request, "searcher/searcher.html",
+                          {"form": form, "total": 0, "form_error": True})
     else:
         # Si es metodo GET se redirige a la vista index
         return HttpResponseRedirect('/')

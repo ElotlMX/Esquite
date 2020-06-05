@@ -98,8 +98,10 @@
             </button>
             </p>
           {% else %}
+            {% if not form_error %}
             <p class="col-12 result-notify"><i class="fa fa-warning"></i> No encontramos
               resultados para <i class="fa fa-long-arrow-right"></i> <b> {{ query_text }} </b> en <b>{{ idioma }}</b></p>
+            {% endif %}
           {% endif %}
         {% endif %}
       </div>
