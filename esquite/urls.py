@@ -8,7 +8,7 @@ urlpatterns = [
     path('links/', views.links, name='links'),
     path('about/', views.about, name='about'),
     path('participantes/', views.participants, name='participantes'),
-    path('media/<path:file_name>/', views.pdf_view, name="pdf_view"),
+    path('media/<path:file_name>', views.pdf_view, name="pdf_view"),
     path('admin/', admin.site.urls),
     path('search/', include('searcher.urls')),
     path('corpus-admin/', include('corpus_admin.urls')),
