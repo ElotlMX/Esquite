@@ -172,7 +172,7 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR + '/site/assets/'
 
-MEDIA_ROOT = '/media/'
+MEDIA_ROOT = BASE_DIR + '/media/'
 
 GOOGLE_ANALYTICS = {
     'google_analytics_id': env["GOOGLE_ANALYTICS"]
