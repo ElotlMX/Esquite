@@ -8,8 +8,9 @@ __pycache__/
 *env/
 .python-version
 
-# Pdf files
+# Files
 *.pdf
+*.csv
 
 # Enviroment Variables
 *.yaml
