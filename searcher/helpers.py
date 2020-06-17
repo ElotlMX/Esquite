@@ -1,5 +1,7 @@
+import os
 import json
 import logging
+import csv
 from django.conf import settings
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
@@ -178,6 +180,46 @@ def variant_to_query(variantes):
         else:
             query += " OR "
     return query
+
+
+def results_to_csv(data_response, variants):
+    """**Función que escribe los resultados de la consulta en archivo
+    csv**
+
+    Guarda los resultados de la consulta en formato ``csv`` en caso de
+    que la usuaria quiera descargarlos.
+
+    :param data_response: Resultados de la consulta devueltos por el
+    índice de ``elasticsearch``
+    :type: list
+    :param variants: Variantes actuales para saber si escribir variante
+    o dejar el campo vacío.
+    :type: dict
+    :return: Estatus del archivo. ``True`` si fue escrito, ``False`` en
+    caso contrario
+    :rtype: bool
+    """
+    row = []
+    path_to_save = os.path.join(settings.MEDIA_ROOT,  "query-results.csv")
+    query_results = data_response['hits']
+    with open(path_to_save, "w") as csv_file:
+        writer = csv.writer(csv_file)
+        # Writing header
+        writer.writerow(["l1", "l2", "variante"])
+        for data in query_results:
+            try:
+                row.append(data['_source']["l1"])
+                row.append(data['_source']["l2"])
+                if len(variants):
+                    row.append(data['_source']["variant"])
+                else:
+                    row.append("")
+                writer.writerow(row)
+            except KeyError:
+                LOGGER.warning("No existe campo. Se omite línea")
+            row = []
+    return True
+
 
 # === Scrapper de Ethnologue ===
 

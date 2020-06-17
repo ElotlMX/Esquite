@@ -1,13 +1,15 @@
+import os
+import csv
+import logging
 import elasticsearch
 import requests
-import logging
 from bs4 import BeautifulSoup
 from django.shortcuts import render
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.contrib import messages
 from .helpers import (data_processor, variant_to_query, ethno_table_maker,
-                      query_kreator, get_variants)
+                      query_kreator, get_variants, results_to_csv)
 from .forms import SearchPostForm
 from elasticsearch import Elasticsearch
 
@@ -94,7 +96,12 @@ def search(request):
                 # TODO: Mandar correos para notificar servers caidos
                 documents_count = 0
             if documents_count != 0:
+                status = results_to_csv(data_response, current_variants)
+                LOGGER.info("Los resultados de la consulta se guardaron::"\
+                            + str(status))
                 data = data_processor(data_response, lang_query, user_query)
+                row = []
+                # TODO: Store results in case of download
             else:
                 data = []
             return render(request, "searcher/searcher.html",
@@ -148,3 +155,25 @@ def ethnologue_data(request, iso_variant):
         LOGGER.error("Error de conexión a Ethnologue::{}".format(e.request.body))
         LOGGER.error("Url Ethnologue::" + e.request.url)
         return HttpResponse("<h1>404 :(</h1>")
+
+
+def download_results(request):
+    """**Descarga los resultados de la busqueda actual**
+
+    Vista asociada a botón que se encarga de descargar los resultados
+    de la consulta actual
+
+    :param request: Objeto ``HttpRequet`` para pasar el estado de la app a
+                    través del sistema
+    :type: ``HttpRequest``
+    :return: Los resultados de busqueda en formato ``csv``
+    """
+    file_path = os.path.join(settings.MEDIA_ROOT, "query-results.csv")
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as csv_file:
+            data = csv_file.read()
+        response = HttpResponse(data, content_type="text/csv")
+        response['Content-Disposition'] = f"inline; filename='query-data.csv'"
+        return response
+    raise Http404
+

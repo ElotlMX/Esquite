@@ -191,3 +191,5 @@ def get_document_info(_id):
     file = data['pdf_file']
     # TODO: Agregar mas información útil
     return {"name": name, "file": file, "id": _id}
+
+
