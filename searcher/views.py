@@ -82,17 +82,16 @@ def search(request):
             except elasticsearch.exceptions.RequestError as e:
                 LOGGER.error("Error al buscar::{}".format(e))
                 LOGGER.error("Query::" + data_form["busqueda"])
-                notification = "Tuvimos problemas realizando la búsqueda " + \
-                               "<em>" + data_form['busqueda'] + "</em>. " + \
-                               "Por favor vuelve a intentarlo :("
-                messages.error(request, notification)
+                notification = "Búsqueda inválida. Vuelve a intentarlo ¯\\_(ツ)_/¯"
+                messages.warning(request, notification)
                 documents_count = 0
             except elasticsearch.exceptions.ConnectionError as e:
                 LOGGER.error("Error de conexión::{}".format(e))
-                LOGGER.error("No se pudo conectar al Indice de Elasticsearch::" + settings.INDEX)
+                LOGGER.error("No se pudo conectar al Indice de" +\
+                             "Elasticsearch::" + settings.INDEX)
                 notification = "Error de conexión al servidor " + \
-                               "Elasticsearch. Intentalo más tarde :("
-                messages.error(request, "Error de conexión a servidores :(")
+                               "Intentalo más tarde (；一_一)"
+                messages.error(request, notification)
                 # TODO: Mandar correos para notificar servers caidos
                 documents_count = 0
             if documents_count != 0:
