@@ -1,3 +1,4 @@
+import os
 import logging
 from git import Repo, exc
 from django.shortcuts import render
@@ -131,9 +132,8 @@ def pdf_view(request, file_name):
     :return: Archivo ``PDF`` para ser visto en el navegador
     """
     try:
-        return FileResponse(open(settings.BASE_DIR + settings.MEDIA_ROOT +
-                                 file_name, 'rb'),
-                            content_type='application/pdf')
+        path = settings.BASE_DIR + settings.MEDIA_ROOT + file_name
+        return FileResponse(open(path, 'rb'), content_type='application/pdf')
     except FileNotFoundError:
         path = settings.BASE_DIR + settings.MEDIA_ROOT + file_name
         LOGGER.error("No se encontro el PDF en " + path)

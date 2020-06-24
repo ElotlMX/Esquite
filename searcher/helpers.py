@@ -200,7 +200,8 @@ def results_to_csv(data_response, variants):
     :rtype: bool
     """
     row = []
-    path_to_save = os.path.join(settings.MEDIA_ROOT,  "query-results.csv")
+    file_name = "query-results.csv"
+    path_to_save = settings.BASE_DIR + settings.MEDIA_ROOT + file_name
     query_results = data_response['hits']
     with open(path_to_save, "w") as csv_file:
         writer = csv.writer(csv_file)

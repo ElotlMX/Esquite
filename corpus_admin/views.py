@@ -1,4 +1,3 @@
-# --------------------------------------
 import logging
 import csv
 from django.shortcuts import render
@@ -131,21 +130,25 @@ def doc_edit(request, _id):
         form = DocumentEditForm(request.POST, request.FILES)
         if form.is_valid():
             data_form = form.cleaned_data
-            set_name, set_file = '', ''
             # Script que se ejecutara en Elasticsearch
-            base_script = "ctx._source.put('document_"
             if data_form['nombre'] != '':
-                set_name = base_script + f"name', '{data_form['nombre']}');"
+                doc_name = data_form['nombre']
+                set_name = f"ctx._source.put('document_name', '{doc_name}');"
                 notification = f"""El documento <b>{_id}</b> cambió el nombre
-                a <b>{data_form['nombre']}</b>."""
+                a <b>{doc_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
+            else:
+                set_name = ''
 
             if data_form['pdf'] is not None:
-                set_file = base_script + f"file', '{data_form['pdf'].name}');"
-                pdf_uploader(data_form['pdf'], data_form['pdf'].name)
+                pdf_name = data_form['pdf'].name
+                set_file = f"ctx._source.put('pdf_file', '{pdf_name}');"
+                pdf_uploader(data_form['pdf'], pdf_name)
                 notification = f"""El archivo del documento <b>{_id}</b> PDF
-                cambió a <b>{data_form['pdf'].name}</b>."""
+                cambió a <b>{pdf_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
+            else:
+                set_file = ''
 
             if set_file or set_name:
                 update_rules = {
@@ -164,7 +167,7 @@ def doc_edit(request, _id):
             else:
                 notification = "Se debe modificar <b>al menos un campo</b>. " \
                                "Documento sin cambios :("
-                messages.add_message(request, messages.ERROR, notification)
+                messages.add_message(request, messages.WARNING, notification)
                 return HttpResponseRedirect('/corpus-admin/edit/' + _id)
     else:
         form = DocumentEditForm()
@@ -238,6 +241,8 @@ def export_data(request):
     response = HttpResponse(content_type="text/csv")
     response['Content-Disposition'] = f"attachment; filename='{project_name}-data.csv'"
     writer = csv.writer(response)
+    csv_header = ["l1", "l2", "variant", "document_name",
+                  "pdf_file", "document_id"]
     query = '{"query": {"match_all": {}}}'
     r = es.search(index=settings.INDEX, body=query, scroll="1m", size=1000)
     data_response = r["hits"]
@@ -249,18 +254,27 @@ def export_data(request):
         data_response["hits"] += sub_response["hits"]["hits"]
         rows_count += len(sub_response["hits"]["hits"])
         scroll_id = sub_response["_scroll_id"]
-    writer.writerow(["l1", "l2", "variant", "document_name", "pdf_file", "document_id"])
+    writer.writerow(csv_header)
     for hit in data_response["hits"]:
+        row = []
         data = hit['_source']
-        try:
-            row = []
+        fields = data.keys()
+        if "l1" not in fields or "l2" not in fields:
+            LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
+            continue
+        elif "variant" not in fields:
+            row.append(data["l1"])
+            row.append(data["l2"])
+            row.append("")
+            row.append(data["document_name"])
+            row.append(data["pdf_file"])
+            row.append(data["document_id"])
+        else:
             row.append(data["l1"])
             row.append(data["l2"])
             row.append(data["variant"])
             row.append(data["document_name"])
             row.append(data["pdf_file"])
             row.append(data["document_id"])
-            writer.writerow(row)
-        except KeyError as e:
-            LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
+        writer.writerow(row)
     return response
