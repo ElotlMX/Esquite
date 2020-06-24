@@ -130,21 +130,25 @@ def doc_edit(request, _id):
         form = DocumentEditForm(request.POST, request.FILES)
         if form.is_valid():
             data_form = form.cleaned_data
-            set_name, set_file = '', ''
             # Script que se ejecutara en Elasticsearch
-            base_script = "ctx._source.put('document_"
             if data_form['nombre'] != '':
-                set_name = base_script + f"name', '{data_form['nombre']}');"
+                doc_name = data_form['nombre']
+                set_name = f"ctx._source.put('document_name', '{doc_name}');"
                 notification = f"""El documento <b>{_id}</b> cambió el nombre
-                a <b>{data_form['nombre']}</b>."""
+                a <b>{doc_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
+            else:
+                set_name = False
 
             if data_form['pdf'] is not None:
-                set_file = base_script + f"file', '{data_form['pdf'].name}');"
-                pdf_uploader(data_form['pdf'], data_form['pdf'].name)
+                pdf_name = data_form['pdf'].name
+                set_file = f"ctx._source.put('pdf_file', '{pdf_name}');"
+                pdf_uploader(data_form['pdf'], pdf_name)
                 notification = f"""El archivo del documento <b>{_id}</b> PDF
-                cambió a <b>{data_form['pdf'].name}</b>."""
+                cambió a <b>{pdf_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
+            else:
+                set_file = False
 
             if set_file or set_name:
                 update_rules = {
@@ -163,7 +167,7 @@ def doc_edit(request, _id):
             else:
                 notification = "Se debe modificar <b>al menos un campo</b>. " \
                                "Documento sin cambios :("
-                messages.add_message(request, messages.ERROR, notification)
+                messages.add_message(request, messages.WARNING, notification)
                 return HttpResponseRedirect('/corpus-admin/edit/' + _id)
     else:
         form = DocumentEditForm()
