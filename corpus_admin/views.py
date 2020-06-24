@@ -138,7 +138,7 @@ def doc_edit(request, _id):
                 a <b>{doc_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
             else:
-                set_name = False
+                set_name = ''
 
             if data_form['pdf'] is not None:
                 pdf_name = data_form['pdf'].name
@@ -148,7 +148,7 @@ def doc_edit(request, _id):
                 cambió a <b>{pdf_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
             else:
-                set_file = False
+                set_file = ''
 
             if set_file or set_name:
                 update_rules = {
