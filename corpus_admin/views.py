@@ -1,4 +1,3 @@
-# --------------------------------------
 import logging
 import csv
 from django.shortcuts import render
@@ -238,6 +237,8 @@ def export_data(request):
     response = HttpResponse(content_type="text/csv")
     response['Content-Disposition'] = f"attachment; filename='{project_name}-data.csv'"
     writer = csv.writer(response)
+    csv_header = ["l1", "l2", "variant", "document_name",
+                  "pdf_file", "document_id"]
     query = '{"query": {"match_all": {}}}'
     r = es.search(index=settings.INDEX, body=query, scroll="1m", size=1000)
     data_response = r["hits"]
@@ -249,18 +250,27 @@ def export_data(request):
         data_response["hits"] += sub_response["hits"]["hits"]
         rows_count += len(sub_response["hits"]["hits"])
         scroll_id = sub_response["_scroll_id"]
-    writer.writerow(["l1", "l2", "variant", "document_name", "pdf_file", "document_id"])
+    writer.writerow(csv_header)
     for hit in data_response["hits"]:
+        row = []
         data = hit['_source']
-        try:
-            row = []
+        fields = data.keys()
+        if "l1" not in fields or "l2" not in fields:
+            LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
+            continue
+        elif "variant" not in fields:
+            row.append(data["l1"])
+            row.append(data["l2"])
+            row.append("")
+            row.append(data["document_name"])
+            row.append(data["pdf_file"])
+            row.append(data["document_id"])
+        else:
             row.append(data["l1"])
             row.append(data["l2"])
             row.append(data["variant"])
             row.append(data["document_name"])
             row.append(data["pdf_file"])
             row.append(data["document_id"])
-            writer.writerow(row)
-        except KeyError as e:
-            LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
+        writer.writerow(row)
     return response
