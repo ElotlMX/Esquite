@@ -168,7 +168,7 @@ def download_results(request):
     :type: ``HttpRequest``
     :return: Los resultados de busqueda en formato ``csv``
     """
-    file_path = os.path.join(settings.MEDIA_ROOT, "query-results.csv")
+    file_path = settings.BASE_DIR + settings.MEDIA_ROOT + "query-results.csv"
     if os.path.exists(file_path):
         with open(file_path, 'r') as csv_file:
             data = csv_file.read()
