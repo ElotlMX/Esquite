@@ -5,37 +5,37 @@
   <h1 class="my-4">Nuevo documento</h1>
   <hr class="mb-3">
   <div class="jumbotron pt-5 pb-2" id="new-doc-form-container">
-    <form action="{% url 'new-doc' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'new-doc' %}" method="post" enctype="multipart/form-data" id="new-doc-form">
       {% csrf_token %}
       <div class="form-group row">
-        <label for="id_nombre" class="col-sm-2 col-form-label text-right">{{ form.nombre.label }}</label>
-        <div class="col-sm-10">
+        <label for="id_nombre" class="col-2 col-form-label text-right">{{ form.nombre.label }}</label>
+        <div class="col-10">
           {{ form.nombre }}
         </div>
       </div>
       <div class="form-group row">
-        <label for="id_csv" class="col-sm-2 col-form-label text-right">{{ form.csv.label }}</label>
-        <div class="col-sm-10">
+        <label for="id_csv" class="col col-form-label text-right">{{ form.csv.label }}</label>
+        <div class="col-10">
           {{ form.csv }}
         </div>
       </div>
       <div class="form-group row">
-        <label for="id_pdf" class="col-sm-2 col-form-label text-right">{{ form.pdf.label }}</label>
-        <div class="col-sm-10">
+        <label for="id_pdf" class="col-2 col-form-label text-right">{{ form.pdf.label }}</label>
+        <div class="col-10">
           {{ form.pdf }}
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-sm-2 pt-2">
+        <div class="col-md-2 pt-2">
           <a href="{% url 'list-docs' %}" class="badge badge-light">
             <i class="fa fa-arrow-left"></i> Regresar
           </a>
         </div>
-        <div class="col-sm-8 col-md-2">
-          <button type="submit" class="btn btn-primary" id="new-doc-btn">Guardar <i class="fa fa-save"></i></button>
+        <div class="col col-md-3">
+          <button type="submit" class="btn btn-primary btn-block mt-2" id="new-doc-btn">Subir <i class="fa fa-save"></i></button>
         </div>
-        <div class="col-sm-3">
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#csv-format">Ayuda
+        <div class="col col-md-3">
+          <button type="button" class="btn btn-danger btn-block mt-2" data-toggle="modal" data-target="#csv-format">Ayuda
             <i class="fa fa-file-excel-o"></i></button>
         </div>
       </div>
@@ -93,3 +93,22 @@
   </div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+<script charset="utf-8">
+  $("#new-doc-btn").on("click", (e) => {
+    e.preventDefault()
+    name = $("#id_nombre").val()
+    csv = $("#id_csv").val()
+    pdf = $("#id_pdf").val()
+
+    $btn = $("#new-doc-btn")
+    spinner = 'Subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+    $btn.html(spinner).prop('disabled', true);
+    $("#new-doc-form").submit().then(() => {
+      alert("something")
+    })
+
+  })
+</script>
+{% endblock javascript %}

@@ -1,5 +1,5 @@
-import logging
 import csv
+import logging
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
@@ -71,7 +71,14 @@ def new_doc(request):
                            '</b> fue guardado correctamente. <b>' + \
                            str(lines) + ' líneas</b> agregadas al corpus.'
             messages.add_message(request, messages.INFO, notification)
-            return HttpResponseRedirect("/corpus-admin/")
+            return HttpResponseRedirect('/corpus-admin/')
+        else:
+            if "nombre" in form.errors:
+                form.fields["nombre"].widget.attrs["class"] += " is-invalid"
+            else:
+                form.fields["nombre"].widget.attrs["class"] += " is-valid"
+            messages.error(request, "Llena todos los campos")
+            return render(request, "corpus-admin/new-doc.html", {'form': form})
     else:
         form = NewDocumentForm()
         return render(request, "corpus-admin/new-doc.html", {'form': form})
@@ -226,6 +233,7 @@ def delete_doc(request):
         través del sistema
     * `:type:` *HttpRequest*
     """
+    # TODO: Agregar excepcion cuando haya error de conexion
     if request.method == "POST":
         document_id = request.POST.get('doc_id')
         query = {"query": {"term": {"document_id": document_id}}}
@@ -239,7 +247,7 @@ def delete_doc(request):
 def export_data(request):
     project_name = settings.NAME
     response = HttpResponse(content_type="text/csv")
-    response['Content-Disposition'] = f"attachment; filename='{project_name}-data.csv'"
+    response['Content-Disposition'] = f"attachment; filename={project_name}-data.csv"
     writer = csv.writer(response)
     csv_header = ["l1", "l2", "variant", "document_name",
                   "pdf_file", "document_id"]
