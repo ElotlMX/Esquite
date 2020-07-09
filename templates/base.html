@@ -121,9 +121,6 @@
 
   {% block content %}
   {% endblock %}
-
-  {% block panchito %}
-  {% endblock panchito %}
 </div>
 
 <hr >
@@ -132,12 +129,12 @@
   {{ PROJECT_NAME }} 2020 | Hecho con <i class="fa fa-heart"></i> por <a href="https://elotl.mx">Comunidad Elotl</a>
 </footer>
 </body>
-<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
-<script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'data-tables/datatables.min.js' %}"></script>
-<script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
-<script src="{% static 'js/select2.full.min.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'data-tables/datatables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/sweetalert2.all.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 {% block javascript %}{% endblock %}
 </html>

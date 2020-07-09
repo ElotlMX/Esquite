@@ -113,6 +113,7 @@
   <script>
     $(function(){
       let $deleteBtn = $(".delete-doc-btn")
+
       $deleteBtn.click((event) => {
 	    event.preventDefault()
         Swal.fire({
@@ -125,7 +126,6 @@
           confirmButtonText: 'Si, borrar',
           cancelButtonText: 'Cancelar',
         }).then((result) => {
-          console.debug('RES', result)
           if(result.value){
             let document_id = event.target.value
             let csrftoken = $("[name=csrfmiddlewaretoken]").val()
@@ -160,8 +160,8 @@
               'error'
             )
           }
-        })
-      })
+        }); // End of Swal Delete Doc
+      }) // End btnDelete event
     });
   </script>
 {% endblock %}
