@@ -19,10 +19,10 @@ def set_project_info(config):
     """
     # Redes por defecto
     social = ["site", "blog", "email", "facebook", "twitter", "github"]
-    config['ORG_NAME'] = input("Nombre de la organización>> ").upper()
-    config['NAME'] = input("Nombre del proyecto>> ").upper()
-    config['L1'] = input("Primera lengua del corpus (l1)>> ").title()
-    config['L2'] = input("Segunda lengua del corpus (l2)>> ").title()
+    config['ORG_NAME'] = input("\t * Nombre de la organización>> ").upper()
+    config['NAME'] = input("\t * Nombre del proyecto>> ").upper()
+    config['L1'] = input("\t * Primera lengua del corpus (l1)>> ").title()
+    config['L2'] = input("\t * Segunda lengua del corpus (l2)>> ").title()
     # Colaboradoras vacio por defecto
     config['COLABS'] = []
     config['SOCIAL'] = {k: "" for k in social}
@@ -78,13 +78,13 @@ def set_services(config):
     notification = "\n🛑 El corpus requiere que exista un indice de\n" + \
                    "Elasticsearch con las configuraciones que se indican\n" + \
                    "en la documentación 🛑\n"
-    print("⚙" * 60 + notification + "⚙" * 60)
-    config['INDEX'] = input('Índice de Elasticsearch>> ')
-    protocol = input("Protocolo HTTP o HTTPS [http]>>")
-    ip = input("Nombre o IP del servidor de Elasticsearch [localhost]>>")
-    port = input("Puerto del servidor de Elasticsearch [9200]>>")
+    print("⚙" * 55 + notification + "⚙" * 55)
+    config['INDEX'] = input('\t * Índice de Elasticsearch>> ')
+    protocol = input("\t * Protocolo HTTP o HTTPS [http]>>")
+    ip = input("\t * Nombre o IP del servidor de Elasticsearch [localhost]>>")
+    port = input("\t * Puerto del servidor de Elasticsearch [9200]>>")
     config['URL'] = set_url(protocol, ip, port)
-    config['GOOGLE_ANALYTICS'] = input('Token Google Analytics (OPCIONAL)>> ')
+    config['GOOGLE_ANALYTICS'] = input('\t * Token Google Analytics (OPCIONAL)>> ')
     return config
 
 
@@ -100,54 +100,23 @@ def set_colors(config):
              proyecto
     :rtype: dict
     """
-    primary_color = input('Primario [#ffffff]>>#') or "ffffff"
-    secondary_color = input('Secundario [#000000]>>#') or "000000"
-    r = compute_color(int(primary_color[:2], base=16))
-    g = compute_color(int(primary_color[2:4], base=16))
-    b = compute_color(int(primary_color[4:], base=16))
-    config['PRIMARY_COLOR'] = '#' + primary_color
-    config['SECONDARY_COLOR'] = '#' + secondary_color
-    config['TEXT_COLOR'] = get_text_color(r, g, b)
-    config['ALT_TEXT'] = "#000000" if config['TEXT_COLOR'][-1] == 'f' else '#ffffff'
+    config['COLORS'] = {"text": {}, "background": {}, "border": {}}
+    background_color = input('\t * Color de fondo [#ffffff]>>') or "#ffffff"
+    text_color = input('\t * Color de texto [#000000]>>') or "#000000"
+    highlight_color = input('\t * Color de resaltado [#000000]>>') or "#000000"
+    text_fields = {
+        "highlight": highlight_color, "result": text_color, "nav": text_color,
+        "form": text_color, "button": text_color, "hover": highlight_color
+    }
+    background_fields = {
+        "nav": background_color, "form": background_color,
+        "button": background_color, "hover": text_color
+    }
+    border_fields = {"button": text_color}
+    config['COLORS']['text'] = text_fields
+    config['COLORS']['background'] = background_fields
+    config['COLORS']['border'] = border_fields
     return config
-
-
-def compute_color(c):
-    """Convierte de sRGB a RGB líneal
-
-    Se toma un color con su representación decimal y retorna el color en RGB
-    líneal
-
-    :param c: Color
-    :type: int
-    :return: Color en RGB líneal
-    :rtype: float
-    """
-    # Referencia:
-    # ``https://stackoverflow.com/questions/3942878/how-to-decide-font-color-in-white-or-black-depending-on-background-color/``
-    c /= 255.0
-    return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
-
-
-def get_text_color(r, g, b):
-    """ Obtiene el color del texto
-
-    Dada la luminocidad del color retorna el color del texto para que
-    contraste con el color de fondo previamente configurado
-
-    :param r: color rojo en RGB líneal
-    :type: float
-    :param g: color verde en RGB líneal
-    :type: float
-    :param b: color azul en RGB líneal
-    :type: float
-    :return: Cadena con color negro o blanco en hexadecimal
-    :rtype: str
-    """
-    # Referencia:
-    # ``https://www.w3.org/TR/WCAG20/#relativeluminancedef``
-    luminosity = 0.2126 * r + 0.7152 * g + 0.0722 * b
-    return "#000000" if luminosity > 0.179 else "#ffffff"
 
 
 def main():
@@ -156,21 +125,26 @@ def main():
     Genera token secreto del proyecto y escribe las configuraciones
     en el archivo ``env.yaml`` en la raíz del proyecto.
     """
-    print("Asistente de configuración del backend 🧙\n\n")
+    print("Asistente de configuración del backend 🧙\n")
+    print("# Configuraciones Generales (1/3)")
     config = set_project_info({})
-    print("Generando token secreto")
+    # Generando Token Secreto
     config['SECRET_KEY'] = secrets.token_urlsafe(50)
-    config['DEBUG'] = 'False'
+    # Dejando por defecto el modo Debug Encendido
+    config['DEBUG'] = 'True'
+    print("# Configuracion de servicios (2/3)")
     config = set_services(config)
     # Vacio por defecto
     config['KEYBOARD'] = []
-    print("Colores del proyecto (HEXADECIMALES)")
+    print("# Colores del proyecto (HEXADECIMALES) (3/3)")
     config = set_colors(config)
-    print("Generando archivo para la configuración:")
+    print("# Generando archivo para la configuración:")
+    print("⚙"*50)
     pprint(config)
+    print("⚙"*50)
     with open("env.yaml", 'w') as conf_file:
         yaml.dump(config, conf_file)
-    print("Terminado :)")
+    print("# Terminado :)")
 
 
 if __name__ == "__main__":
