@@ -26,20 +26,20 @@
 				background: {{ COLORS.background.form }};
     }
 
+		/* Color de la barra  de  navegacion*/
     nav > a.navbar-brand, .nav-link{
       color: {{ COLORS.text.nav }} !important;
     }
 
-    /* Colores del boton que realiza la búsqueda */
+    /* Colores de botones */
     #search-btn, #export-btn, .buttons-csv, .buttons-excel, .btn-keyboard{
 			background-color: {{ COLORS.background.button }};
-			border: 3px {{ COLORS.border.button }};
+			border: 3px solid {{ COLORS.border.button }};
 			color: {{ COLORS.text.button }};
     }
 
-
-    /* Colores del teclado */
-    .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover{
+    /* Colores de botones cuando pasa el mouse sobre ellos */
+    .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover, #export-btn:hover{
 				background-color: {{ COLORS.background.hover }};
         font-weight: bold;
 				color: {{ COLORS.text.hover }};
@@ -51,7 +51,7 @@
         font-style: italic;
     }
 
-    /* El texto resaltado en general */
+    /* Color del texto resaltado en general */
     b{
 			color: {{ COLORS.text.highlight }};
     }
