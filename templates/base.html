@@ -22,43 +22,38 @@
 
     /* Colores del formulario de búsqueda */
     #form-container{
-        color: {{ TEXT_COLOR }};
-        background: {{ PRIMARY_COLOR }};
+        color: {{ COLORS.text.form }};
+				background: {{ COLORS.background.form }};
     }
 
     nav > a.navbar-brand, .nav-link{
-      color: {{ TEXT_COLOR }} !important;
+      color: {{ COLORS.text.nav }} !important;
     }
 
     /* Colores del boton que realiza la búsqueda */
     #search-btn, #export-btn, .buttons-csv, .buttons-excel, .btn-keyboard{
-        background-color: {{ SECONDARY_COLOR }};
-        border: 3px {{ PRIMARY_COLOR }};
-        color: {{ ALT_TEXT }};
+			background-color: {{ COLORS.background.button }};
+			border: 3px {{ COLORS.border.button }};
+			color: {{ COLORS.text.button }};
     }
 
 
     /* Colores del teclado */
-    .btn-keyboard:hover, #search-btn:hover{
+    .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover{
+				background-color: {{ COLORS.background.hover }};
         font-weight: bold;
-        color: {{ ALT_TEXT }};
+				color: {{ COLORS.text.hover }};
     }
 
     /* Colores del resultado de busqueda en forma textual */
     .result-notify{
-        color: {{ SECONDARY_COLOR }};
+				color: {{ COLORS.text.result }};
         font-style: italic;
-    }
-
-    /* Botones de la pagina de Participantes */
-    .contact-btn:hover{
-        background-color: {{ SECONDARY_COLOR }};
-        color: {{ TEXT_COLOR }};
     }
 
     /* El texto resaltado en general */
     b{
-      color: {{ SECONDARY_COLOR }};
+			color: {{ COLORS.text.highlight }};
     }
 
     /* Colores de la línea separador */
@@ -75,7 +70,7 @@
   {% endif %}
 <div class="container">
   <img class="img-fluid" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
-  <nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-light" style="background: {{ PRIMARY_COLOR }}">
+	<nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-light" style="background: {{ COLORS.background.nav }}">
     <a href="{% url 'index' %}" class="navbar-brand">{{ PROJECT_NAME }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tsunkua-navbar"
             aria-controls="tsunkua-navbar" aria-expanded="false" aria-label="Toggle navigation">

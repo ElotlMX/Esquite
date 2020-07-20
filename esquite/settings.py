@@ -16,8 +16,7 @@ except FileNotFoundError:
     print("[ERROR] Archivo de configuración env.yaml no encontrado")
     # Setting dummy dict for build the docs correctly at Read The Docs
     env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
-           "KEYBOARD": [], "PRIMARY_COLOR": "", "SECONDARY_COLOR": "",
-           "TEXT_COLOR": "", "ALT_TEXT": "", "L1": "", "L2": "",
+           "KEYBOARD": [], "COLORS": [], "L1": "", "L2": "",
            "INDEX": "test", "SOCIAL": [], "URL": "localhost", "COLABS": [],
            "NAME": "", "GOOGLE_ANALYTICS": ""}
 
@@ -39,13 +38,7 @@ KEYBOARD = env['KEYBOARD']
 
 # Colores
 
-PRIMARY_COLOR = env['PRIMARY_COLOR']
-
-SECONDARY_COLOR = env['SECONDARY_COLOR']
-
-TEXT_COLOR = env['TEXT_COLOR']
-
-ALT_TEXT = env['ALT_TEXT']
+COLORS = env['COLORS']
 
 # Lenguas
 

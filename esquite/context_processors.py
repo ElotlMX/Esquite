@@ -16,9 +16,7 @@ def languages(request):
 
 def colors(request):
     """**Configura variables de entorno para los colores**"""
-    return {'PRIMARY_COLOR': settings.PRIMARY_COLOR,
-            'SECONDARY_COLOR': settings.SECONDARY_COLOR,
-            'TEXT_COLOR': settings.TEXT_COLOR, 'ALT_TEXT': settings.ALT_TEXT}
+    return {'COLORS': settings.COLORS}
 
 
 def project_info(request):
