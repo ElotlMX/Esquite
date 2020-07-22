@@ -20,7 +20,7 @@ django.setup()
 
 # -- Project information -----------------------------------------------------
 
-project = 'Corpus Paralelo Backend'
+project = 'Esquite'
 copyright = '2020, Comunidad Elotl'
 author = 'Comunidad Elotl'
 
