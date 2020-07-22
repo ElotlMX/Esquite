@@ -183,20 +183,19 @@ def variant_to_query(variantes):
 
 
 def results_to_csv(data_response, variants):
-    """**Función que escribe los resultados de la consulta en archivo
-    csv**
+    """**Función que escribe los resultados de la consulta en archivo csv**
 
     Guarda los resultados de la consulta en formato ``csv`` en caso de
     que la usuaria quiera descargarlos.
 
-    :param data_response: Resultados de la consulta devueltos por el
-    índice de ``elasticsearch``
+    :param data_response: Resultados de la consulta devueltos
+        por el índice de ``elasticsearch``
     :type: list
     :param variants: Variantes actuales para saber si escribir variante
-    o dejar el campo vacío.
+        o dejar el campo vacío.
     :type: dict
     :return: Estatus del archivo. ``True`` si fue escrito, ``False`` en
-    caso contrario
+        caso contrario
     :rtype: bool
     """
     row = []

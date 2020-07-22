@@ -9,7 +9,10 @@ Bienvenidx a la documentación de Esquite
 Framework para administrar corpus paralelos
 -------------------------------------------
 
-Este framework está destinado para las personas que poseen corpus paralelos (textos bilingües) y deseen generar un sistema web que les permita subir estos documentos, administrarlos y realizar búsquedas de palabras y frases en las dos lenguas. Se rescatan las siguientes consideraciones técnicas:
+Este framework está destinado para las personas que poseen corpus paralelos
+(textos bilingües) y deseen generar un sistema web que les permita subir estos
+documentos, administrarlos y realizar búsquedas de palabras y frases en las dos
+lenguas. Se rescatan las siguientes consideraciones técnicas:
 
 
 * **Vistas**: Estas funciones se encargan de procesar los datos que otorgan

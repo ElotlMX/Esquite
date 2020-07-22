@@ -20,23 +20,39 @@ Archivo de configuración
 
 .. code-block:: yaml
 
-    ALT_TEXT: '#ffffff'
     COLABS:
-    - Hari Seldon
-    - Salvon Hardin
-    - Hober Mallow
-    - Bayta Darrell
-    - Arkady Darrell
-    DEBUG: 'False'
+      - Hari Seldon
+      - Salvon Hardin
+      - Hober Mallow
+      - Bayta Darrell
+      - Arkady Darrell
+    DEBUG: 'True'
     KEYBOARD:
+      - a
+      - b
+      - c
+      - d
     GOOGLE_ANALYTICS: 'UA-XXXXXXXXX-X'
     INDEX: index-name
     LANG_1: "Español"
     LANG_2: "Galactico"
     NAME: ENCICLOPEDIA GALACTICA
     ORG_NAME: FUNDACION
-    PRIMARY_COLOR: '#ffffff'
-    SECONDARY_COLOR: '#000000'
+    COLORS:
+        background:
+          button: '#ffffff'
+          form: '#ffffff'
+          hover: '#000000'
+          nav: '#ffffff'
+        border:
+          button: 'black'
+        text:
+          button: '#000000'
+          form: '#000000'
+          highlight: '#000000'
+          hover: 'white'
+          nav: '#000000'
+          result: '#000000'
     SECRET_KEY: '"<llave-secreta-autogenerada>"'
     SOCIAL:
       site: https://example.com/
@@ -45,25 +61,26 @@ Archivo de configuración
       facebook: https://www.facebook.com/fundacion/
       twitter: https://twitter.com/fundacion/
       github: https://github.com/fundacion/
-    TEXT_COLOR: '#000000'
     URL: http://elasticsearch-ip:9600/
 
 .. warning::
 
-    La variable llamada ``DEBUG`` está establecida por defecto en ``FALSE``
-    siguiendo las recomendaciones de seguridad de ``django`` para un entorno
-    de **producción**.
+    La variable llamada ``DEBUG`` está establecida por defecto en ``True``
+    dado que es mas conveniente. Pero, las recomendaciones de seguridad
+    de ``django`` sugieren el modo ``DEBUG`` en ``False`` para un entorno de
+    **producción**.
 
-    En este estado el servidor web de ``django`` no está habilitado, por
-    lo que, los archivos estáticos (``js``, ``css``, imagenes, entre otros)
-    no se cargarán. Para ello se deberá configurar un servidor web externo
-    como `nginx <https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/>`_
+    Sin embargo, con el modo ``DEBUG`` en ``False`` el servidor web de
+    ``django`` no está habilitado, por lo que, los archivos estáticos (``js``,
+    ``css``, imagenes, entre otros) no se cargarán. Para ello se deberá
+    configurar un servidor web externo como `nginx
+    <https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/>`_
     , `apache <https://httpd.apache.org/download.cgi>`_ u otro.
 
-    Si se está en un entorno de **desarrollo** se puede cambiar el valor
-    de la variable a ``TRUE`` con lo que se habilitará el servidor web de
-    ``django``. Además, si existen excepciones se mostrará un detallado
-    *traceback*, que incluye muchos metadatos del entorno, en el navegador web.
+    El valor de la variable ``DEBUG`` en ``True`` es para un entorno de
+    **desarrollo**. En este entorno se habilitará el servidor web de
+    ``django``. Además, si hubiese un error se mostraran, en el navegador, un
+    detallado *traceback* que incluye muchos metadatos del entorno.
 
     Recomendamos ampliamente leer la
     `documentación sobre esta variable <https://docs.djangoproject.com/en/2.2/ref/settings/#std:setting-DEBUG>`_
