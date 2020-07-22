@@ -172,7 +172,7 @@ def download_results(request):
         with open(file_path, 'r') as csv_file:
             data = csv_file.read()
         response = HttpResponse(data, content_type="text/csv")
-        response['Content-Disposition'] = f"inline; filename='query-data.csv'"
+        response['Content-Disposition'] = f"inline; filename=resultados.csv"
         return response
     raise Http404
 
