@@ -1,5 +1,5 @@
-Programa de intalación wizard.py
-================================
+Asistente de instalación ``wizard.py``
+======================================
 
 Este programa se encarga de asistir a la usuaria a generar el archivo
 ``env.yaml`` que contiene las configuraciones generales del proyecto.

@@ -1,5 +1,5 @@
-esquite app
-=========
+Modulo ``esquite``
+==================
 
 Variables de entorno
 --------------------

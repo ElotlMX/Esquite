@@ -1,5 +1,5 @@
-corpus\_admin app
-=================
+Modulo ``corpus_admin``
+=======================
 
 Formularios
 -----------

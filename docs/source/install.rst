@@ -1,3 +1,5 @@
+.. _instalation:
+
 Instalación
 ===========
 
