@@ -13,7 +13,7 @@ Puedes revisar nuestra [documentación](https://esquite.readthedocs.io/es/latest
 
 ## Dependencias
 
-* [Elasticsearch 7.0](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-install.html)
+* [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html)
 * `python3.6` o mayor
 * `pip`
 * `virtualenv`
