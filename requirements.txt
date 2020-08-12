@@ -13,6 +13,7 @@ decorator==4.4.2
 Django==2.2.13
 django-celery==3.3.1
 django-google-analytics-app==4.4.0
+djangorestframework==3.11.1
 docutils==0.15.2
 elasticsearch==7.0.2
 gitdb==4.0.2
