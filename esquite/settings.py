@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'searcher.apps.SearcherConfig',
     'corpus_admin.apps.DocsAdminConfig',
     'google_analytics',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
