@@ -3,38 +3,32 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Bienvenidx a la documentación de Esquite
-========================================
+Bienvenidx a la documentación de Esquite 🌽
+===========================================
 
-Framework para administrar corpus paralelos
--------------------------------------------
+Puedes comenzar con la instalación :ref:`instalation` del *framework* y despues
+seguir alguno de nuestros tutoriales :ref:`tutorials` para que configures y
+personalices tu propia instancia de Esquite.
 
-Este framework está destinado para las personas que poseen corpus paralelos
-(textos bilingües) y deseen generar un sistema web que les permita subir estos
-documentos, administrarlos y realizar búsquedas de palabras y frases en las dos
-lenguas. Se rescatan las siguientes consideraciones técnicas:
+¿Qué es Esquite?
+^^^^^^^^^^^^^^^^
 
+Esquite es un *framework* de software libre destinado a personas que poseen
+corpus paralelos (textos bilingües) y que desean tener un sistema web que les
+permita subir, administrar realizar búsquedas de palabras o frases en sus
+corpus.
 
-* **Vistas**: Estas funciones se encargan de procesar los datos que otorgan
-  las usuarias para ser procesados y posteriormente *renderean* los archivos
-  ``html`` con la información solicitada. Ej: Una consulta al índice de
-  Elasticsearch, las personas involucradas en el proyecto, etc.
-* **Rutas**: En esta sección se configuran el nombre de las rutas del proyecto.
-  Las rutas son el texto que aparece en la parte superior del navegador.
-  Por ejemplo las que se muestran a continuación:
+Este software esta basado en ``django`` y utiliza ``elasticsearch`` como motor
+de búsquedas y gestión de documentos. Una instancia del *framework* es el
+corpus paralelo `TSU̱NKUA <https://tsunkua.elotl.mx/>`_ que permite consultar
+documentos bilingües digitalizados y alineados de distintas variantes del
+otomí.
 
-  * ``https://micorpus/about/``
-  * ``https://micorpus/media/visiondelosvencidoshnahnu.pdf/``
-
-* **Formularios**: Los formularios mostrados en las vistas son generados por
-  medio de las clases de ``django`` ya que brindan ventajas conrespecto a
-  validaciones, paso de datos de las vistas a los controladores, etc.
-* **Funciones auxiliares**: Funciones que son útiles en diversos escenarios.
-  Sobre todo es un archivo para organizar funciones con diversos propositos.
+Tabla de contenidos
+-------------------
 
 .. toctree::
    :maxdepth: 2
-   :caption: Aplicaciones:
 
    install
    tutorials
@@ -43,8 +37,8 @@ lenguas. Se rescatan las siguientes consideraciones técnicas:
    corpus_admin
    wizard
 
-Indices and tables
-==================
+Indices
+=======
 
 * :ref:`genindex`
 * :ref:`modindex`

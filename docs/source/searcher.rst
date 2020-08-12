@@ -1,5 +1,5 @@
-searcher app
-============
+Modulo ``searcher``
+===================
 
 Formularios
 ------------

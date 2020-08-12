@@ -2,51 +2,51 @@
 	"settings": {
 		"index": {
 			"number_of_shards": 1,
-			 "analysis": {
-		      "filter": {
-		        "spanish_stop": {
-		          "type":       "stop",
-		          "stopwords":  "_none_"
-		        },
-		        "spanish_stemmer": {
-		          "type": "stemmer",
-		          "language": "light_spanish"
-		        }
-		      },
-		      "analyzer": {
-		        "rebuild_spanish": {
-		          "tokenizer":  "standard",
-		          "filter": [
-		            "lowercase",
-		            "spanish_stop",
-		            "spanish_stemmer"
-		          ]
-		        }
-		      }
-		    }
+			"analysis": {
+				"filter": {
+					"spanish_stop": {
+							"type":       "stop",
+							"stopwords":  "_none_"
+						},
+					"spanish_stemmer": {
+						"type": "stemmer",
+						"language": "light_spanish"
+					}
+				},
+				"analyzer": {
+					"rebuild_spanish": {
+						"tokenizer":  "standard",
+						"filter": [
+							"lowercase",
+							"spanish_stop",
+							"spanish_stemmer"
+						]
+					}
+				}
+			}
 		}
 	},
 	"mappings": {
 		"properties": {
-		  "pdf_file": {
-		    "type": "keyword"
-		  },
-		  "document_id": {
-		    "type": "keyword"
-		  },
-		  "document_name": {
-		    "type": "keyword"
-		  },
-		  "l1": {
-		    "type": "text",
-		    "analyzer":"rebuild_spanish"
-		  },
-		  "l2": {
-		    "type": "text"
-		  },
-		  "variant": {
-		    "type": "keyword"
-		  }
+			"pdf_file": {
+				"type": "keyword"
+			},
+			"document_id": {
+				"type": "keyword"
+			},
+			"document_name": {
+				"type": "keyword"
+			},
+			"l1": {
+				"type": "text",
+				"analyzer":"rebuild_spanish"
+			},
+			"l2": {
+				"type": "text"
+			},
+			"variant": {
+				"type": "keyword"
+			}
 		}
 	}
 }
