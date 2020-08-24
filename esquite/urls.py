@@ -12,5 +12,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('search/', include('searcher.urls')),
     path('corpus-admin/', include('corpus_admin.urls')),
+    path('api/v1/', include('api.urls')),
     re_path('^djga/', include('google_analytics.urls')),
 ]

@@ -6,5 +6,4 @@ urlpatterns = [
     path('ethnologue/<str:iso_variant>', views.ethnologue_data,
          name='ethnologue'),
     path('download-results/', views.download_results, name="download_results"),
-    path('api/v1/', views.search_api, name="search-api")
 ]

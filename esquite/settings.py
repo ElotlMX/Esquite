@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'searcher.apps.SearcherConfig',
     'corpus_admin.apps.DocsAdminConfig',
+    'api.apps.ApiConfig',
     'google_analytics',
     'rest_framework',
 ]
