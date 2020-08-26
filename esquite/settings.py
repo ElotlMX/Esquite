@@ -67,11 +67,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'google_analytics',
+    'rest_framework',
+    'rest_framework.authtoken',
     'searcher.apps.SearcherConfig',
     'corpus_admin.apps.DocsAdminConfig',
     'api.apps.ApiConfig',
-    'google_analytics',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -182,6 +183,12 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 # Logging de eventos
 LOGGING = {

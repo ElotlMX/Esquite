@@ -1,7 +1,8 @@
-def api_data_processor(data):
+def api_data_processor(data, limit=0):
     data_set = []
     result = {}
-    for hit in data["hits"]:
+    hits = data["hits"] if not limit else data["hits"][:limit]
+    for hit in hits:
         fields = hit.keys()
         result["document_name"] = hit["_source"]["document_name"]
         result["pdf_file"] = hit["_source"]["pdf_file"]
