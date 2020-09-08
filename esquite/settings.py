@@ -187,7 +187,15 @@ MESSAGE_TAGS = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ]
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'api.throttles.BurstRateUserThrottle',
+        'api.throttles.BurstRateAnonThrottle',
+        'api.throttles.SustainedRateUserThrottle',
+        'api.throttles.SustainedRateAnonThrottle'
+    ],
 }
 
 # Logging de eventos

@@ -6,10 +6,14 @@ from django.conf import settings
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import (api_view, permission_classes,
-                                       authentication_classes)
+                                       authentication_classes,
+                                       throttle_classes)
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from api.throttles import (SustainedRateAnonThrottle, BurstRateAnonThrottle,
+                          SustainedRateUserThrottle, BurstRateUserThrottle)
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
 
@@ -28,6 +32,7 @@ def info(request):
 
 
 @api_view(['POST'])
+@throttle_classes([BurstRateAnonThrottle, SustainedRateAnonThrottle])
 def basic_search(request):
     """Endpoint para busquedas básicas de la API"""
     anon_limit = 10
@@ -47,7 +52,8 @@ def basic_search(request):
 
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticatedOrReadOnly])
+@permission_classes([IsAuthenticated])
+@throttle_classes([BurstRateUserThrottle, SustainedRateUserThrottle])
 def full_search(request):
     if request.method == "POST":
         entries = 0
