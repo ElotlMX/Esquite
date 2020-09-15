@@ -118,6 +118,31 @@ def set_colors(config):
     config['COLORS']['border'] = border_fields
     return config
 
+def api_limits(config):
+    """Establece valores de limites para la API
+
+    Se añaden límites para el consumo de la API incluyendo número de
+    request por hora y día, resultados máximos devueltos para una
+    consulta y el número de proxies en el server.
+
+    :param config: Diccionario con la configuración
+    :type: dict
+    :return: Configuraciones con los límites de la API
+    :rtype: dict
+    """
+    config['API'] = {}
+    # Limites de los request por dia y hora
+    throttles = {'sustain_anon': '50/day', 'burst_anon': '20/hour',
+                 'sustain_user': '200/day', 'burst_user': '50/hour'}
+    # Limite de los resultados devuelve la API
+    limit_results = {'anon': 10, 'user': 100}
+    # Número de proxies en el server
+    config['API']['num_proxies'] = 0
+    config['API']['limit_results'] = limit_results
+    config['API']['throttles'] = throttles
+    return config
+
+
 
 def main():
     """Función principal del asistente de configuración
@@ -138,6 +163,8 @@ def main():
     config['KEYBOARD'] = []
     print("# Colores del proyecto (HEXADECIMALES) (3/3)")
     config = set_colors(config)
+    # Configurando limites para la API
+    config = api_limits(config)
     print("# Generando archivo para la configuración:")
     print("⚙"*50)
     pprint(config)
