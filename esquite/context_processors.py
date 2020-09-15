@@ -51,3 +51,8 @@ def user_templates(request):
         name = view.upper() + "_USER"
         user_views[name] = html_view
     return user_views
+
+
+def api(request):
+    """**Configuraciones de los l+imites para la API**"""
+    return {"API": settings.API}

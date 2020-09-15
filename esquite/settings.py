@@ -18,7 +18,7 @@ except FileNotFoundError:
     env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
            "KEYBOARD": [], "COLORS": [], "L1": "", "L2": "",
            "INDEX": "test", "SOCIAL": [], "URL": "localhost", "COLABS": [],
-           "NAME": "", "GOOGLE_ANALYTICS": ""}
+           "NAME": "", "GOOGLE_ANALYTICS": "", "API": {"num_proxies": 0}}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(env['DEBUG'])
@@ -47,6 +47,10 @@ L1 = env['L1']
 L2 = env['L2']
 
 INDEX = env["INDEX"]
+
+# API limits
+
+API = env['API']
 
 # Social links
 
@@ -104,7 +108,7 @@ TEMPLATES = [
                 'esquite.context_processors.colors',
                 'esquite.context_processors.project_info',
                 'esquite.context_processors.google_analytics',
-
+                'esquite.context_processors.api',
             ],
         },
     },
@@ -196,6 +200,7 @@ REST_FRAMEWORK = {
         'api.throttles.SustainedRateUserThrottle',
         'api.throttles.SustainedRateAnonThrottle'
     ],
+    'NUM_PROXIES': API['num_proxies'],
 }
 
 # Logging de eventos

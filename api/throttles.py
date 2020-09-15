@@ -1,17 +1,20 @@
+from django.conf import settings
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+
+THROTTLES = settings.API['throttles']
 
 class SustainedRateAnonThrottle(AnonRateThrottle):
     scope = 'anon-sustained'
-    rate = '50/day'
+    rate = THROTTLES['sustain_anon']
 
 class BurstRateAnonThrottle(AnonRateThrottle):
     scope = 'anon-burst'
-    rate = '20/hour'
+    rate = THROTTLES['burst_anon']
 
 class SustainedRateUserThrottle(UserRateThrottle):
     scope = 'user-sustained'
-    rate = '200/day'
+    rate = THROTTLES['sustain_user']
 
 class BurstRateUserThrottle(UserRateThrottle):
     scope = 'user-burst'
-    rate = '50/hour'
+    rate = THROTTLES['burst_user']

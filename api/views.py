@@ -35,7 +35,7 @@ def info(request):
 @throttle_classes([BurstRateAnonThrottle, SustainedRateAnonThrottle])
 def basic_search(request):
     """Endpoint para busquedas básicas de la API"""
-    anon_limit = 10
+    anon_limit = settings.API['limit_results']['anon']
     if request.method == "POST":
         variants = ""
         data = request.data
@@ -57,7 +57,7 @@ def basic_search(request):
 def full_search(request):
     if request.method == "POST":
         entries = 0
-        user_limit = 100
+        user_limit = settings.API['limit_results']['user']
         data = request.data
         lang = data["lang"]
         variants = ""
