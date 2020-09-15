@@ -17,3 +17,17 @@ def api_data_processor(data, limit=0):
         data_set.append(result)
         result = {}
     return data_set
+
+
+def get_source_ip(request):
+    """Función encargada de obtener la IP del cliente
+
+    Se obtiene la IP para poder verificar los límites para usuarios
+    anonimos que hagan consultas a la API
+    """
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
