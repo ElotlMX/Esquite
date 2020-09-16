@@ -36,6 +36,7 @@ Tabla de contenidos
    searcher
    corpus_admin
    wizard
+   estructura
 
 Indices
 =======

@@ -58,7 +58,7 @@ muestra un ejemplo
         - ä
         - "'"
 
-.. image:: ../img/keyboard.png
+.. image:: static/img/keyboard.png
 
 .. note::
 
@@ -108,7 +108,7 @@ Modificación del banner
 El banner por defecto puede ser remplazado modificando el archivo
 que se encuentra en la ruta ``static/img/banner.png``. El archivo **debe**
 llamarse ``banner.png``. Se recomienda utilizar una imagen de ``1260 x 270
-pixeles``. 
+pixeles``.
 
 Vistas
 ``````
@@ -137,16 +137,25 @@ archivo ``templates/user/help-user.html``. Si agregas el siguiente código
   </ul>
 
 
-.. image:: ../img/help-user.png
+.. image:: static/img/help-user.png
 
 Administración del corpus
 -------------------------
 
+La aplicación provee una interfase interna de *administración del corpus*.
+Para acceder al administrador se debe introducir la *URL* directamente en
+el navegador y es la siguiente ``https://<micorpus.com>/corpus-admin/``,
+dónde ``<micorpus.com>`` dependerá de las configuraciones personales de
+dominio.
+
+.. note::
+
+  Si está en un entorno local ``<micorpus.com>`` debería ser sustituido
+  por ``localhost:8000`` con lo que la *URL* será ``http://localhost:8000/corpus_admin/``
+
 Subida de documentos
 ````````````````````
 
-La aplicación provee una interface interna de *administración del corpus* que
-puede encontrarse en la url ``https://micorpus.com/corpus-admin/``.
 Si se quiere subir material al corpus deberá ser en formato ``.csv``
 (**separado por comas**).
 
@@ -154,7 +163,7 @@ Es **indispensable** que exista la cabecera ya que la primer línea
 del archivo se **ignora** por defecto. Actualmente se tiene la siguiente
 convención para la subida de nuevos documentos
 
-.. image:: ../img/corpus_table.png
+.. image:: static/img/corpus_table.png
 
 Primera columna la lengua l1 (en este ejemplo español), segunda columna la
 lengua l2 (en este ejemplo otomí) y en la última columna la variante. Además,

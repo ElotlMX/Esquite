@@ -21,7 +21,7 @@ Instalación
     asistente de configuración :func:`wizard`.
 
 1. Clona el repositorio::
-        
+
     $ git clone https://github.com/ElotlMX/esquite
 
 2. Crea un entorno virtual de ``python``::
@@ -41,6 +41,12 @@ Instalación
 
     (env)$ python wizard.py
 
-6. Correr ``django`` en segundo plano::
+6. Aplicar migraciones de ``django``::
 
-    (env)$ python manage.py runserver 0.0.0.0:3000 &
+    (env)$ python manage.py migrate
+
+7. Correr ``django`` en segundo plano::
+
+    (env)$ python manage.py runserver 0.0.0.0:8000 &
+
+
