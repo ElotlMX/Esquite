@@ -123,8 +123,6 @@ def search(request):
         # Si es metodo GET se redirige a la vista index
         return HttpResponseRedirect('/')
 
-# === Datos de Ethnologue ===
-
 
 def ethnologue_data(request, iso_variant):
     """**Búsca información de la variante en Ethnologue**

@@ -18,7 +18,7 @@ except FileNotFoundError:
     env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
            "KEYBOARD": [], "COLORS": [], "L1": "", "L2": "",
            "INDEX": "test", "SOCIAL": [], "URL": "localhost", "COLABS": [],
-           "NAME": "", "GOOGLE_ANALYTICS": ""}
+           "NAME": "", "GOOGLE_ANALYTICS": "", "API": {"num_proxies": 0}}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(env['DEBUG'])
@@ -48,6 +48,10 @@ L2 = env['L2']
 
 INDEX = env["INDEX"]
 
+# API limits
+
+API = env['API']
+
 # Social links
 
 SOCIAL = env['SOCIAL']
@@ -67,9 +71,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'google_analytics',
+    'rest_framework',
+    'rest_framework.authtoken',
     'searcher.apps.SearcherConfig',
     'corpus_admin.apps.DocsAdminConfig',
-    'google_analytics',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
@@ -101,7 +108,7 @@ TEMPLATES = [
                 'esquite.context_processors.colors',
                 'esquite.context_processors.project_info',
                 'esquite.context_processors.google_analytics',
-
+                'esquite.context_processors.api',
             ],
         },
     },
@@ -180,6 +187,21 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+        'api.throttles.BurstRateUserThrottle',
+        'api.throttles.BurstRateAnonThrottle',
+        'api.throttles.SustainedRateUserThrottle',
+        'api.throttles.SustainedRateAnonThrottle'
+    ],
+    'NUM_PROXIES': API['num_proxies'],
+}
 
 # Logging de eventos
 LOGGING = {
@@ -208,31 +230,27 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose'
         },
-        'requests': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/tsunkua_errors.log'),
-            'maxBytes': 1024*1024*5,  # 5 MB
-            'backupCount': 5,
-            'formatter': 'simple'
-        }
     },
     'loggers': {
         'esquite': {
-            'handlers': ['console', 'file', 'requests'],
+            'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'searcher': {
-            'handlers': ['console', 'file', 'requests'],
-            'level': 'INFO',
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
             'propagate': True,
         },
         'corpus_admin': {
-            'handlers': ['console', 'file', 'requests'],
-            'level': 'INFO',
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'api': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG',
             'propagate': True,
         }
-
     },
 }

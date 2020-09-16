@@ -90,8 +90,6 @@ def data_processor(raw_data, idioma, query):
         data.append(hit['_source'])
     return data
 
-# === Creador de consultas ===
-
 
 def query_kreator(term):
     """Crea la estructura para busquedas en Elasticsearch
@@ -302,9 +300,6 @@ def ethno_btn_maker(variante):
             <i class="fa fa-info"></i>
         </button>'''
     return variante + btn_info
-
-
-# === Obtención de variantes actuales ===
 
 
 def get_variants():
