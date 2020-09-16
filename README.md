@@ -13,13 +13,13 @@ y frases en las dos lenguas.
 ### Características
 
 * Realizar búsquedas avanzadas atreves de tus corpus paralelos gracias al motor
-	de [*Elasticsearch*](https://www.elastic.co/es/)
+	de búsquedas de [*Elasticsearch*](https://www.elastic.co/es/)
 * Gestionar tus documento por medio de su administrador de corpus
 * Personalización de la interfaz web
 	* Colores
 	* Teclado con caracteres especiales (útil para lenguas minorizadas)
 	* Agregar información personalizada a las vistas: **Ayuda**, **Acerca del Corpus**,
-		etc.
+		**Links**, etc.
 * Nuevas características en desarrollo
 
 
@@ -35,6 +35,18 @@ y frases en las dos lenguas.
 ¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
 paralelo en línea? Contactamos: *contacto at elotl.mx*
 
+### Colaboradoras
+
+* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - xim at unam.mx
+* **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - 
+
+### Comunidad 
+
+* Twitter: [@elotlmx](https://twitter.com/elotlmx)
+* Sitio: [https://elotl.mx/](https://elotl.mx)
+* Email: *contacto at elotl.mx*
+
 ## Documentación
 
 Para una [guía de instalación](https://esquite.readthedocs.io/es/latest/install.html)
@@ -42,7 +54,7 @@ completa, [tutoriales](https://esquite.readthedocs.io/es/latest/tutorials.html)
 y estructura del proyecto puedes revisar nuestra
 [documentación](https://esquite.readthedocs.io/es/latest/).
 
-## Dependencias
+### Dependencias
 
 * `git`
 * [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) o mayor
@@ -50,7 +62,7 @@ y estructura del proyecto puedes revisar nuestra
 	* `pip`
 	* Opcional: `virtualenv`: [Guía de instalación virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
 
-## Instalación en servidor
+### Instalación en servidor
 
 1. Instalar y correr `elasticsearch`
 
@@ -109,3 +121,4 @@ y estructura del proyecto puedes revisar nuestra
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
 	```
+
