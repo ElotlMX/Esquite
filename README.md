@@ -10,6 +10,8 @@ Esquite is a *framework* that is intended for people who have parallel corpus
 (bilingual texts) and wish generate a web system that allows to upload these
 documents, manage them and make queries of words and phrases in both languages.
 
+---
+
 Esquite es un *framework* está destinado para las personas que poseen corpus
 paralelos (textos bilingües) y deseen generar un sistema web que les permita
 subir estos documentos, administrarlos y realizar búsquedas de palabras
@@ -26,6 +28,8 @@ y frases en las dos lenguas.
     * Add custom information to the views: **help**, **about corpus**,
       **links**, **etc**.
 * New features in development
+
+---
 
 * Realizar búsquedas avanzadas atreves de tus corpus paralelos gracias al motor
 	de búsquedas de [*Elasticsearch*](https://www.elastic.co/es/)
@@ -49,6 +53,8 @@ y frases en las dos lenguas.
 
 Are you a speaker/studious of a minoritised language and would you like to put
 your parallel corpus online? Contact us: *contacto at elotl.mx*
+
+---
 
 ¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
 paralelo en línea? Contactamos: *contacto at elotl.mx*
@@ -74,6 +80,9 @@ structure you can check our
 [documentation](https://esquite.readthedocs.io/es/latest/).
 
 
+---
+
+
 Para una [guía de instalación](https://esquite.readthedocs.io/es/latest/install.html)
 completa, [tutoriales](https://esquite.readthedocs.io/es/latest/tutorials.html)
 y estructura del proyecto puedes revisar nuestra
@@ -82,7 +91,9 @@ y estructura del proyecto puedes revisar nuestra
 ### Dependencies
 
 * `git`
-* [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) o mayor
+* [Elasticsearch
+  7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html)
+  or higher
 * `python3.6` or higher
 	* `pip`
 	* Optional: `virtualenv`: [virtualenv instalation guide](https://virtualenv.pypa.io/en/latest/installation.html)
@@ -95,6 +106,8 @@ y estructura del proyecto puedes revisar nuestra
 	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
     to complete this step depending on your Operating System
 
+---
+
 1. Instalar y correr `elasticsearch`
 
 	**Nota**: Puedes consultar la página oficial de
@@ -106,6 +119,9 @@ y estructura del proyecto puedes revisar nuestra
 	```shell
 	$ git clone https://github.com/ElotlMX/Esquite
 	```
+
+
+---
 
 2. Clona este repositorio
 
@@ -124,6 +140,9 @@ y estructura del proyecto puedes revisar nuestra
 	$ source env/bin/activate
 	```
 
+---
+
+
 3. Preparación del entorno
 
 	Entrar a la carpeta del proyecto, crea un entorno virtual de `python` con
@@ -140,6 +159,9 @@ y estructura del proyecto puedes revisar nuestra
 	```shell
 	(env)$ pip install -r requirements.txt
 	```
+
+---
+
 
 4. Instalar las dependencias
 
@@ -163,8 +185,8 @@ y estructura del proyecto puedes revisar nuestra
     Where you find `<your-index-name>` you should set the name you would and
     this will be the name of the index to be entered into the installation wizard.
 
-	Donde dice `<nombre-de-tu-indice>` deberás poner el nombre que desees
-	y ese será el nombre del índice para poner en el asistente de instalación.
+---
+
 
 5. Iniciar el asistente de instalación e ingresar los datos que piden
 
@@ -189,6 +211,8 @@ y estructura del proyecto puedes revisar nuestra
 	(env)$ python manage.py migrate
 	```
 
+---
+
 6. Aplicar migraciones de `django`
 
 	```shell
@@ -200,6 +224,8 @@ y estructura del proyecto puedes revisar nuestra
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
 	```
+
+---
 
 6. Correr `django` en segundo plano
 
