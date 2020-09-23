@@ -6,20 +6,14 @@
 
 ## About Esquite
 
-Esquite is a *framework* that is intended for people who have parallel corpus
-(bilingual texts) and wish generate a web system that allows to upload these
-documents, manage them and make queries of words and phrases in both languages.
-
----
-
-Esquite es un *framework* está destinado para las personas que poseen corpus
-paralelos (textos bilingües) y deseen generar un sistema web que les permita
-subir estos documentos, administrarlos y realizar búsquedas de palabras
-y frases en las dos lenguas.
+Esquite is a framework intended for people who have parallel corpus
+(bilingual texts) and wish to get a web system that allows them to upload
+documents, manage them and perform queries based on words and phrases in both
+languages.
 
 ### Features
 
-* Make advance queries through your parallel corpus thanks to the search engine
+* Perform advance queries through your parallel corpus thanks to the search engine
 [*Elasticsearch*](https://www.elastic.co/es/)
 * Manage your documents through the corpus administrator
 * Customization of the Web Client
@@ -28,19 +22,6 @@ y frases en las dos lenguas.
     * Add custom information to the views: **help**, **about corpus**,
       **links**, **etc**.
 * New features in development
-
----
-
-* Realizar búsquedas avanzadas atreves de tus corpus paralelos gracias al motor
-	de búsquedas de [*Elasticsearch*](https://www.elastic.co/es/)
-* Gestionar tus documento por medio de su administrador de corpus
-* Personalización de la interfaz web
-	* Colores
-	* Teclado con caracteres especiales (útil para lenguas minorizadas)
-	* Agregar información personalizada a las vistas: **Ayuda**, **Acerca del Corpus**,
-		**Links**, etc.
-* Nuevas características en desarrollo
-
 
 ### Example: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
@@ -53,11 +34,6 @@ y frases en las dos lenguas.
 
 Are you a speaker/studious of a minoritised language and would you like to put
 your parallel corpus online? Contact us: *contacto at elotl.mx*
-
----
-
-¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
-paralelo en línea? Contactamos: *contacto at elotl.mx*
 
 ### Collaborators
 
@@ -79,15 +55,6 @@ guide](https://esquite.readthedocs.io/es/latest/install.html),
 structure you can check our
 [documentation](https://esquite.readthedocs.io/es/latest/).
 
-
----
-
-
-Para una [guía de instalación](https://esquite.readthedocs.io/es/latest/install.html)
-completa, [tutoriales](https://esquite.readthedocs.io/es/latest/tutorials.html)
-y estructura del proyecto puedes revisar nuestra
-[documentación](https://esquite.readthedocs.io/es/latest/).
-
 ### Dependencies
 
 * `git`
@@ -106,24 +73,7 @@ y estructura del proyecto puedes revisar nuestra
 	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
     to complete this step depending on your Operating System
 
----
-
-1. Instalar y correr `elasticsearch`
-
-	**Nota**: Puedes consultar la página oficial de
-	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-	para completar este paso dependiendo de tu Sistema Operativo
-
 2. Clone this repo
-
-	```shell
-	$ git clone https://github.com/ElotlMX/Esquite
-	```
-
-
----
-
-2. Clona este repositorio
 
 	```shell
 	$ git clone https://github.com/ElotlMX/Esquite
@@ -140,30 +90,7 @@ y estructura del proyecto puedes revisar nuestra
 	$ source env/bin/activate
 	```
 
----
-
-
-3. Preparación del entorno
-
-	Entrar a la carpeta del proyecto, crea un entorno virtual de `python` con
-	`virtualenv` y activarlo
-
-	```shell
-	$ cd Esquite
-	$ virtualenv env -p /usr/bin/python3
-	$ source env/bin/activate
-	```
-
 4. Install dependencies
-
-	```shell
-	(env)$ pip install -r requirements.txt
-	```
-
----
-
-
-4. Instalar las dependencias
 
 	```shell
 	(env)$ pip install -r requirements.txt
@@ -185,35 +112,7 @@ y estructura del proyecto puedes revisar nuestra
     Where you find `<your-index-name>` you should set the name you would and
     this will be the name of the index to be entered into the installation wizard.
 
----
-
-
-5. Iniciar el asistente de instalación e ingresar los datos que piden
-
-	```shell
-	(env)$ python wizard.py
-	```
-
-	**Nota**: El asistente menciona que debemos tener un índice de `elasticsearh`
-	previamente creado. Para crear dicho índice puede ejecutar el siguiente
-	comando.
-
-	```shell
-	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<nombre-de-tu-indice>
-	```
-
-	Donde dice `<nombre-de-tu-indice>` deberás poner el nombre que desees
-	y ese será el nombre del índice para poner en el asistente de instalación.
-
 6. Apply `django` migrations
-
-	```shell
-	(env)$ python manage.py migrate
-	```
-
----
-
-6. Aplicar migraciones de `django`
 
 	```shell
 	(env)$ python manage.py migrate
@@ -224,12 +123,3 @@ y estructura del proyecto puedes revisar nuestra
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
 	```
-
----
-
-6. Correr `django` en segundo plano
-
-	```shell
-	(env)$ python manage.py runserver 0.0.0.0:8000 &
-	```
-

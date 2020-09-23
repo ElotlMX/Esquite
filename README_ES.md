@@ -5,9 +5,9 @@
 
 ## Acerca de Esquite
 
-Esquite es un *framework* está destinado para las personas que poseen corpus
-paralelos (textos bilingües) y deseen generar un sistema web que les permita
-subir estos documentos, administrarlos y realizar búsquedas de palabras
+Esquite es un *framework* que está destinado a personas que poseen corpus
+paralelos (textos bilingües) y que deseen obtener un sistema web que les permita
+subir documentos, administrarlos y realizar búsquedas basadas en palabras
 y frases en las dos lenguas.
 
 ### Características
@@ -39,9 +39,9 @@ paralelo en línea? Contactamos: *contacto at elotl.mx*
 
 * **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - xim at unam.mx
 * **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
-* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - 
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) -
 
-### Comunidad 
+### Comunidad
 
 * Twitter: [@elotlmx](https://twitter.com/elotlmx)
 * Sitio: [https://elotl.mx/](https://elotl.mx)
