@@ -37,9 +37,9 @@ your parallel corpus online? Contact us: *contacto at elotl.mx*
 
 ### Collaborators
 
-* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - xim at unam.mx
+* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
 * **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
-* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) -
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing@jusanet.org*
 
 ### Community
 

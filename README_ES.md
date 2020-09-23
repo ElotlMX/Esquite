@@ -37,9 +37,9 @@ paralelo en línea? Contactamos: *contacto at elotl.mx*
 
 ### Colaboradoras
 
-* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - xim at unam.mx
+* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
 * **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
-* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) -
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing@jusanet.org*
 
 ### Comunidad
 
