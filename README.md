@@ -13,13 +13,13 @@ languages.
 
 ### Features
 
-* Perform advance queries through your parallel corpus thanks to the search engine
+* Perform advanced queries in your parallel corpus thanks to the search engine
 [*Elasticsearch*](https://www.elastic.co/es/)
 * Manage your documents through the corpus administrator
 * Customization of the Web Client
     * Colors
-    * Keyboard with special characters (useful for minoritised languages)
-    * Add custom information to the views: **help**, **about corpus**,
+    * Keyboard with special characters (useful for non-english languages)
+    * Add custom `html` information to the views: **help**, **about corpus**,
       **links**, **etc**.
 * New features in development
 
@@ -32,14 +32,14 @@ languages.
 
 ## Contact
 
-Are you a speaker/studious of a minoritised language and would you like to put
-your parallel corpus online? Contact us: *contacto at elotl.mx*
+Are you a speaker/researcher of a minority language and would like to upload
+your parallel corpus? Contact us: *contacto at elotl.mx*
 
 ### Collaborators
 
-* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
+* **Collaborator:** Xim ([@XimGutierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
 * **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
-* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing@jusanet.org*
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing at jusanet.org*
 
 ### Community
 
@@ -49,7 +49,7 @@ your parallel corpus online? Contact us: *contacto at elotl.mx*
 
 ## Docs
 
-For a full [instalation
+For a full [installation
 guide](https://esquite.readthedocs.io/es/latest/install.html),
 [tutorials](https://esquite.readthedocs.io/es/latest/tutorials.html) and project
 structure you can check our
@@ -79,7 +79,7 @@ structure you can check our
 	$ git clone https://github.com/ElotlMX/Esquite
 	```
 
-3. Environment setting
+3. Environment settings
 
     Change to the directory's project, make a virtual environment of `python`
     with `virtualenv` and activate
@@ -109,8 +109,8 @@ structure you can check our
 	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<nombre-de-tu-indice>
 	```
 
-    Where you find `<your-index-name>` you should set the name you would and
-    this will be the name of the index to be entered into the installation wizard.
+    Replace `<your-index-name>` with the index  name that  will  be used by
+    installation wizard.
 
 6. Apply `django` migrations
 
@@ -118,7 +118,7 @@ structure you can check our
 	(env)$ python manage.py migrate
 	```
 
-6. Run `django` in background
+7. Run `django` in background
 
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
