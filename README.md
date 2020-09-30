@@ -1,85 +1,88 @@
-# Esquite: framework para administrar corpus paralelos 🌽
+# Esquite: framework to manage parallel corpus 🌽
 
 [![Documentation Status](https://readthedocs.org/projects/esquite/badge/?version=latest)](https://esquite.readthedocs.io/es/latest/?badge=latest)
 [![License](https://img.shields.io/github/license/ElotlMX/Esquite?label=Licencia&style=flat)](https://github.com/ElotlMX/Esquite/blob/master/LICENSE)
+[![README ES](https://img.shields.io/badge/README-Espa%C3%B1ol-informational)](https://github.com/ElotlMX/Esquite/blob/master/README_ES.md)
 
-## Acerca de Esquite
+## About Esquite
 
-Esquite es un *framework* está destinado para las personas que poseen corpus
-paralelos (textos bilingües) y deseen generar un sistema web que les permita
-subir estos documentos, administrarlos y realizar búsquedas de palabras
-y frases en las dos lenguas.
+Esquite is a framework intended for people who have parallel corpus
+(bilingual texts) and wish to get a web system that allows them to upload
+documents, manage them and perform queries based on words and phrases in both
+languages.
 
-### Características
+### Features
 
-* Realizar búsquedas avanzadas atreves de tus corpus paralelos gracias al motor
-	de búsquedas de [*Elasticsearch*](https://www.elastic.co/es/)
-* Gestionar tus documento por medio de su administrador de corpus
-* Personalización de la interfaz web
-	* Colores
-	* Teclado con caracteres especiales (útil para lenguas minorizadas)
-	* Agregar información personalizada a las vistas: **Ayuda**, **Acerca del Corpus**,
-		**Links**, etc.
-* Nuevas características en desarrollo
+* Perform advanced queries in your parallel corpus thanks to the search engine
+[*Elasticsearch*](https://www.elastic.co/es/)
+* Manage your documents through the corpus administrator
+* Customization of the Web Client
+    * Colors
+    * Keyboard with special characters (useful for non-english languages)
+    * Add custom `html` information to the views: **help**, **about corpus**,
+      **links**, **etc**.
+* New features in development
 
-
-### Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
+### Example: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
 <p align="center">
 	<img src="https://elotl.mx/wp-content/uploads/2020/07/tsunkua.png" width="40%" height="40%" />
 	<img src="https://elotl.mx/wp-content/uploads/2020/07/export_csv.png" width="52%" height="52%" />
 </p>
 
-## Contacto
+## Contact
 
-¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
-paralelo en línea? Contactamos: *contacto at elotl.mx*
+Are you a speaker/researcher of a minority language and would like to upload
+your parallel corpus? Contact us: *contacto at elotl.mx*
 
-### Colaboradoras
+### Collaborators
 
-* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - xim at unam.mx
+* **Collaborator:** Xim ([@XimGutierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
 * **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
-* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - 
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing at jusanet.org*
 
-### Comunidad 
+### Community
 
 * Twitter: [@elotlmx](https://twitter.com/elotlmx)
-* Sitio: [https://elotl.mx/](https://elotl.mx)
+* Site: [https://elotl.mx/](https://elotl.mx)
 * Email: *contacto at elotl.mx*
 
-## Documentación
+## Docs
 
-Para una [guía de instalación](https://esquite.readthedocs.io/es/latest/install.html)
-completa, [tutoriales](https://esquite.readthedocs.io/es/latest/tutorials.html)
-y estructura del proyecto puedes revisar nuestra
-[documentación](https://esquite.readthedocs.io/es/latest/).
+For a full [installation
+guide](https://esquite.readthedocs.io/es/latest/install.html),
+[tutorials](https://esquite.readthedocs.io/es/latest/tutorials.html) and project
+structure you can check our
+[documentation](https://esquite.readthedocs.io/es/latest/).
 
-### Dependencias
+### Dependencies
 
 * `git`
-* [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) o mayor
-* `python3.6` o mayor
+* [Elasticsearch
+  7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html)
+  or higher
+* `python3.6` or higher
 	* `pip`
-	* Opcional: `virtualenv`: [Guía de instalación virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
+	* Optional: `virtualenv`: [virtualenv instalation guide](https://virtualenv.pypa.io/en/latest/installation.html)
 
-### Instalación en servidor
+### Installation
 
-1. Instalar y correr `elasticsearch`
+1. Install and run `elasticsearch`
 
-	**Nota**: Puedes consultar la página oficial de
+    **Note**: You can check the official page of
 	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-	para completar este paso dependiendo de tu Sistema Operativo
+    to complete this step depending on your Operating System
 
-2. Clona este repositorio
+2. Clone this repo
 
 	```shell
 	$ git clone https://github.com/ElotlMX/Esquite
 	```
 
-3. Preparación del entorno
+3. Environment settings
 
-	Entrar a la carpeta del proyecto, crea un entorno virtual de `python` con
-	`virtualenv` y activarlo
+    Change to the directory's project, make a virtual environment of `python`
+    with `virtualenv` and activate
 
 	```shell
 	$ cd Esquite
@@ -87,38 +90,36 @@ y estructura del proyecto puedes revisar nuestra
 	$ source env/bin/activate
 	```
 
-4. Instalar las dependencias
+4. Install dependencies
 
 	```shell
 	(env)$ pip install -r requirements.txt
 	```
 
-5. Iniciar el asistente de instalación e ingresar los datos que piden
+5. Launch the installation wizard and enter the data requested
 
 	```shell
 	(env)$ python wizard.py
 	```
 
-	**Nota**: El asistente menciona que debemos tener un índice de `elasticsearh`
-	previamente creado. Para crear dicho índice puede ejecutar el siguiente
-	comando.
+    **Note**: The wizard displays that we need an `elasticsearch` index previously
+    created. To create this index you can run the `curl` command below
 
 	```shell
 	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<nombre-de-tu-indice>
 	```
 
-	Donde dice `<nombre-de-tu-indice>` deberás poner el nombre que desees
-	y ese será el nombre del índice para poner en el asistente de instalación.
+    Replace `<your-index-name>` with the index  name that  will  be used by
+    installation wizard.
 
-6. Aplicar migraciones de `django`
+6. Apply `django` migrations
 
 	```shell
 	(env)$ python manage.py migrate
 	```
 
-6. Correr `django` en segundo plano
+7. Run `django` in background
 
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
 	```
-
