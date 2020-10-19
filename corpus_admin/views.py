@@ -1,10 +1,12 @@
 import csv
 import logging
+import json
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
-from .forms import NewDocumentForm, DocumentEditForm, AddDocumentDataForm
+from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
+                   IndexConfigForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info)
 from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
@@ -286,3 +288,28 @@ def export_data(request):
             row.append(data["document_id"])
         writer.writerow(row)
     return response
+
+
+def index_config(request):
+    """Configura un índice de elasticsearch
+
+    Permite configurar o modificar la configuración de un índice de
+    elasticsearch por medio de un formulario.
+
+    :returns: None
+    """
+    with open("elastic-config.json", 'r') as f:
+        json_file = f.read()
+    data = json.loads(json_file)
+    index_name = settings.INDEX
+    form = IndexConfigForm(initial={'index_name': index_name,
+                                    'settings': json.dumps(data['settings'],
+                                                           indent=2,
+                                                           sort_keys=True),
+                                    'mapping': json.dumps(data['mappings'],
+                                                          indent=2,
+                                                         sort_keys=True)})
+    return render(request, "corpus-admin/index-config.html",
+                  {
+                      "form": form, "index_name": index_name
+                  })

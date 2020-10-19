@@ -8,5 +8,6 @@ urlpatterns = [
     path('edit/<str:_id>', views.doc_edit, name='edit'),
     path('add/<str:_id>', views.add_doc_data, name='add'),
     path('delete/', views.delete_doc, name='delete'),
-    path('export-corpus-data/', views.export_data, name="export-corpus-data")
+    path('export-corpus-data/', views.export_data, name="export-corpus-data"),
+    path('index-config/', views.index_config, name="index-config")
 ]

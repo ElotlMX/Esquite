@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+   <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="mt-3">Configuración del índice</h1>
+        <h2 class="mt-3"><i class="fa fa-file-text-o"></i> {{ index_name }} |
+         <span data-toggle="tooltip" data-placement="right"
+             title="Mostrar configuraciones avanzadas de elasticsearch">
+             <button type="button"
+                     id="advance-settings-config"
+                     class="btn btn-danger"
+                     data-toggle="modal"
+                     data-target="#advance-settings-modal">
+             Modo avanzado <i class="fa fa-code"></i></button>
+         </span>
+        </h2>
+
+      </div>
+    </div>
+    <hr class="mb-3"/>
+    <div class="jumbotron pt-5 pb-2" id="index-editor-form-container">
+    <form action="{% url 'index-config' %}" id="index-config-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <h4>Configuraciones de las lenguas</h4>
+      <div class="form-row">
+          <div class="form-group col-md-10 col-sm-12">
+            <label for="id_l1" class="col-sm-2 col-form-label">{{ form.l1.label }}</label>
+              {{ form.l1 }}
+          </div>
+          <div class="form-group col-md-2 col-sm-6">
+            <label for="id_l1_analizers" class="col-form-label">
+                {{ form.l1_analizers.label }}
+            </label>
+            {{ form.l1_analizers }}
+          </div>
+      </div>
+      <div class="form-row" id="l2-form-field">
+          <div class="form-group col-md-10 col-sm-12">
+            <label for="id_l2" class="col-sm-2 col-form-label">{{ form.l2.label }}</label>
+              {{ form.l2 }}
+          </div>
+          <div class="form-group col-md-2 col-sm-12">
+            <label for="id_l2_analizers" class="col-form-label">
+                {{ form.l2_analizers.label }}
+            </label>
+            {{ form.l2_analizers }}
+          </div>
+      </div>
+      <div id="btn-group-form" class="form-group row">
+        <div class="col-sm-3 col-md-2 pt-2">
+          <a href="{% url 'list-docs' %}" class="badge badge-light">
+            <i class="fa fa-arrow-left"></i> Regresar
+          </a>
+        </div>
+        <div class="col-sm-9 col-md-6 btn-group btn-group-md" role="group"
+            aria-label="Botones para guardar cambios en configuración básica del
+            indice de elaticsearch y agregar nuevos campos">
+          <button type="submit" class="btn btn-success" id="save-settings-btn">Guardar <i class="fa fa-save"></i></button>
+          <button type="button" class="btn btn-outline-primary"
+              id="add-field-btn">Agregar campo <i class="fa fa-plus"></i></a>
+        </div>
+      </div>
+    </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="advance-settings-modal" tabindex="-1" role="dialog"
+    aria-labelledby="advance-settings-modal" aria-hidden="true">
+  <div class="modal-dialog modal-diaog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Configuraciones del
+            indice {{ index_name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="advance-form" action="{% url 'index-config' %}" method="post" enctype="multipart/form-data">
+         {% csrf_token %}
+          <div class="form-group row">
+            <label for="id_index_name" class="col-sm-2 col-form-label text-right">{{ form.index_name.label }}</label>
+            <div class="col-sm-10">
+             {{ form.index_name }}
+            </div>
+          </div>
+          <div class="form-row">
+              <div class="form-group col-md-6 col-sm-12">
+                <label for="id_settings" class="col-sm-2 col-form-label">{{ form.settings.label }}</label>
+                  {{ form.settings }}
+              </div>
+              <div class="form-group col-md-6 col-sm-12">
+                <label for="id_mapping" class="col-sm-2 col-form-label">{{ form.mapping.label }}</label>
+                  {{ form.mapping }}
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script charset="utf-8">
+    $(function(){
+        let fieldsCount = 1
+        $("#add-field-btn").on("click", () => {
+        let formField = `<div class="form-row">
+              <div class="form-group col-md-10 col-sm-12">
+                <label for="optiona-field-${fieldsCount}" class="col-sm-3
+                col-form-label">Campo Opcional #${fieldsCount}</label>
+                <input type="text" class="form-control" value=""
+                name="opcional-field" id="opcional-field-${fieldsCount}"/>
+              </div>
+              <div class="form-group col-md-2 col-sm-12">
+                <label for="id_mapping" class="col-sm-3 col-form-label">Tipo</label>
+                <select name="type-field" id="type-field" class="form-control" >
+                    <option value="txt">Texto</option>
+                    <option value="kwd">Palabras clave</option>
+                </select>
+              </div>
+          </div>`
+        $("#btn-group-form").before(formField);
+            fieldsCount++
+        })
+    })
+</script>
+{% endblock javascript %}
