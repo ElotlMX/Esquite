@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     'google_analytics',
     'rest_framework',
     'rest_framework.authtoken',
+    'drf_yasg',
     'searcher.apps.SearcherConfig',
     'corpus_admin.apps.DocsAdminConfig',
     'api.apps.ApiConfig',
