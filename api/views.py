@@ -39,7 +39,7 @@ def basic_search(request):
     fields = ["lang", "query", "index"]
     if request.method == "POST":
         data = request.data
-        if fields != list(data.keys()):
+        if set(fields) - list(data.keys()) != set():
             missing_fields = set(fields).difference(set(data.keys()))
             return Response(
                 {
@@ -58,9 +58,9 @@ def basic_search(request):
                                                  user_limit=anon_limit)
             response = {"query": data["query"],
                         "index": data["index"],
-                        "results": preprocess_data,
                         "total_results": total_entries,
-                        "showed_results": anon_limit
+                        "showed_results": anon_limit,
+                        "results": preprocess_data,
                        }
             status_code = status.HTTP_200_OK
         except elasticsearch.exceptions.RequestError as e:
@@ -118,7 +118,7 @@ def full_search(request):
         entries = 0
         variants = ""
         data = request.data
-        if fields != list(data.keys()):
+        if set(fields) - set(data.keys()) != set():
             # Getting missing fields with set operation
             missing_fields = set(fields) - (set(data.keys()))
             return Response(
@@ -149,9 +149,9 @@ def full_search(request):
                                                  user_limit=user_limit)
             response = {"query": data["query"],
                         "index": data["index"],
-                        "results": preprocess_data,
                         "total_results": total_entries,
-                        "showed_results": user_limit
+                        "showed_results": user_limit,
+                        "results": preprocess_data,
                        }
             status_code = status.HTTP_200_OK
         except elasticsearch.exceptions.RequestError as e:
