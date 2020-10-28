@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  title: Esquite API
+  description: |-
+      API para busquedas en corpus paralelos. Visita la
+      [documentación](https://esquite.readthedocs.io/es/latest/)
+      oficial del proyecto para mas información.
+  contact:
+    email: contacto@elotl.mx
+  license:
+    name: MLP-2.0 License
+  version: v1
+servers:
+    - url: https://api.elotl.mx/v1/
+      description: API de producción de Comunidad Elotl
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  "Basic":
+    type: http
+    scheme: basic
+    tokenUrl: "https://api.elot.mx/v1/api-token-auth/"
+    scopes:
+        'full-search': ''
+paths:
+  /api-token-auth/:
+    post:
+      operationId: api-token-auth_create
+      description: ''
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - api-token-auth
+    parameters: []
+  /full-search/:
+    post:
+      operationId: full-search_create
+      summary: "Endpoint para b\xFAsquedas completas de la API"
+      requestBody:
+        description: |-
+            Se pueden realizar búsquedas añadiendo el campo de variante a la query.
+            El limite de resultados es mayor al de las búsquedas básicas y los
+            resultados incluyen el campo de *highlight* automático. La cantidad de
+            request por hora y día será más amplia que en las búsquedas básicas.
+        required: true
+        content:
+            application/json:
+                schema:
+                    $ref: '#/definitions/postFullSearch'
+      security:
+          - "Basic": []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - full-search
+    parameters: []
+  /search/:
+    post:
+      operationId: search_create
+      summary: "Endpoint para b\xFAsquedas b\xE1sicas de la API"
+      description: |-
+        Se pueden realizar búsquedas que devolverán una cantidad limitada de
+        resultados. No es posible buscar por variante y los resultados omiten
+        el *highlight* automático. Tambien la cantidad de request por hora y
+        día será muy limitada.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+        - search
+    parameters: []
+definitions:
+  postFullSearch:
+    type: object
+    properties:
+      lang:
+        type: string
+      query:
+        type: string
+      variants:
+          type: array
+      index:
+        type: string

@@ -15,8 +15,6 @@ personalices tu propia instancia de Esquite.
 
 Información sobre los *endpoints* de la API de Esquite y cómo utilizarlos.
 
-
-
 ¿Qué es Esquite?
 ^^^^^^^^^^^^^^^^
 

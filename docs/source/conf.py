@@ -72,3 +72,5 @@ redoc = [
         'embed': True
     },
 ]
+
+redoc_uri = 'https://cdn.jsdelivr.net/npm/redoc@2.0.0-alpha.17/bundles/redoc.standalone.js'
