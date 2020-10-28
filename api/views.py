@@ -39,7 +39,7 @@ def basic_search(request):
     fields = ["lang", "query", "index"]
     if request.method == "POST":
         data = request.data
-        if set(fields) - list(data.keys()) != set():
+        if set(fields) - set(data.keys()) != set():
             missing_fields = set(fields).difference(set(data.keys()))
             return Response(
                 {
