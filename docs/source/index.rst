@@ -10,6 +10,11 @@ Puedes comenzar con la instalación :ref:`instalation` del *framework* y despues
 seguir alguno de nuestros tutoriales :ref:`tutorials` para que configures y
 personalices tu propia instancia de Esquite.
 
+`Documentación de la API <api.html>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Información sobre los *endpoints* de la API de Esquite y cómo utilizarlos.
+
 ¿Qué es Esquite?
 ^^^^^^^^^^^^^^^^
 
@@ -32,6 +37,7 @@ Tabla de contenidos
 
    install
    tutorials
+   API Docs <api.html#http://>
    esquite
    searcher
    corpus_admin

@@ -18,6 +18,7 @@ templates/user/*
 # Enviroment Variables
 *.yaml
 !.readthedocs.yaml
+!openapi.yaml
 
 # Documentation
 docs/build/*
