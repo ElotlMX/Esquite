@@ -1,17 +1,28 @@
 openapi: 3.0.0
 info:
+  title: Esquite API
   description: |-
-      API para busquedas en corpus paralelos. Visita la
+      API para búsquedas en corpus paralelos de comunidad elotl. Visita la
       [documentación](https://esquite.readthedocs.io/es/latest/)
-      oficial del proyecto para mas información.
+      oficial del proyecto para mas información sobre el *framework*.
+
+      ## Corpus disponibles (índices)
+
+      * **Tsunkua**
+        * Español-Otomí: `tsunkua-production`
+      * **Axolotl**
+        * Español-Nahuatl: `axolotl-production`
   contact:
+    name: Comunidad Elotl
+    url: https://elotl.mx/
     email: contacto@elotl.mx
   license:
     name: MLP-2.0 License
+    url: https://www.mozilla.org/en-US/MPL/2.0/
   version: v1
 servers:
-    - url: https://api.elotl.mx/v1/
-      description: API de producción de Comunidad Elotl
+  - url: https://api.elotl.mx/v1/
+    description: API de producción de Comunidad Elotl
 schemes:
   - http
 consumes:
@@ -41,7 +52,7 @@ paths:
                 $ref: '#/definitions/postApiToken'
       responses:
         '200':
-          description: 'Token de autenticación'
+          description: 'Token de autenticación generado'
           content:
             application/json:
               schema:
@@ -66,15 +77,16 @@ paths:
                     example:
                       - Este campo es requerido
         '404':
-          description: 'Usuariæ invalidæ'
+          description: 'Usuariæ o contraseña invalidæs'
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  msg:
-                    type: string
-                    example: 'No existe usuariæ'
+                  no_fields_error:
+                    type: array
+                    example:
+                      - 'No puede iniciar sesión con las credenciales proporcionadas.'
       tags:
         - api-token-auth
       parameters: []
@@ -133,7 +145,7 @@ paths:
                       l1: el va a mexico
                       l2: nuni pa M'ónda
         '400':
-          description: 'Bad request'
+          description: 'Rquest inválido. (Faltan campos en el json)'
           content:
             application/json:
               schema:
@@ -184,9 +196,29 @@ paths:
         '401':
           description: 'La información de autenticación no ha sido especificada o es inválida'
           headers:
-            WWW_Authenticate:
+            Authentication:
               schema:
                 type: string
+        '400':
+          description: 'Rquest inválido. (Faltan campos en el json)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: 'Missing fields in JSON request'
+                  missing_fiels:
+                    type: array
+                    example:
+                      - query
+                      - index
+                      - variants
+                      - lang
+                  error:
+                    type: string
+                    example: 'bad_request'
         '200':
           description: 'Resultados de búsqueda'
           content:
@@ -207,10 +239,28 @@ paths:
                     type: interger
                     example: 100
                   results:
-                    type: interger
-                    example: 800
-        '201':
-          description: ''
+                    type: array
+                    example:
+                    - document-name: La visión de los vencidos (hñahñu)
+                      pdf-file: visiondelosvencidoshnahnu.pdf
+                      variant: Otomí del Mezquital (ote)
+                      highlight:
+                        l1:
+                          - 'En <em>México</em>, aquí,'
+                        variant:
+                          - '<em>Otomí del Mezquital (ote)</em>'
+                      l1: el va a mexico
+                      l2: nuni pa M'ónda
+                    - document-name: 'El otomí de toluca, Yolanda Lastra'
+                      pdf-file: elotomidetoluca.pdf
+                      variant: Otomí del Estado de México (ots)
+                      highlight:
+                        l1:
+                          - 'Ya estaba en <em>México</em> entonces'
+                        variant:
+                          - '<em>Otomí del Estado de Méxco (ots)</em>'
+                      l1: 'Ya estaba en México entonces'
+                      l2: "ya xo mbra'bu̱i 'á múndowik'a"
       tags:
         - full-search
       parameters: []
