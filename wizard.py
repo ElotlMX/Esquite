@@ -26,6 +26,7 @@ def set_project_info(config):
     # Colaboradoras vacio por defecto
     config['COLABS'] = []
     config['SOCIAL'] = {k: "" for k in social}
+    config['META_DESC'] = input("\t * Descripción del sitio (etiqueta meta de html): ")
     return config
 
 

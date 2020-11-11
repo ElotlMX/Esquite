@@ -26,7 +26,8 @@ def project_info(request):
     *colaboradoras* y *redes sociales*. Las últimas dos son listas de python.
     """
     return {'PROJECT_NAME': settings.NAME, 'ORG_NAME': settings.ORG_NAME,
-            'COLABS': settings.COLABS, 'SOCIAL': settings.SOCIAL}
+            'COLABS': settings.COLABS, 'SOCIAL': settings.SOCIAL,
+            'META_DESC': settings.META_DESC}
 
 
 def google_analytics(request):
@@ -46,7 +47,7 @@ def user_templates(request):
                 html_view = regex.sub("<br>", html_view)
                 html_view += "<br>"
         except FileNotFoundError:
-            LOGGER.error("No se encontró el template de usuario", view)
+            LOGGER.error(f"No se encontró el template de usuario {view}")
             html_view = ""
         name = view.upper() + "_USER"
         user_views[name] = html_view

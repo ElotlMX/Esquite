@@ -71,3 +71,7 @@ span.small-icon{
 button#variants-btn, button#export-data{
   font-size: 1.0em;
 }
+
+textarea.json-config{
+    font-family: monospace;
+}
