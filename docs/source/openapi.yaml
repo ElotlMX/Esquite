@@ -1,37 +1,55 @@
 openapi: 3.0.0
+servers:
+  - url: https://api.elotl.mx/v1/
+    description: API de producción de Comunidad Elotl
 info:
-  title: Esquite API
   description: |-
-      API para búsquedas en corpus paralelos de comunidad elotl. Visita la
-      [documentación](https://esquite.readthedocs.io/es/latest/)
-      oficial del proyecto para mas información sobre el *framework*.
+      API para búsquedas en corpus paralelos de comunidad elotl.
+
+      ## Introducción
+
+      Esta API permite realizar búsquedas a traves de los indices de
+      Comunidad Elotl y devuelve los resultados de esta búsqueda. Se pueden
+      realizar búsquedas por palabras o frases y se pueden utilizar operadores
+      avanzados.
+
+      ### Operadores soportados
+
+      * Busqueda difusa `~`
+      * Frases exactas `" "`
+      * Comodín de cero o mas caracteres `*`
+      * Comodín de un caracter `?`
+
+      Más información sobre operadores en https://tsunkua.elotl.mx/ayuda/
 
       ## Corpus disponibles (índices)
 
-      * **Tsunkua**
-        * Español-Otomí: `tsunkua-production`
-      * **Axolotl**
-        * Español-Nahuatl: `axolotl-production`
+      | Nombre | Lenguas | Índice |
+      |--------|---------|--------|
+      | **Tsunkua** | Español-Otomí | `tsunkua-production` |
+      | **Axolotl** | Español-Nahuatl | `axolotl-production` |
+  version: 1.0.0
+  title: Esquite API
   contact:
     name: Comunidad Elotl
     url: https://elotl.mx/
     email: contacto@elotl.mx
+  x-logo:
+      url: "https://raw.githubusercontent.com/ElotlMX/elotl-brand-resources/master/logo/logo_elotl_transparente.png"
+      altText: Elotl logo
   license:
     name: MLP-2.0 License
     url: https://www.mozilla.org/en-US/MPL/2.0/
-  version: v1
-servers:
-  - url: https://api.elotl.mx/v1/
-    description: API de producción de Comunidad Elotl
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
+externalDocs:
+    description: Visita la documentación oficial del framework.
+    url: https://esquite.readthedocs.io/es/latest/
 components:
   securitySchemes:
     BasicAuth:
+      description: |
+          El esquema de seguridad es `HTTP` básico. Se espera enviar el
+          token de autorizacion en los headers de las peticiones con el formato\:
+          `Autorizarion: token <secret-token>`
       type: http
       scheme: basic
 paths:
@@ -89,7 +107,6 @@ paths:
                       - 'No puede iniciar sesión con las credenciales proporcionadas.'
       tags:
         - api-token-auth
-      parameters: []
   /search/:
     post:
       operationId: search_create
@@ -165,7 +182,6 @@ paths:
                     example: 'bad_request'
       tags:
         - search
-      parameters: []
   /full-search/:
     post:
       operationId: full-search_create
@@ -263,7 +279,6 @@ paths:
                       l2: "ya xo mbra'bu̱i 'á múndowik'a"
       tags:
         - full-search
-      parameters: []
 definitions:
   postApiToken:
     type: object
