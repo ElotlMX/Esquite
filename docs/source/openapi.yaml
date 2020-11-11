@@ -1,83 +1,301 @@
 openapi: 3.0.0
+servers:
+  - url: https://api.elotl.mx/v1/
+    description: API de producción de Comunidad Elotl
 info:
-  title: Esquite API
   description: |-
-      API para busquedas en corpus paralelos. Visita la
-      [documentación](https://esquite.readthedocs.io/es/latest/)
-      oficial del proyecto para mas información.
+      API para búsquedas en corpus paralelos de comunidad elotl.
+
+      ## Introducción
+
+      Esta API permite realizar búsquedas a traves de los indices de
+      Comunidad Elotl y devuelve los resultados de esta búsqueda. Se pueden
+      realizar búsquedas por palabras o frases y se pueden utilizar operadores
+      avanzados.
+
+      ### Operadores soportados
+
+      * Busqueda difusa `~`
+      * Frases exactas `" "`
+      * Comodín de cero o mas caracteres `*`
+      * Comodín de un caracter `?`
+
+      Más información sobre operadores en https://tsunkua.elotl.mx/ayuda/
+
+      ## Corpus disponibles (índices)
+
+      | Nombre | Lenguas | Índice |
+      |--------|---------|--------|
+      | **Tsunkua** | Español-Otomí | `tsunkua-production` |
+      | **Axolotl** | Español-Nahuatl | `axolotl-production` |
+  version: 1.0.0
+  title: Esquite API
   contact:
+    name: Comunidad Elotl
+    url: https://elotl.mx/
     email: contacto@elotl.mx
+  x-logo:
+      url: "https://raw.githubusercontent.com/ElotlMX/elotl-brand-resources/master/logo/logo_elotl_transparente.png"
+      altText: Elotl logo
   license:
     name: MLP-2.0 License
-  version: v1
-servers:
-    - url: https://api.elotl.mx/v1/
-      description: API de producción de Comunidad Elotl
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
-securityDefinitions:
-  "Basic":
-    type: http
-    scheme: basic
-    tokenUrl: "https://api.elot.mx/v1/api-token-auth/"
-    scopes:
-        'full-search': ''
+    url: https://www.mozilla.org/en-US/MPL/2.0/
+externalDocs:
+    description: Visita la documentación oficial del framework.
+    url: https://esquite.readthedocs.io/es/latest/
+components:
+  securitySchemes:
+    BasicAuth:
+      description: |
+          El esquema de seguridad es `HTTP` básico. Se espera enviar el
+          token de autorizacion en los headers de las peticiones con el formato\:
+          `Autorizarion: token <secret-token>`
+      type: http
+      scheme: basic
 paths:
   /api-token-auth/:
     post:
       operationId: api-token-auth_create
-      description: ''
-      parameters: []
+      summary: "Endpoint para obtener un token de autenticación "
+      description: |-
+          Para realizar búsquedas avanzadas en el endpoint `/full-search/` es
+          necesario tener un token de autenticación. Es necesario estar
+          registradæ en la plataforma. Para obtener unæ usuariæ y contraseña
+          contactanos `contacto at elotl.mx`.
+      requestBody:
+          required: true
+          content:
+            applicationjson:
+              schema:
+                $ref: '#/definitions/postApiToken'
       responses:
-        '201':
-          description: ''
+        '200':
+          description: 'Token de autenticación generado'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: 'wrt3dca802d6lkwd1ffce77c02d21b9m2t89lljk'
+        '400':
+          description: 'Request inválido (faltan campos en json)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: array
+                    example:
+                      - Este campo es requerido
+                  password:
+                    type: array
+                    example:
+                      - Este campo es requerido
+        '404':
+          description: 'Usuariæ o contraseña invalidæs'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  no_fields_error:
+                    type: array
+                    example:
+                      - 'No puede iniciar sesión con las credenciales proporcionadas.'
       tags:
         - api-token-auth
-    parameters: []
-  /full-search/:
-    post:
-      operationId: full-search_create
-      summary: "Endpoint para b\xFAsquedas completas de la API"
-      requestBody:
-        description: |-
-            Se pueden realizar búsquedas añadiendo el campo de variante a la query.
-            El limite de resultados es mayor al de las búsquedas básicas y los
-            resultados incluyen el campo de *highlight* automático. La cantidad de
-            request por hora y día será más amplia que en las búsquedas básicas.
-        required: true
-        content:
-            application/json:
-                schema:
-                    $ref: '#/definitions/postFullSearch'
-      security:
-          - "Basic": []
-      responses:
-        '201':
-          description: ''
-      tags:
-        - full-search
-    parameters: []
   /search/:
     post:
       operationId: search_create
       summary: "Endpoint para b\xFAsquedas b\xE1sicas de la API"
       description: |-
-        Se pueden realizar búsquedas que devolverán una cantidad limitada de
-        resultados. No es posible buscar por variante y los resultados omiten
-        el *highlight* automático. Tambien la cantidad de request por hora y
-        día será muy limitada.
-      parameters: []
+        *Endpoint* para realizar búsquedas simples. Este *endpoint* es para
+        **pruebas** por lo que devolverá una cantidad limitada de resultados.
+        Además, las características de busqueda por variante y *highlight*
+        automático en resultados están dehabilitadas. La cantidad de resultados,
+        request por hora y día será limitados.
+        - request **por día**: 50
+        - request **por hora**: 20
+        - **resultados** mostrados: 10
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/postSearch'
+              example:
+                lang: l2
+                query: 'jamadi~'
+                index: tsunkua-production
       responses:
-        '201':
-          description: ''
+        '200':
+          description: 'Resultados de búsqueda'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  query:
+                    type: string
+                    example: mexico~
+                  index:
+                    type: string
+                    example: tsunkua-production
+                  total-results:
+                    type: interger
+                    example: 200
+                  showed-results:
+                    type: interger
+                    example: 10
+                  results:
+                    type: array
+                    example:
+                    - document-name: Visión de los vencidos (hñahñu)
+                      pdf-file: visiondelosvencidoshnahnu.pdf
+                      l1: Tenochtitlan México, aquí.
+                      l2: ra B'ondo M'onda, nuua
+                    - document-name: NORMA DE ESCRITURA DE LA LENGUA HÑÄHÑU (OTOMÍ)
+                      pdf-file: Norma_Otomi.pdf
+                      l1: el va a mexico
+                      l2: nuni pa M'ónda
+        '400':
+          description: 'Rquest inválido. (Faltan campos en el json)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: 'Missing fields in JSON request'
+                  missing_fiels:
+                    type: array
+                    example:
+                      - query
+                      - index
+                      - lang
+                  error:
+                    type: string
+                    example: 'bad_request'
       tags:
         - search
-    parameters: []
+  /full-search/:
+    post:
+      operationId: full-search_create
+      summary: "Endpoint para b\xFAsquedas completas de la API"
+      description: |-
+          *Endpoint* para realizar búsquedas avanzadas. Además de los campos del
+          *endpoint* `/search/` se añade el campo búsqueda por variante.
+          El limite de resultados es mayor al de las búsquedas básicas y los
+          resultados incluyen un campo de *highlight* automático. La cantidad de
+          request por hora y día será más amplia que en las búsquedas básicas.
+          - request **por día**: 200
+          - request **por hora**: 50
+          - **resultados** mostrados: 100
+      requestBody:
+        required: true
+        content:
+            application/json:
+                schema:
+                    $ref: '#/definitions/postFullSearch'
+                example:
+                  lang: l1
+                  query: 'mexico~'
+                  variants: ["ote", "ots"]
+                  index: tsunkua-production
+      security:
+          - BasicAuth: []
+      responses:
+        '401':
+          description: 'La información de autenticación no ha sido especificada o es inválida'
+          headers:
+            Authentication:
+              schema:
+                type: string
+        '400':
+          description: 'Rquest inválido. (Faltan campos en el json)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: 'Missing fields in JSON request'
+                  missing_fiels:
+                    type: array
+                    example:
+                      - query
+                      - index
+                      - variants
+                      - lang
+                  error:
+                    type: string
+                    example: 'bad_request'
+        '200':
+          description: 'Resultados de búsqueda'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  query:
+                    type: string
+                    example: mexico~
+                  index:
+                    type: string
+                    example: tsunkua-production
+                  total-results:
+                    type: interger
+                    example: 200
+                  showed-results:
+                    type: interger
+                    example: 100
+                  results:
+                    type: array
+                    example:
+                    - document-name: La visión de los vencidos (hñahñu)
+                      pdf-file: visiondelosvencidoshnahnu.pdf
+                      variant: Otomí del Mezquital (ote)
+                      highlight:
+                        l1:
+                          - 'En <em>México</em>, aquí,'
+                        variant:
+                          - '<em>Otomí del Mezquital (ote)</em>'
+                      l1: el va a mexico
+                      l2: nuni pa M'ónda
+                    - document-name: 'El otomí de toluca, Yolanda Lastra'
+                      pdf-file: elotomidetoluca.pdf
+                      variant: Otomí del Estado de México (ots)
+                      highlight:
+                        l1:
+                          - 'Ya estaba en <em>México</em> entonces'
+                        variant:
+                          - '<em>Otomí del Estado de Méxco (ots)</em>'
+                      l1: 'Ya estaba en México entonces'
+                      l2: "ya xo mbra'bu̱i 'á múndowik'a"
+      tags:
+        - full-search
 definitions:
+  postApiToken:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  postSearch:
+    type: object
+    properties:
+      lang:
+        type: string
+      query:
+        type: string
+      index:
+        type: string
   postFullSearch:
     type: object
     properties:
@@ -86,6 +304,6 @@ definitions:
       query:
         type: string
       variants:
-          type: array
+        type: array
       index:
         type: string
