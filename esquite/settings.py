@@ -31,6 +31,8 @@ NAME = env['NAME']
 
 ORG_NAME = env['ORG_NAME']
 
+META_DESC = env['META_DESC']
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env['SECRET_KEY']
 
