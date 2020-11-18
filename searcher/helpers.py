@@ -341,7 +341,11 @@ def get_variants():
     except es_exceptions.ConnectionError as e:
         LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
         LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
-        LOGGER.error("Url de indice::" + settings.ELASTIC_URL)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
         # Diccionario porque se utilizara el metodo items() en forms
+        variants = {'status': 'error'}
+    except es_exceptions.NotFoundError as e:
+        LOGGER.error("No se encontró el indice::" + settings.INDEX)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
         variants = {'status': 'error'}
     return variants

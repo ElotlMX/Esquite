@@ -5,7 +5,10 @@ import uuid
 import csv
 import logging
 from django.conf import settings
+from django.contrib import messages
+from django.urls import reverse
 from elasticsearch import Elasticsearch
+from elasticsearch import exceptions as es_exceptions
 from searcher.helpers import get_variants
 
 LOGGER = logging.getLogger(__name__)
@@ -16,12 +19,12 @@ es = Elasticsearch([settings.ELASTIC_URL])
 # === Información del Corpus ===
 
 
-def get_corpus_info():
+def get_corpus_info(request):
     """**Función que obtiene la información general del corpus**
 
     Está función utiliza el framework de ``Elasticsearch`` llamado
     *aggregations* para obtener los ids del corpus. Con cada uno se
-    obtienen los nombres de documentos, nombres de archivos y total.
+    obtienen los nombres de documentos, nombres de archivos y total:>>.
 
     :return: El total de documentos y una lista con información de los documentos
     :rtype: int, list
@@ -40,14 +43,28 @@ def get_corpus_info():
     docs = []
     total = 0
     LOGGER.info("Buscando documentos")
-    r = es.search(index=settings.INDEX, body=ids_filters)
-    buckets = r['aggregations']['ids']['buckets']
-    LOGGER.info("Documentos actuales::" + str(len(buckets)))
-    for bucket in buckets:
-        total += int(bucket["doc_count"])
-        document = get_document_info(bucket['key'])
-        document['count'] = bucket['doc_count']
-        docs.append(document)
+    try:
+        r = es.search(index=settings.INDEX, body=ids_filters)
+        buckets = r['aggregations']['ids']['buckets']
+        LOGGER.info("Documentos actuales::" + str(len(buckets)))
+        for bucket in buckets:
+            total += int(bucket["doc_count"])
+            document = get_document_info(bucket['key'])
+            document['count'] = bucket['doc_count']
+            docs.append(document)
+    except es_exceptions.ConnectionError as e:
+        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
+        LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
+        total = 0
+        docs = []
+    except es_exceptions.NotFoundError as e:
+        LOGGER.error("No se encontró el indice::" + settings.INDEX)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
+        total = 0
+        docs = []
+        messages.warning(request, f"Parece que no existe el índice <b>{settings.INDEX}</b>")
+        messages.info(request, f"Por favor configura un índice <a href=\"{reverse('index-config')}\">aquí</a>")
     return total, docs
 
 # === Cargador de PDFs ===

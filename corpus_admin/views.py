@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
                    IndexConfigForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
-                      get_document_info)
+                      get_document_info, csv_writer)
 from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
                               query_kreator)
 from elasticsearch import Elasticsearch
@@ -33,7 +33,7 @@ def list_docs(request):
     """
     # TODO: Excepcion cuando no se pueda conectar al indice del corpus
     LOGGER.info("Listando Documentos")
-    total, docs = get_corpus_info()
+    total, docs = get_corpus_info(request)
     variants = get_variants()
     # TODO: Notificar de error al traer variantes
     del variants['status']
@@ -298,18 +298,45 @@ def index_config(request):
 
     :returns: None
     """
-    with open("elastic-config.json", 'r') as f:
-        json_file = f.read()
-    data = json.loads(json_file)
-    index_name = settings.INDEX
-    form = IndexConfigForm(initial={'index_name': index_name,
-                                    'settings': json.dumps(data['settings'],
-                                                           indent=2,
-                                                           sort_keys=True),
-                                    'mapping': json.dumps(data['mappings'],
-                                                          indent=2,
-                                                         sort_keys=True)})
-    return render(request, "corpus-admin/index-config.html",
-                  {
-                      "form": form, "index_name": index_name
-                  })
+    default_fields = ["l1", "l2", "variants", "document_name",
+                      "document_id", "pdf_file"]
+    if request.method == "POST":
+        breakpoint()
+        form = IndexConfigForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            csv_file = data['autofill']
+            csv_writer(csv_file, "autofill.csv")
+            with open("autofill.csv", 'r', encoding="utf-8") as f:
+                fields = f.readline()
+        with open("elastic-config.json", 'r') as f:
+            json_file = f.read()
+        data = json.loads(json_file)
+        index_name = settings.INDEX
+        form = IndexConfigForm(initial={'index_name': index_name,
+                                        'settings': json.dumps(data['settings'],
+                                                               indent=2,
+                                                               sort_keys=True),
+                                        'mapping': json.dumps(data['mappings'],
+                                                              indent=2,
+                                                             sort_keys=True)})
+        return render(request, "corpus-admin/index-config.html",
+                      {
+                          "form": form, "index_name": index_name
+                      })
+    else:
+        with open("elastic-config.json", 'r') as f:
+            json_file = f.read()
+        data = json.loads(json_file)
+        index_name = settings.INDEX
+        form = IndexConfigForm(initial={'index_name': index_name,
+                                        'settings': json.dumps(data['settings'],
+                                                               indent=2,
+                                                               sort_keys=True),
+                                        'mapping': json.dumps(data['mappings'],
+                                                              indent=2,
+                                                             sort_keys=True)})
+        return render(request, "corpus-admin/index-config.html",
+                      {
+                          "form": form, "index_name": index_name
+                      })
