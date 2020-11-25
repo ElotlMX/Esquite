@@ -26,12 +26,28 @@ es = Elasticsearch([settings.ELASTIC_URL])
 @api_view(['POST'])
 @throttle_classes([BurstRateAnonThrottle, SustainedRateAnonThrottle])
 def basic_search(request):
-    """Endpoint para búsquedas básicas de la API
+    """### API Web Endpoint - Comunidad Elotl
 
-    Se pueden realizar búsquedas que devolverán una cantidad limitada de
-    resultados. No es posible buscar por variante y los resultados omiten
-    el *highlight* automático. Tambien la cantidad de request por hora y
-    día será muy limitada.
+    Endpoint web (demo) para consultas de la API de la Comunidad Elotl.
+    Los resultados pueden ser limitados dependiendo del tipo de acceso:
+
+    * anónimo ([detalles](https://esquite.readthedocs.io/es/latest/api.html#tag/search))
+    * token registrado ([detalles](https://esquite.readthedocs.io/es/latest/api.html#tag/full-search))
+    * token registrado extendido (contactanos en *contacto at elotl.mx*)
+
+    Para mayor información consultar los términos de uso de la API en
+    la [documentación oficial](https://esquite.readthedocs.io/es/latest/api.html)
+    ---
+
+    Web Endpoint for Comunidad Elotl API queries.
+    Results may be limited based on the access type:
+
+    * anonymous ([details](https://esquite.readthedocs.io/es/latest/api.html#tag/search))
+    * registered acces token ([details](https://esquite.readthedocs.io/es/latest/api.html#tag/full-search))
+    * extended access token (contact us at *contacto at elotl.mx*)
+
+    For more information check the API terms of use in the [online
+    documentation](https://esquite.readthedocs.io/es/latest/api.html)
     """
     anon_limit = settings.API['limit_results']['anon']
     ip_client = get_source_ip(request)
