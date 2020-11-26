@@ -75,3 +75,12 @@ button#variants-btn, button#export-data{
 textarea.json-config{
     font-family: monospace;
 }
+
+label#autofill-label{
+  display: inline-block;
+  background-color: indigo;
+  color: white;
+  font-family: monospace;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}

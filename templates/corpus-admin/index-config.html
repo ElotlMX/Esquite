@@ -56,28 +56,28 @@
           </div>
       </div>
       <div id="btn-group-form" class="form-group row">
-        <div class="col-sm-3 col-md-2 pt-2">
+        <div class="col-sm-3 col-md-1 pt-2">
           <a href="{% url 'list-docs' %}" class="badge badge-light">
             <i class="fa fa-arrow-left"></i> Regresar
           </a>
         </div>
-        <div class="col-sm-8 col-md-5 btn-group btn-group-lg" role="group"
-            aria-label="Botones para guardar cambios en configuración básica del
+        <div class="col-sm-8 offset-md-1 col-md-6 btn-group btn-group-lg" role="group" aria-label="Botones para guardar cambios en configuración básica del
             indice de elaticsearch y agregar nuevos campos">
           <button type="submit" class="btn btn-success" id="save-settings-btn">Guardar <i class="fa fa-save"></i></button>
-          <button type="button" class="btn btn-outline-primary" id="add-field-btn">Agregar campo <i class="fa fa-plus"></i></a></button>
+          <button type="button" class="btn btn-outline-info"
+              id="add-field-btn">Nuevo campo <i class="fa fa-plus"></i></a></button>
         </div>
-        <div class="col-sm-12 col-md-5 mt-3">
+        <div class="col-sm-12 col-md-3">
             <!--actual upload which is hidden-->
           {{form.autofill}}
          <!-- our custom upload button-->
           <span data-toggle="tooltip" data-placement="bottom"
              title="Sube un archivo CSV e intentaremos autodetectar los campos">
               <label class="btn" id="autofill-label"
-                  for="id_autofill">{{form.autofill.label}}</label>
+                  for="id_autofill">{{form.autofill.label}} <i class="fa fa-cogs"></i></label>
           </span>
           <!--name of file chosen-->
-          <span id="file-chosen-name">Ningun archivo seleccionado</span>
+          <!--<span id="file-chosen-name">Ningun archivo seleccionado</span>-->
         </div>
       </div>
     </form>
@@ -153,14 +153,14 @@
 
     /*Manage custom upload button file name*/
     const actualBtn = document.getElementById('id_autofill');
-    const fileChosen = document.getElementById('file-chosen-name');
+    //const fileChosen = document.getElementById('file-chosen-name');
     const indexConfForm = $('form#index-config-form')
     const saveConfBtn = $('#save-settings-btn')
     actualBtn.addEventListener('change', function(){
       const fileName = this.files[0].name
-      fileChosen.textContent = fileName
+      //fileChosen.textContent = fileName
       saveConfBtn.html(`Enviar ${fileName} <i class='fa fa-file-excel-o'>`)
-      saveConfBtn.attr("class", "btn btn-warning")
+      saveConfBtn.attr("class", "btn btn-primary")
     })
 </script>
 {% endblock javascript %}
