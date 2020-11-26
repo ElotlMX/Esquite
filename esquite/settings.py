@@ -18,7 +18,8 @@ except FileNotFoundError:
     env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
            "KEYBOARD": [], "COLORS": [], "L1": "", "L2": "",
            "INDEX": "test", "SOCIAL": [], "URL": "localhost", "COLABS": [],
-           "NAME": "", "GOOGLE_ANALYTICS": "", "API": {"num_proxies": 0}}
+           "NAME": "", "GOOGLE_ANALYTICS": "", "API": {"num_proxies": 0},
+           'META_DESC': ''}
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(env['DEBUG'])
