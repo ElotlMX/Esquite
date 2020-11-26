@@ -68,7 +68,7 @@ class IndexConfigForm(forms.Form):
                                      'class': 'form-control',
                                      'placeholder': 'En mínusculas'
                                  }),
-                                 required=True)
+                                 required=False)
     l1 = forms.CharField(label='L1',
                          widget=forms.TextInput(attrs={
                              'class': 'form-control'
@@ -103,3 +103,7 @@ class IndexConfigForm(forms.Form):
                                   'rows': 28,
                               }),
                               required=False)
+    autofill = forms.FileField(label="Autodetectar", required=False)
+
+    autofill.widget.attrs.update({'hidden':''})
+

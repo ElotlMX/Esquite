@@ -24,6 +24,12 @@
     <div class="jumbotron pt-5 pb-2" id="index-editor-form-container">
     <form action="{% url 'index-config' %}" id="index-config-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <div class="form-row">
+          <div class="form-group col">
+          <label for="id_index_name" class="col-sm-2 col-form-label">{{ form.index_name.label }}</label>
+          {{ form.index_name }}
+          </div>
+      </div>
       <h4>Configuraciones de las lenguas</h4>
       <div class="form-row">
           <div class="form-group col-md-10 col-sm-12">
@@ -55,12 +61,23 @@
             <i class="fa fa-arrow-left"></i> Regresar
           </a>
         </div>
-        <div class="col-sm-9 col-md-6 btn-group btn-group-md" role="group"
+        <div class="col-sm-8 col-md-5 btn-group btn-group-lg" role="group"
             aria-label="Botones para guardar cambios en configuración básica del
             indice de elaticsearch y agregar nuevos campos">
           <button type="submit" class="btn btn-success" id="save-settings-btn">Guardar <i class="fa fa-save"></i></button>
-          <button type="button" class="btn btn-outline-primary"
-              id="add-field-btn">Agregar campo <i class="fa fa-plus"></i></a>
+          <button type="button" class="btn btn-outline-primary" id="add-field-btn">Agregar campo <i class="fa fa-plus"></i></a></button>
+        </div>
+        <div class="col-sm-12 col-md-5 mt-3">
+            <!--actual upload which is hidden-->
+          {{form.autofill}}
+         <!-- our custom upload button-->
+          <span data-toggle="tooltip" data-placement="bottom"
+             title="Sube un archivo CSV e intentaremos autodetectar los campos">
+              <label class="btn" id="autofill-label"
+                  for="id_autofill">{{form.autofill.label}}</label>
+          </span>
+          <!--name of file chosen-->
+          <span id="file-chosen-name">Ningun archivo seleccionado</span>
         </div>
       </div>
     </form>
@@ -119,11 +136,11 @@
                 <label for="optiona-field-${fieldsCount}" class="col-sm-3
                 col-form-label">Campo Opcional #${fieldsCount}</label>
                 <input type="text" class="form-control" value=""
-                name="opcional-field" id="opcional-field-${fieldsCount}"/>
+                name="opcional-field-${fieldsCount}" id="opcional-field-${fieldsCount}"/>
               </div>
               <div class="form-group col-md-2 col-sm-12">
-                <label for="id_mapping" class="col-sm-3 col-form-label">Tipo</label>
-                <select name="type-field" id="type-field" class="form-control" >
+                <label for="id_mapping-${fieldsCount}" class="col-sm-3 col-form-label">Tipo</label>
+                <select name="type-field-${fieldsCount}" id="type-field-${fieldsCount}" class="form-control">
                     <option value="txt">Texto</option>
                     <option value="kwd">Palabras clave</option>
                 </select>
@@ -132,6 +149,18 @@
         $("#btn-group-form").before(formField);
             fieldsCount++
         })
+    })
+
+    /*Manage custom upload button file name*/
+    const actualBtn = document.getElementById('id_autofill');
+    const fileChosen = document.getElementById('file-chosen-name');
+    const indexConfForm = $('form#index-config-form')
+    const saveConfBtn = $('#save-settings-btn')
+    actualBtn.addEventListener('change', function(){
+      const fileName = this.files[0].name
+      fileChosen.textContent = fileName
+      saveConfBtn.html(`Enviar ${fileName} <i class='fa fa-file-excel-o'>`)
+      saveConfBtn.attr("class", "btn btn-warning")
     })
 </script>
 {% endblock javascript %}
