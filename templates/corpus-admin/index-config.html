@@ -24,6 +24,7 @@
     <div class="jumbotron pt-5 pb-2" id="index-editor-form-container">
     <form action="{% url 'index-config' %}" id="index-config-form" method="post" enctype="multipart/form-data">
       {% csrf_token %}
+      <h4>Configuración del índice</h4>
       <div class="form-row">
           <div class="form-group col">
           <label for="id_index_name" class="col-sm-2 col-form-label">{{ form.index_name.label }}</label>
@@ -32,30 +33,63 @@
       </div>
       <h4>Configuraciones de las lenguas</h4>
       <div class="form-row">
-          <div class="form-group col-md-10 col-sm-12">
-            <label for="id_l1" class="col-sm-2 col-form-label">{{ form.l1.label }}</label>
+          <div class="form-group col-6 col-lg-4">
+            <label for="id_l1" class="col-form-label"><code>{{ form.l1.label }}</code></label>
               {{ form.l1 }}
           </div>
-          <div class="form-group col-md-2 col-sm-6">
+          <div class="form-group col-6 col-lg-2">
             <label for="id_l1_analizers" class="col-form-label">
                 {{ form.l1_analizers.label }}
             </label>
             {{ form.l1_analizers }}
           </div>
-      </div>
-      <div class="form-row" id="l2-form-field">
-          <div class="form-group col-md-10 col-sm-12">
-            <label for="id_l2" class="col-sm-2 col-form-label">{{ form.l2.label }}</label>
+          <div class="form-group col-6 col-lg-4">
+            <label for="id_l2" class="col-form-label"><code>{{ form.l2.label }}</code></label>
               {{ form.l2 }}
           </div>
-          <div class="form-group col-md-2 col-sm-12">
+          <div class="form-group col-6 col-lg-2">
             <label for="id_l2_analizers" class="col-form-label">
                 {{ form.l2_analizers.label }}
             </label>
             {{ form.l2_analizers }}
           </div>
       </div>
-      <div id="btn-group-form" class="form-group row">
+      <h5>Campos fijos</h5>
+      <div class="form-row">
+        <div class="form-group col-6 col-lg-3">
+          <label class="col-form-label" for="id_variants"><code>{{form.variants.label}}</code></label>
+          {{form.variants}}
+        </div>
+        <div class="form-group col-6 col-lg-3"><label class="col-form-label"
+                                                    for="id_document_id"><code>{{form.document_id.label}}</code></label>
+          {{form.document_id}}
+        </div>
+        <div class="form-group col-6 col-lg-3"><label class="col-form-label"
+                                                    for="id_document_name"><code>{{form.document_name.label}}</code></label>
+          {{form.document_name}}
+        </div>
+        <div class="form-group col-6 col-lg-3"><label class="col-form-label"
+                                                    for="id_pdf_file"><code>{{form.pdf_file.label}}</code></label>
+          {{form.pdf_file}}
+        </div>
+      </div>
+      {% if aditional_fields %}
+      <h4>Campos adicionales</h4>
+      <div class="form-row">
+      {% for field in aditional_fields  %}
+        <div class="form-group col" id="{{field}}-form-field">
+          <label for="{{field}}-form-field" class="col-form-label">Tipo para:
+            <code>{{field|upper}}</code></label>
+          <select name="{{field}}" class="form-control"
+            id="{{field}}-optional-field">
+            <option value="txt">Texto</option>
+            <option value="kwd">Palabras clave</option>
+          </select>
+        </div>
+      {% endfor %}
+      </div>
+      {% endif %}
+      <div id="btn-group-form" class="form-group row mt-3">
         <div class="col-sm-3 col-md-1 pt-2">
           <a href="{% url 'list-docs' %}" class="badge badge-light">
             <i class="fa fa-arrow-left"></i> Regresar

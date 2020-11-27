@@ -63,6 +63,7 @@ class IndexConfigForm(forms.Form):
     """**Genera formulario para editar índice de elasticsearch**
     """
     ANALIZERS = [("sp", "spanish"), ("en", "english"), ("no", "Ninguno")]
+    TYPES = [("kwd", "Palabras clave"), ("txt", "Texto")]
     index_name = forms.CharField(label='Índice',
                                  widget=forms.TextInput(attrs={
                                      'class': 'form-control',
@@ -89,6 +90,22 @@ class IndexConfigForm(forms.Form):
                                     widget=forms.Select(
                                         attrs={'class': 'form-control'}
                                     ))
+    variants = forms.ChoiceField(label="Variantes", choices=TYPES,
+                                 widget=forms.Select(
+                                     attrs={'class': 'form-control'}),
+                                 required=False)
+    document_id = forms.ChoiceField(label="ID de documento", choices=TYPES,
+                                 widget=forms.Select(
+                                     attrs={'class': 'form-control'}),
+                                 required=False)
+    document_name = forms.ChoiceField(label="Nombre de documento", choices=TYPES,
+                                 widget=forms.Select(
+                                     attrs={'class': 'form-control'}),
+                                 required=False)
+    pdf_file = forms.ChoiceField(label="Archivo PDF", choices=TYPES,
+                                 widget=forms.Select(
+                                     attrs={'class': 'form-control'}),
+                                 required=False)
     settings = forms.CharField(label='Settings',
                               widget=forms.Textarea(attrs={
                                   'class': 'form-control json-config',

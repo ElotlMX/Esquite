@@ -298,8 +298,7 @@ def index_config(request):
 
     :returns: None
     """
-    default_fields = ["l1", "l2", "variants", "document_name",
-                      "document_id", "pdf_file"]
+    default_fields = ["l1", "l2", "variant", "document_name", "pdf_file"]
     if request.method == "POST":
         breakpoint()
         form = IndexConfigForm(request.POST, request.FILES)
@@ -309,27 +308,43 @@ def index_config(request):
             csv_writer(csv_file, "autofill.csv")
             with open("autofill.csv", 'r', encoding="utf-8") as f:
                 fields = f.readline()
-        with open("elastic-config.json", 'r') as f:
-            json_file = f.read()
-        data = json.loads(json_file)
-        index_name = settings.INDEX
-        form = IndexConfigForm(initial={'index_name': index_name,
-                                        'settings': json.dumps(data['settings'],
+            fields = fields.strip('\n').split(',')
+            # Aditional fields
+            if set(fields) - set(default_fields) != set():
+                aditional_fields = set(fields) - set(default_fields)
+            else:
+                aditional_fields = []
+                notification = "No detectamos ningun campo adicional en el archivo CSV que subiste :o"
+                messages.warning(request, notification)
+                messages.info(request, f"Campos mínimos: {', '.join(default_fields)}")
+            with open("elastic-config.json", 'r') as f:
+                json_file = f.read()
+            data_config = json.loads(json_file)
+            for optional_field in aditional_fields:
+                data_config['mappings']['properties'][optional_field] = {'type': 'keyword'}
+            index_name = settings.INDEX
+            form = IndexConfigForm(initial={'index_name': index_name,
+                                            'l1': settings.L1,
+                                            'l2': settings.L2,
+                                            'settings': json.dumps(data_config['settings'],
                                                                indent=2,
                                                                sort_keys=True),
-                                        'mapping': json.dumps(data['mappings'],
+                                            'mapping': json.dumps(data_config['mappings'],
                                                               indent=2,
-                                                             sort_keys=True)})
-        return render(request, "corpus-admin/index-config.html",
-                      {
-                          "form": form, "index_name": index_name
-                      })
+                                                             sort_keys=True),})
+            return render(request, "corpus-admin/index-config.html",
+                          {
+                              "form": form, "index_name": index_name,
+                              'aditional_fields': aditional_fields
+                          })
     else:
         with open("elastic-config.json", 'r') as f:
             json_file = f.read()
         data = json.loads(json_file)
         index_name = settings.INDEX
         form = IndexConfigForm(initial={'index_name': index_name,
+                                        'l1': settings.L1,
+                                        'l2': settings.L2,
                                         'settings': json.dumps(data['settings'],
                                                                indent=2,
                                                                sort_keys=True),
