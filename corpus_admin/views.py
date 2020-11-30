@@ -338,20 +338,24 @@ def index_config(request):
                               'aditional_fields': aditional_fields
                           })
     else:
+        analysis = {"idioma": "spanish"}
+        fields = dict()
+        # Just visualize the current configuration
         with open("elastic-config.json", 'r') as f:
             json_file = f.read()
         data = json.loads(json_file)
+        index_config = data['settings']['index']
+        analyzer = index_config['analysis']['analyzer']
+        analyzer_name = list(analyzer.keys())[0]
+        analysis['filtros'] = analyzer[analyzer_name]['filter']
+        analysis['nombre'] = analyzer_name
+        mappings = data['mappings']
+        fields = mappings['properties']
         index_name = settings.INDEX
-        form = IndexConfigForm(initial={'index_name': index_name,
-                                        'l1': settings.L1,
-                                        'l2': settings.L2,
-                                        'settings': json.dumps(data['settings'],
-                                                               indent=2,
-                                                               sort_keys=True),
-                                        'mapping': json.dumps(data['mappings'],
-                                                              indent=2,
-                                                             sort_keys=True)})
+        form = IndexConfigForm()
         return render(request, "corpus-admin/index-config.html",
                       {
-                          "form": form, "index_name": index_name
+                        "index_name": index_name, 'mappings': mappings,
+                          'index_config': index_config, 'analysis': analysis,
+                          'fields': fields, 'form': form
                       })

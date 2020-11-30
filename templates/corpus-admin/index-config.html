@@ -5,8 +5,8 @@
    <div class="container">
     <div class="row">
       <div class="col-12">
-        <h1 class="mt-3">Configuración del índice</h1>
-        <h2 class="mt-3"><i class="fa fa-file-text-o"></i> {{ index_name }} |
+        <h1 class="mt-3">Configuración de índice</h1>
+        <h1 class="mt-3"><i class="fa fa-cogs"></i> Índice: <i>{{ index_name }}</i> |
          <span data-toggle="tooltip" data-placement="right"
              title="Mostrar configuraciones avanzadas de elasticsearch">
              <button type="button"
@@ -21,100 +21,80 @@
       </div>
     </div>
     <hr class="mb-3"/>
-    <div class="jumbotron pt-5 pb-2" id="index-editor-form-container">
-    <form action="{% url 'index-config' %}" id="index-config-form" method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      <h4>Configuración del índice</h4>
-      <div class="form-row">
-          <div class="form-group col">
-          <label for="id_index_name" class="col-sm-2 col-form-label">{{ form.index_name.label }}</label>
-          {{ form.index_name }}
-          </div>
-      </div>
-      <h4>Configuraciones de las lenguas</h4>
-      <div class="form-row">
-          <div class="form-group col-6 col-lg-4">
-            <label for="id_l1" class="col-form-label"><code>{{ form.l1.label }}</code></label>
-              {{ form.l1 }}
-          </div>
-          <div class="form-group col-6 col-lg-2">
-            <label for="id_l1_analizers" class="col-form-label">
-                {{ form.l1_analizers.label }}
-            </label>
-            {{ form.l1_analizers }}
-          </div>
-          <div class="form-group col-6 col-lg-4">
-            <label for="id_l2" class="col-form-label"><code>{{ form.l2.label }}</code></label>
-              {{ form.l2 }}
-          </div>
-          <div class="form-group col-6 col-lg-2">
-            <label for="id_l2_analizers" class="col-form-label">
-                {{ form.l2_analizers.label }}
-            </label>
-            {{ form.l2_analizers }}
-          </div>
-      </div>
-      <h5>Campos fijos</h5>
-      <div class="form-row">
-        <div class="form-group col-6 col-lg-3">
-          <label class="col-form-label" for="id_variants"><code>{{form.variants.label}}</code></label>
-          {{form.variants}}
+    <h2>Configuración actual</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <h4>Analizador: <i>{{analysis.nombre}}</i></h4>
+                <ul class='list-group'>
+                    {% for k, v in analysis.items  %}
+                    {% if k == "filtros" %}
+                    <li class="list-group-item">
+                    Filtros:
+                        <ul>
+                            {% for filtro in v  %}
+                            <li><code>{{filtro}}</code></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">{{k|title}}: <code>{{v}}</code></li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                <h4>Filtros</h4>
+                <ul class='list-group'>
+                    {% for k, v in index_config.analysis.filter.items  %}
+                    <li class="list-group-item">{{k}}: <code>{{v}}</code></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <div class="col-12 col-lg-6">
+                <h4>Campos</h4>
+                <table class="table table-hover table-borderless">
+                    <thead class="table-primary">
+                        <tr>
+                            <th scope="col">Campo</th>
+                            <th scope="col">Tipo</th>
+                            <th scope="col">Analizador</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field, type in fields.items  %}
+                        <tr>
+                            <th scope="row">{{field}}</td>
+                            <td>{{type.type}}</td>
+                            {% if type.analyzer %}
+                            <td>{{type.analyzer}}</td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="form-group col-6 col-lg-3"><label class="col-form-label"
-                                                    for="id_document_id"><code>{{form.document_id.label}}</code></label>
-          {{form.document_id}}
+        <div class="row mt-3">
+            <div class="col-sm-3 col-md-1 pt-2">
+              <a href="{% url 'list-docs' %}" class="badge badge-info">
+                <i class="fa fa-arrow-left"></i> Regresar
+              </a>
+            </div>
+
+            <div class="col-sm-8 offset-md-1 col-md-6" aria-label="Botones para guardar cambios en configuración básica del
+                indice de elaticsearch y agregar nuevos campos">
+              <button type="button" class="btn btn-success btn-lg"
+                  id="save-settings-btn"> Guardar <i class="fa fa-save"></i></button>
+              <button type="button"
+                      class="btn btn-primary btn-lg"
+                      data-toggle="modal"
+                      data-target="#edit-settings-modal"
+                      id="edit-settings-btn"> Editar <i class="fa fa-cogs"></i>
+              </button>
+            </div>
         </div>
-        <div class="form-group col-6 col-lg-3"><label class="col-form-label"
-                                                    for="id_document_name"><code>{{form.document_name.label}}</code></label>
-          {{form.document_name}}
-        </div>
-        <div class="form-group col-6 col-lg-3"><label class="col-form-label"
-                                                    for="id_pdf_file"><code>{{form.pdf_file.label}}</code></label>
-          {{form.pdf_file}}
-        </div>
-      </div>
-      {% if aditional_fields %}
-      <h4>Campos adicionales</h4>
-      <div class="form-row">
-      {% for field in aditional_fields  %}
-        <div class="form-group col" id="{{field}}-form-field">
-          <label for="{{field}}-form-field" class="col-form-label">Tipo para:
-            <code>{{field|upper}}</code></label>
-          <select name="{{field}}" class="form-control"
-            id="{{field}}-optional-field">
-            <option value="txt">Texto</option>
-            <option value="kwd">Palabras clave</option>
-          </select>
-        </div>
-      {% endfor %}
-      </div>
-      {% endif %}
-      <div id="btn-group-form" class="form-group row mt-3">
-        <div class="col-sm-3 col-md-1 pt-2">
-          <a href="{% url 'list-docs' %}" class="badge badge-light">
-            <i class="fa fa-arrow-left"></i> Regresar
-          </a>
-        </div>
-        <div class="col-sm-8 offset-md-1 col-md-6 btn-group btn-group-lg" role="group" aria-label="Botones para guardar cambios en configuración básica del
-            indice de elaticsearch y agregar nuevos campos">
-          <button type="submit" class="btn btn-success" id="save-settings-btn">Guardar <i class="fa fa-save"></i></button>
-          <button type="button" class="btn btn-outline-info"
-              id="add-field-btn">Nuevo campo <i class="fa fa-plus"></i></a></button>
-        </div>
-        <div class="col-sm-12 col-md-3">
-            <!--actual upload which is hidden-->
-          {{form.autofill}}
-         <!-- our custom upload button-->
-          <span data-toggle="tooltip" data-placement="bottom"
-             title="Sube un archivo CSV e intentaremos autodetectar los campos">
-              <label class="btn" id="autofill-label"
-                  for="id_autofill">{{form.autofill.label}} <i class="fa fa-cogs"></i></label>
-          </span>
-          <!--name of file chosen-->
-          <!--<span id="file-chosen-name">Ningun archivo seleccionado</span>-->
-        </div>
-      </div>
-    </form>
     </div>
 </div>
 
@@ -158,6 +138,124 @@
     </div>
   </div>
 </div>
+
+
+<!-- Edit Settings Modal -->
+<div class="modal fade" id="edit-settings-modal" tabindex="-1" role="dialog"
+    aria-labelledby="edit-settings-modal" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">Configuraciones del
+            indice <i>{{ index_name }}</i></h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="advance-form" action="{% url 'index-config' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-12 col-lg-6">
+                    <label class="col-form-label"
+                        for="index-name-field"><code>Nombre del índice</code></label>
+                    <input class="form-control" type="text" value="{{index_name}}" name="index-name-field" id="index-name-field"/>
+                </div>
+                <div class="form-group col-6 col-lg-3">
+                    <label class="col-form-label"
+                        for="l1-analizer"><code>Analizador L1</code></label>
+                    <select class="custom-select" name="types" id="l1-analizer"/>
+                        <option value="spanish">Español</option>
+                        <option value="english">Inglés</option>
+                        <option value="none">Ninguno</option>
+                    </select>
+                </div>
+                <div class="form-group col-6 col-lg-3">
+                    <label class="col-form-label"
+                        for="l2-analizer"><code>Analizador L2</code></label>
+                    <select class="custom-select" name="types" id="l2-analizer"/>
+                        <option value="spanish">Español</option>
+                        <option value="english">Inglés</option>
+                        <option value="none">Ninguno</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-6 col-lg-3">
+                    <label class="col-form-label" for="l1-field"><code>L1</code></label>
+                    <input class="form-control" placeholder="Nombre de lengua"
+                           type="text"
+                           value="{{L1}}"
+                           name="l1-field"
+                           id="l1-field"/>
+                </div>
+                <div class="form-group col-3">
+                    <div class="custom-control custom-switch mt-5">
+                      <input type="checkbox" class="custom-control-input"
+                                             id="l1-analizer-switch"
+                                             name="l1-analizer-switch">
+                      <label class="custom-control-label"
+                          for="l1-analizer-switch">Aplicar analizador</label>
+                    </div>
+                </div>
+                <div class="form-group col-6 col-lg-3">
+                    <label class="col-form-label" for="l2-field"><code>L2</code></label>
+                    <input class="form-control" type="text" value="{{L2}}"
+                                                            name="l2-field"
+                    id="l1-field"/>
+                </div>
+                <div class="form-group col-3">
+                    <div class="custom-control custom-switch mt-5">
+                      <input type="checkbox" class="custom-control-input"
+                                             id="l2-analizer-switch"
+                                             name="l2-analizer-switch">
+                      <label class="custom-control-label"
+                          for="l2-analizer-switch">Aplicar analizador</label>
+                    </div>
+                </div>
+            </div>
+          {% if aditional_fields %}
+          <h4>Campos adicionales</h4>
+          <div class="form-row">
+          {% for field in aditional_fields  %}
+            <div class="form-group col" id="{{field}}-form-field">
+              <label for="{{field}}-form-field" class="col-form-label">Tipo para:
+                <code>{{field|upper}}</code></label>
+              <select name="{{field}}" class="form-control"
+                id="{{field}}-optional-field">
+                <option value="txt">Texto</option>
+                <option value="kwd">Palabras clave</option>
+              </select>
+            </div>
+          {% endfor %}
+          </div>
+          {% endif %}
+          <hr class="mb-3"/>
+          <div class="form-row mt-3">
+              <div class="form-group col-9">
+                <!--actual upload which is hidden-->
+                {{form.autofill_csv}}
+                <!-- our custom upload button-->
+                <span data-toggle="tooltip" data-placement="bottom"
+                    title="Sube un archivo CSV e intentaremos autodetectar los campos">
+                    <label class="btn" id="autofill-label"
+                      for="id_autofill_csv">{{form.autofill_csv.label}} <i class="fa fa-cogs"></i></label>
+                </span>
+                <!--name of file chosen-->
+                <span id="file-chosen-name">Ningun archivo seleccionado</span>
+              </div>
+              <div class="form-group col-3">
+                  <button type="submit" class="btn btn-success btn-lg" id="save-settings-btn">Guardar <i class="fa fa-save"></i></button>
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
@@ -186,15 +284,15 @@
     })
 
     /*Manage custom upload button file name*/
-    const actualBtn = document.getElementById('id_autofill');
-    //const fileChosen = document.getElementById('file-chosen-name');
+    const actualBtn = document.getElementById('id_autofill_csv');
+    const fileChosen = document.getElementById('file-chosen-name');
     const indexConfForm = $('form#index-config-form')
     const saveConfBtn = $('#save-settings-btn')
     actualBtn.addEventListener('change', function(){
       const fileName = this.files[0].name
-      //fileChosen.textContent = fileName
-      saveConfBtn.html(`Enviar ${fileName} <i class='fa fa-file-excel-o'>`)
-      saveConfBtn.attr("class", "btn btn-primary")
+      fileChosen.textContent = fileName
+      //saveConfBtn.html(`Enviar ${fileName} <i class='fa fa-file-excel-o'>`)
+      //saveConfBtn.attr("class", "btn btn-primary")
     })
 </script>
 {% endblock javascript %}
