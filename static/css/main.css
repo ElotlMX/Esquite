@@ -76,7 +76,7 @@ textarea.json-config{
     font-family: monospace;
 }
 
-label#autofill-label{
+button#autofill-modal-btn{
   display: inline-block;
   background-color: indigo;
   color: white;

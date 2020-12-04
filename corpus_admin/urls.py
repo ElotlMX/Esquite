@@ -9,5 +9,6 @@ urlpatterns = [
     path('add/<str:_id>', views.add_doc_data, name='add'),
     path('delete/', views.delete_doc, name='delete'),
     path('export-corpus-data/', views.export_data, name="export-corpus-data"),
-    path('index-config/', views.index_config, name="index-config")
+    path('index-config/', views.index_config, name="index-config"),
+    path('fields-detector/', views.fields_detector, name="fields-detector")
 ]

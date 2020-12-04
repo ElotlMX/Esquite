@@ -66,3 +66,9 @@ class IndexConfigForm(forms.Form):
 
     autofill_csv.widget.attrs.update({'hidden':''})
 
+
+class AutofillForm(forms.Form):
+    """**Genera formulario para editar índice de elasticsearch**
+    """
+    csv = forms.FileField(label="Selecciona un archivo", required=False)
+    csv.widget.attrs.update({"class": "custom-file-input"})

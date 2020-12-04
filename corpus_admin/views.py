@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
-                   IndexConfigForm)
+                   IndexConfigForm, AutofillForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info, csv_writer)
 from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
@@ -301,42 +301,29 @@ def index_config(request):
     default_fields = ["l1", "l2", "variant", "document_name", "pdf_file"]
     if request.method == "POST":
         breakpoint()
-        form = IndexConfigForm(request.POST, request.FILES)
-        if form.is_valid():
-            data = form.cleaned_data
-            csv_file = data['autofill']
-            csv_writer(csv_file, "autofill.csv")
-            with open("autofill.csv", 'r', encoding="utf-8") as f:
-                fields = f.readline()
-            fields = fields.strip('\n').split(',')
-            # Aditional fields
-            if set(fields) - set(default_fields) != set():
-                aditional_fields = set(fields) - set(default_fields)
-            else:
-                aditional_fields = []
-                notification = "No detectamos ningun campo adicional en el archivo CSV que subiste :o"
-                messages.warning(request, notification)
-                messages.info(request, f"Campos mínimos: {', '.join(default_fields)}")
-            with open("elastic-config.json", 'r') as f:
-                json_file = f.read()
-            data_config = json.loads(json_file)
-            for optional_field in aditional_fields:
-                data_config['mappings']['properties'][optional_field] = {'type': 'keyword'}
-            index_name = settings.INDEX
-            form = IndexConfigForm(initial={'index_name': index_name,
-                                            'l1': settings.L1,
-                                            'l2': settings.L2,
-                                            'settings': json.dumps(data_config['settings'],
-                                                               indent=2,
-                                                               sort_keys=True),
-                                            'mapping': json.dumps(data_config['mappings'],
-                                                              indent=2,
-                                                             sort_keys=True),})
-            return render(request, "corpus-admin/index-config.html",
-                          {
-                              "form": form, "index_name": index_name,
-                              'aditional_fields': aditional_fields
-                          })
+        data = request.POST
+        # Aditional fields
+        if set(fields) - set(default_fields) != set():
+            aditional_fields = set(fields) - set(default_fields)
+        else:
+            aditional_fields = []
+            notification = "No detectamos ningun campo adicional en el archivo CSV que subiste :o"
+            messages.warning(request, notification)
+            messages.info(request, f"Campos mínimos: {', '.join(default_fields)}")
+        with open("elastic-config.json", 'r') as f:
+            json_file = f.read()
+        data_config = json.loads(json_file)
+        for optional_field in aditional_fields:
+            data_config['mappings']['properties'][optional_field] = {'type': 'keyword'}
+        index_name = settings.INDEX
+        form = IndexConfigForm()
+        autofill_form = AutofillForm()
+        return render(request, "corpus-admin/index-config.html",
+                      {
+                          "form": form, "index_name": index_name,
+                          'aditional_fields': aditional_fields,
+                          "autofill_form": autofill_form
+                      })
     else:
         analysis = {"idioma": "spanish"}
         fields = dict()
@@ -352,10 +339,59 @@ def index_config(request):
         mappings = data['mappings']
         fields = mappings['properties']
         index_name = settings.INDEX
-        form = IndexConfigForm()
+        autofill_form = AutofillForm()
         return render(request, "corpus-admin/index-config.html",
                       {
                         "index_name": index_name, 'mappings': mappings,
                           'index_config': index_config, 'analysis': analysis,
-                          'fields': fields, 'form': form
+                          "autofill_form": autofill_form,
+                          'fields': fields,
                       })
+
+
+def fields_detector(request):
+    analysis = {"idioma": "spanish"}
+    default_fields = ["l1", "l2", "variant", "document_name", "pdf_file"]
+    fields = dict()
+    if request.method == "POST":
+        form = AutofillForm(request.POST, request.FILES)
+        if form.is_valid():
+            data = form.cleaned_data
+            csv_file = data['csv']
+            csv_writer(csv_file, "autofill.csv")
+            with open("autofill.csv", 'r', encoding="utf-8") as f:
+                fields = f.readline()
+            fields = fields.strip('\n').split(',')
+            # Aditional fields
+            if set(fields) - set(default_fields) != set():
+                aditional_fields = set(fields) - set(default_fields)
+            else:
+                aditional_fields = []
+                notification = "No detectamos ningun campo adicional en el archivo CSV que subiste :o"
+                messages.warning(request, notification)
+                messages.info(request, f"Campos mínimos: {', '.join(default_fields)}")
+            with open("elastic-config.json", 'r') as f:
+                json_file = f.read()
+            data = json.loads(json_file)
+            for optional_field in aditional_fields:
+                data['mappings']['properties'][optional_field] = {'type': 'keyword'}
+            index_config = data['settings']['index']
+            analyzer = index_config['analysis']['analyzer']
+            analyzer_name = list(analyzer.keys())[0]
+            analysis['filtros'] = analyzer[analyzer_name]['filter']
+            analysis['nombre'] = analyzer_name
+            mappings = data['mappings']
+            fields = mappings['properties']
+            index_name = settings.INDEX
+            autofill_form = AutofillForm()
+        return render(request, "corpus-admin/index-config.html",
+                      {
+                        "index_name": index_name, 'mappings': mappings,
+                        'index_config': index_config, 'analysis': analysis,
+                        "autofill_form": autofill_form,
+                        'aditional_fields': aditional_fields,
+                          'fields': fields, 'form': form, "default_fields":
+                          default_fields
+                      })
+    else:
+        return HttpResponseRedirect('/corpus-admin/index-config/')
