@@ -1,7 +1,11 @@
 #!env/bin/python
 import secrets
-import yaml
+import sys
 from pprint import pprint
+import json
+import yaml
+import elasticsearch
+from elasticsearch import Elasticsearch
 
 
 def set_project_info(config):
@@ -76,17 +80,30 @@ def set_services(config):
              de los servicios
     :rtype: dict
     """
-    notification = "\n🛑 El corpus requiere que exista un indice de\n" + \
-                   "Elasticsearch con las configuraciones que se indican\n" + \
-                   "en la documentación 🛑\n"
-    print("⚙" * 55 + notification + "⚙" * 55)
-    config['INDEX'] = input('\t * Índice de Elasticsearch>> ')
+    config['INDEX'] = input('\t * Índice de Elasticsearch>> ') or "default"
     protocol = input("\t * Protocolo HTTP o HTTPS [http]>>")
     ip = input("\t * Nombre o IP del servidor de Elasticsearch [localhost]>>")
     port = input("\t * Puerto del servidor de Elasticsearch [9200]>>")
     config['URL'] = set_url(protocol, ip, port)
     config['GOOGLE_ANALYTICS'] = input('\t * Token Google Analytics (OPCIONAL)>> ')
+    create_index(config)
     return config
+
+
+def create_index(config):
+    """Crea un índice de Elasticsearch con la configuración por defecto"""
+    es_client = Elasticsearch([config["URL"]])
+    with open('elastic-config.json', 'r', encoding="utf-8") as json_file:
+        es_config = json.loads(json_file.read())
+    print("\t⚙ Creando el índice con configuraciones por defecto ⚙")
+    try:
+        es_client.indices.create(index=config['INDEX'], body=es_config)
+    except elasticsearch.exceptions.ConnectionError as e:
+        print("[ERROR]: No se pudo conectar con la instancia de Elasticsearch :(")
+        print("¿Instalaste elasticsearch?")
+        print("Guia de instalación: https://www.elastic.co/guide/en/elasticsearch/reference/7.9/install-elasticsearch.html")
+        sys.exit(1)
+    print("\t⚙ Creado ⚙")
 
 
 def set_colors(config):
