@@ -103,6 +103,11 @@ def create_index(config):
         print("¿Instalaste elasticsearch?")
         print("Guia de instalación: https://www.elastic.co/guide/en/elasticsearch/reference/7.9/install-elasticsearch.html")
         sys.exit(1)
+    except elasticsearch.exceptions.RequestError as e:
+        print(f"[ERROR]: No se pudo crear el índice {config['INDEX']}")
+        print(f"[REASON]: {e.error} [STATUS_CODE]: {e.status_code}")
+        print("Intentalo de nuevo cambiando el nombre del índice")
+        sys.exit(1)
     print("\t⚙ Creado ⚙")
 
 
@@ -175,7 +180,7 @@ def main():
     config['SECRET_KEY'] = secrets.token_urlsafe(50)
     # Dejando por defecto el modo Debug Encendido
     config['DEBUG'] = 'True'
-    print("# Configuracion de servicios (2/3)")
+    print("# Configuración de ELASTICSEARCH (2/3)")
     config = set_services(config)
     # Vacio por defecto
     config['KEYBOARD'] = []
