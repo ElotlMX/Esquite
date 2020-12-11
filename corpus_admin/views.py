@@ -1,6 +1,8 @@
+import os
 import csv
 import logging
 import json
+from pprint import pprint
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
@@ -8,16 +10,17 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
                    IndexConfigForm, AutofillForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
-                      get_document_info, csv_writer)
+                      get_document_info, csv_writer, check_extra_fields,
+                      update_config)
 from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
                               query_kreator)
 from elasticsearch import Elasticsearch
+from elasticsearch import exceptions as es_exceptions
 
 LOGGER = logging.getLogger(__name__)
 
 # Cliente de `elasticsearch`
 es = Elasticsearch([settings.ELASTIC_URL])
-
 # === Listar documentos ===
 
 
@@ -64,16 +67,44 @@ def new_doc(request):
         form = NewDocumentForm(request.POST, request.FILES)
         if form.is_valid():
             data_form = form.cleaned_data
-            lines = csv_uploader(data_form['csv'], data_form['nombre'],
-                                     data_form['pdf'].name)
+            csv_writer(data_form['csv'])
+            csv_file_name = data_form['csv'].name
             pdf_uploader(data_form['pdf'], data_form['pdf'].name)
-            # TODO: Checar si existe el archivo antes de subirlo
-            # TODO: Barra de progreso de subida
-            notification = 'El documento <b>' + data_form['nombre'] + \
-                           '</b> fue guardado correctamente. <b>' + \
-                           str(lines) + ' líneas</b> agregadas al corpus.'
-            messages.add_message(request, messages.INFO, notification)
-            return HttpResponseRedirect('/corpus-admin/')
+            with open(csv_file_name, 'r', encoding='utf-8') as f:
+                header = f.readline().strip('\n').split(',')
+                csv_file = f.read()
+            extra_fields = check_extra_fields(header)
+            if extra_fields:
+                # TODO: Mandar al user a otra vista y preguntarle que hacer con los
+                # campos extra
+                lines = csv_file.split('\n')
+                total_lines = len(lines) - 1 # restando el header
+                notification = f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
+                messages.warning(request, notification)
+                return render(request, "corpus-admin/extra-fields.html",
+                              {"fields": extra_fields, 'doc_name':
+                               data_form['nombre'], 'pdf_file':
+                               data_form['pdf'].name, 'total_lines':
+                               total_lines, 'preview_lines': lines[:10],
+                               'csv_file_name': csv_file_name})
+
+            else: # Upload the csv file as usual
+                if os.path.isfile(csv_file_name):
+                    LOGGER.info(f"El archivo {csv_file_name} ya existe.")
+                else:
+                    if csv_file.multiple_chunks():
+                        LOGGER.warning("Documento grande {:.2f}MB".format(
+                            csv_file.size / (1000 * 1000)))
+                    csv_writer(data_form['csv'])
+                lines = csv_uploader(csv_file_name, data_form['nombre'],
+                                         data_form['pdf'].name)
+                # TODO: Checar si existe el archivo antes de subirlo
+                # TODO: Barra de progreso de subida
+                notification = 'El documento <b>' + data_form['nombre'] + \
+                               '</b> fue guardado correctamente. <b>' + \
+                               str(lines) + ' líneas</b> agregadas al corpus.'
+                messages.add_message(request, messages.INFO, notification)
+                return HttpResponseRedirect('/corpus-admin/')
         else:
             if "nombre" in form.errors:
                 form.fields["nombre"].widget.attrs["class"] += " is-invalid"
@@ -208,6 +239,7 @@ def add_doc_data(request, _id):
         if form.is_valid():
             data_form = form.cleaned_data
             doc = get_document_info(_id)
+            csv_writer(data_form['csv'])
             lines = csv_uploader(data_form['csv'], doc['name'], doc['file'],
                                 _id)
             notification = 'El documento <b>' + doc['name'] + \
@@ -358,8 +390,8 @@ def fields_detector(request):
         if form.is_valid():
             data = form.cleaned_data
             csv_file = data['csv']
-            csv_writer(csv_file, "autofill.csv")
-            with open("autofill.csv", 'r', encoding="utf-8") as f:
+            csv_writer(csv_file)
+            with open(csv_file.name, 'r', encoding="utf-8") as f:
                 fields = f.readline()
             fields = fields.strip('\n').split(',')
             # Aditional fields
@@ -395,3 +427,39 @@ def fields_detector(request):
                       })
     else:
         return HttpResponseRedirect('/corpus-admin/index-config/')
+
+
+def extra_fields(request, csv_file_name, document_name, pdf_file_name):
+    if request.method == "POST":
+        if "config-fields-switch" in request.POST:
+            data = dict(request.POST)
+            del data['config-fields-switch']
+            del data['csrfmiddlewaretoken']
+            with open("elastic-config.json", 'r') as f:
+                json_file = f.read()
+            configs = json.loads(json_file)
+            for field, field_type in data.items():
+                configs['mappings']['properties'][field] = {'type': field_type[0]}
+            try:
+                es.indices.put_mapping(configs['mappings'], index=settings.INDEX)
+            except es_exceptions.RequestError as e:
+                # TODO: Tell to the user that something goes wrong!
+                print(e)
+            new_mappings = es.indices.get_mapping(index=settings.INDEX)
+            configs['mappings'] = new_mappings[settings.INDEX]['mappings']
+            breakpoint()
+            update_config(configs)
+            messages.add_message(request,
+                                 messages.SUCCESS,
+                                 f"Los campos extra <b>\
+                                 {', '.join(data.keys())}\
+                                 </b>fueron configurados exitosamente")
+        # Upload document as usual
+        lines = csv_uploader(csv_file_name, document_name, pdf_file_name)
+        notification = 'El documento <b>' + document_name + \
+                       '</b> fue guardado correctamente. <b>' + \
+                       str(lines) + ' líneas</b> agregadas al corpus.'
+        messages.add_message(request, messages.INFO, notification)
+        return HttpResponseRedirect('/corpus-admin/new/')
+    else:
+        return HttpResponseRedirect("/corpus-admin/new/")

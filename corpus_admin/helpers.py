@@ -3,6 +3,7 @@
 import os
 import uuid
 import csv
+import json
 import logging
 from django.conf import settings
 from django.contrib import messages
@@ -91,7 +92,7 @@ def pdf_uploader(file, name):
     return True
 
 
-def csv_writer(csv_file, file_name):
+def csv_writer(csv_file):
     """**Escribe un archivo ``csv`` de forma temporal**
 
     Esta función escribe el ``csv`` en disco para posteriormente
@@ -104,9 +105,9 @@ def csv_writer(csv_file, file_name):
     :return: ``True`` si se guardo correctamente
     :rtype: bool
     """
-    LOGGER.debug("Guardando CSV temporal::{}".format(file_name))
+    LOGGER.debug(f"Guardando CSV temporal::{csv_file.name}")
     # Guardando en disco ante de procesar los datos
-    with open(file_name, 'wb+') as f:
+    with open(csv_file.name, 'wb+') as f:
         for chunk in csv_file.chunks():
             f.write(chunk)
     return True
@@ -114,7 +115,7 @@ def csv_writer(csv_file, file_name):
 # === Cargador de CSV  ===
 
 
-def csv_uploader(csv_file, doc_name, file_name, doc_id=""):
+def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
     """**Función encargada de cargar nuevas líneas al corpus**
 
     Manipula los archivos mandados desde formulario y los carga al
@@ -123,23 +124,19 @@ def csv_uploader(csv_file, doc_name, file_name, doc_id=""):
     segunda columna sea el texto en otomí y la tercera columna sea la
     variante(s)
 
-    :param csv_file: Archivo csv con el texto alineado
-    :type: File
+    :param csv_name: Nombre del archivo csv con el texto alineado
+    :type: str
     :param doc_name: Nombre del documento a cargar
     :type: str
-    :param file_name: Nombre del archivo PDF del documento
+    :param pdf_file: Nombre del archivo PDF del documento
     :type: str
     :return: Número de líneas cargadas al corpus
     :rtype: int
     """
-    LOGGER.info("Subiendo nuevo CSV::{}".format(doc_name))
-    if csv_file.multiple_chunks():
-        LOGGER.warning("Documento grande {:.2f}MB".format(
-            csv_file.size / (1000 * 1000)))
-    csv_writer(csv_file, file_name)
+    LOGGER.info(f"Subiendo nuevo CSV::{csv_name}")
     # Subiendo al indice de Elasticsearch
-    LOGGER.info("Subiendo al indice de Elasticsearch")
-    with open(file_name, 'r', encoding='utf-8') as f:
+    LOGGER.info(f"Subiendo al indice de Elasticsearch::{settings.INDEX}")
+    with open(csv_name, 'r', encoding='utf-8') as f:
         raw_csv = f.read()
     total_lines = 0
     # Si no existe el documento se crea un nuevo id
@@ -151,26 +148,22 @@ def csv_uploader(csv_file, doc_name, file_name, doc_id=""):
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
         if text:
             if text[0] and text[1]:
-                document = {"pdf_file": file_name,
+                document = {"pdf_file": pdf_file,
                             "document_id": doc_id,
                             "document_name": doc_name,
                             "l1": text[0],
                             "l2": text[1],
                             "variant": text[2]
                             }
-                LOGGER.debug("Subiendo linea #{}::{}".format(total_lines,
-                                                             document))
+                LOGGER.debug(f"Subiendo linea #{total_lines}::{document}")
                 res = es.index(index=settings.INDEX, body=document)
                 total_lines += 1
-                LOGGER.info("Upload estatus #{}::{}".format(total_lines,
-                                                            res['result']))
+                LOGGER.info(f"Upload estatus #{total_lines}::{res['result']}")
             else:
-                LOGGER.warning("Omitiendo la linea #{} en blanco::{}".format(
-                    total_lines - 1,
-                    text))
-    LOGGER.info("Lineas agregadas::{}".format(total_lines))
-    LOGGER.debug("Eliminando csv temporal::{}".format(file_name))
-    os.remove(file_name)
+                LOGGER.warning(f"Omitiendo la linea #{total_lines - 1} en blanco::{text}")
+    LOGGER.info(f"Lineas agregadas::{total_lines}")
+    LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
+    os.remove(csv_name)
     return total_lines
 
 # === Información de documento===
@@ -210,3 +203,43 @@ def get_document_info(_id):
     return {"name": name, "file": file, "id": _id}
 
 
+def check_extra_fields(fields, full=False):
+    """Revisa si existen campos adicionales a los default
+
+    :param fields: Campos del usuario presentes en la cabecera del ``csv``
+    :type: list
+    :param full: Bandera opcional si se requieren los campos completos. Por
+    ejemplo cuando se sube un respaldo de la base de datos
+    :type: bool
+    :return: Los campos adicionales encontrados si existen
+    :rtype: set
+    """
+    # If user already create custom configurations
+    if os.path.isfile('user-elastic-config.json'):
+        with open('user-elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    # Using default configurations
+    else:
+        with open('elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    default_fields = configs['mappings']['properties'].keys()
+    if not full:
+        # Remove additional fields
+        del default_fields['document_id']
+        del default_fields['document_name']
+        del default_fields['pdf_file']
+    # Aditional fields
+    if set(fields) - set(default_fields) != set():
+        aditional_fields = set(fields) - set(default_fields)
+    else:
+        aditional_fields = set()
+    return aditional_fields
+
+
+def update_config(config):
+    """Actualiza las configuraciones locales de elasticsearch
+
+    """
+    with open('user-elastic-config.json', 'w') as json_file:
+        json.dump(config, json_file, indent=2)
+    return 0
