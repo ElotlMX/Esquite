@@ -205,13 +205,15 @@
   $(function () {
     {% if data %}
       let data_s = {{ data|safe }};
+      let fields = {{ fields|safe }};
+      console.debug("FIEDLS:", fields);
+      let columns = [];
+      for (let field of fields){
+        columns.push({"data": field})
+      }
+      console.debug("COLUMNS", columns)
       /*Columns depende de los headers del CSV*/
-      {% if total_variants %}
-      let columns = [{data: "l1"}, {data: "l2"}, {data: "variant"}, {data: "document_name"}]
-      {% else %}
-      let columns = [{data: "l1"}, {data: "l2"}, {data: "document_name"}]
-      {% endif %}
-
+      
       let table = $("#corpus-table").DataTable({
         data: data_s,
         columns: columns,

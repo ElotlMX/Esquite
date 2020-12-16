@@ -2,6 +2,8 @@ import os
 import csv
 import logging
 import json
+import datetime
+import yaml
 from pprint import pprint
 from django.shortcuts import render
 from django.conf import settings
@@ -11,7 +13,7 @@ from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
                    IndexConfigForm, AutofillForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info, csv_writer, check_extra_fields,
-                      update_config)
+                      update_config, update_index_name)
 from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
                               query_kreator)
 from elasticsearch import Elasticsearch
@@ -75,8 +77,6 @@ def new_doc(request):
                 csv_file = f.read()
             extra_fields = check_extra_fields(header)
             if extra_fields:
-                # TODO: Mandar al user a otra vista y preguntarle que hacer con los
-                # campos extra
                 lines = csv_file.split('\n')
                 total_lines = len(lines) - 1 # restando el header
                 notification = f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
@@ -430,6 +430,19 @@ def fields_detector(request):
 
 
 def extra_fields(request, csv_file_name, document_name, pdf_file_name):
+    """Configura los campos extra detectados en un ``CSV``
+
+    :param request: Objeto ``HttpRequets`` de Django
+    :type request: HttpRequest
+    :param csv_file_name: Nombre del archivo ``csv``
+    :type csv_file_name: str
+    :param document_name: Nombre del documento
+    :type document_name: str
+    :param pdf_file_name: Nombre del archivo ``pdf``
+    :type pdf_file_name: str
+    :return: Redirecciona a la vista de nuevo documento
+    :rtype: None
+    """
     if request.method == "POST":
         if "config-fields-switch" in request.POST:
             data = dict(request.POST)
@@ -447,7 +460,6 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
                 print(e)
             new_mappings = es.indices.get_mapping(index=settings.INDEX)
             configs['mappings'] = new_mappings[settings.INDEX]['mappings']
-            breakpoint()
             update_config(configs)
             messages.add_message(request,
                                  messages.SUCCESS,

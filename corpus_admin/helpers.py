@@ -4,7 +4,9 @@ import os
 import uuid
 import csv
 import json
+import yaml
 import logging
+import django
 from django.conf import settings
 from django.contrib import messages
 from django.urls import reverse
@@ -144,8 +146,12 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
         doc_id = str(uuid.uuid4()).replace('-', '')[:24]
     rows = raw_csv.split('\n')
     # Quitando cabecera del csv
+    # TODO: Check extra fields
+    header = rows[0]
     rows.pop(0)
+    extra_fields = check_extra_fields(header)
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
+        breakpoint()
         if text:
             if text[0] and text[1]:
                 document = {"pdf_file": pdf_file,
@@ -156,6 +162,7 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
                             "variant": text[2]
                             }
                 LOGGER.debug(f"Subiendo linea #{total_lines}::{document}")
+                # TODO: Change to bulk
                 res = es.index(index=settings.INDEX, body=document)
                 total_lines += 1
                 LOGGER.info(f"Upload estatus #{total_lines}::{res['result']}")
@@ -223,7 +230,7 @@ def check_extra_fields(fields, full=False):
         with open('elastic-config.json') as json_file:
             configs = json.loads(json_file.read())
     default_fields = configs['mappings']['properties'].keys()
-    if not full:
+    if full:
         # Remove additional fields
         del default_fields['document_id']
         del default_fields['document_name']
@@ -242,4 +249,14 @@ def update_config(config):
     """
     with open('user-elastic-config.json', 'w') as json_file:
         json.dump(config, json_file, indent=2)
+    return 0
+
+
+def update_index_name(new_index_name):
+    with open("env.yaml", 'r') as f:
+        env_configs = yaml.load(f, Loader=yaml.FullLoader)
+        env_configs['INDEX'] = new_index_name
+    with open("env.yaml", 'w') as f:
+        yaml.dump(env_configs, f)
+    settings.INDEX = new_index_name
     return 0

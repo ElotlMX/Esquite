@@ -99,16 +99,20 @@ def search(request):
                 LOGGER.info("Los resultados de la consulta se guardaron::"\
                             + str(status))
                 data = data_processor(data_response, lang_query, user_query)
-                row = []
-                # TODO: Store results in case of download
             else:
                 data = []
+            mappings = es.indices.get_mapping(index=settings.INDEX)
+            del mappings[settings.INDEX]['mappings']['properties']['document_id']
+            del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
+            breakpoint()
+            fields = mappings[settings.INDEX]['mappings']['properties'].keys()
             return render(request, "searcher/searcher.html",
                           {'form': form, 'data': data,
                            'total': documents_count,
                            'idioma': idioma,
                            'query_text': user_query,
-                           'total_variants': len(current_variants)
+                           'total_variants': len(current_variants),
+                           'fields': fields
                            })
         else:
             user_data = form.cleaned_data
