@@ -214,10 +214,10 @@
       let data_s = {{ data|safe }};
       let fields = {{ fields|safe }};
       let columns = [];
+
       for (let field of fields){
         columns.push({"data": field})
       }
-      /*Columns depende de los headers del CSV*/
 
       $.fn.dataTable.ext.errMode = "none"
       let table = $("#corpus-table").DataTable({

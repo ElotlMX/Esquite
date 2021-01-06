@@ -142,11 +142,21 @@ def doc_preview(request, _id):
     current_variants = get_variants()
     if len(current_variants) == 1:
         current_variants = {}
+    mappings = es.indices.get_mapping(index=settings.INDEX)
+    del mappings[settings.INDEX]['mappings']['properties']['document_id']
+    del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
+    del mappings[settings.INDEX]['mappings']['properties']['document_name']
+    fields = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+    # Ordening fields
+    fields.insert(0, fields.pop(fields.index("l1")))
+    fields.insert(1, fields.pop(fields.index("l2")))
+    fields.insert(2, fields.pop(fields.index("variant")))
     return render(request, "corpus-admin/doc-preview.html",
                   {
                       "doc_data": corpus, "doc_name": name,
                       "doc_file": file, "total": len(corpus),
-                      "id": _id, "total_variants": len(current_variants)
+                      "id": _id, "total_variants": len(current_variants),
+                      "fields": fields
                   })
 
 # === Edición de documentos ===

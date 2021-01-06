@@ -101,6 +101,7 @@ def search(request):
                 data = data_processor(data_response, lang_query, user_query)
             else:
                 data = []
+            # TODO: Make a function for this
             mappings = es.indices.get_mapping(index=settings.INDEX)
             del mappings[settings.INDEX]['mappings']['properties']['document_id']
             del mappings[settings.INDEX]['mappings']['properties']['pdf_file']

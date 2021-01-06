@@ -138,10 +138,8 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=[]):
         doc_id = str(uuid.uuid4()).replace('-', '')[:24]
     rows = raw_csv.split('\n')
     # Quitando cabecera del csv
-    # TODO: Check extra fields
     header = rows[0].split(",")
     rows.pop(0)
-    breakpoint()
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
         if text:
             if text[header.index("l1")] and text[header.index("l2")]:
