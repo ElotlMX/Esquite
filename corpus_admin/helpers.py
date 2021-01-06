@@ -1,5 +1,3 @@
-# Funciones utilitarias del modulo `corpus_admin`
-# --------------------------------------------
 import os
 import uuid
 import csv
@@ -18,8 +16,6 @@ LOGGER = logging.getLogger(__name__)
 
 # Cliente de `elasticsearch`
 es = Elasticsearch([settings.ELASTIC_URL])
-
-# === Información del Corpus ===
 
 
 def get_corpus_info(request):
@@ -70,8 +66,6 @@ def get_corpus_info(request):
         messages.info(request, f"Por favor configura un índice <a href=\"{reverse('index-config')}\">aquí</a>")
     return total, docs
 
-# === Cargador de PDFs ===
-
 
 def pdf_uploader(file, name):
     """**Función encargada de cargar y guardar el archivo pdf de un nuevo
@@ -114,10 +108,8 @@ def csv_writer(csv_file):
             f.write(chunk)
     return True
 
-# === Cargador de CSV  ===
 
-
-def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
+def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=[]):
     """**Función encargada de cargar nuevas líneas al corpus**
 
     Manipula los archivos mandados desde formulario y los carga al
@@ -147,20 +139,22 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
     rows = raw_csv.split('\n')
     # Quitando cabecera del csv
     # TODO: Check extra fields
-    header = rows[0]
+    header = rows[0].split(",")
     rows.pop(0)
-    extra_fields = check_extra_fields(header)
+    breakpoint()
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
-        breakpoint()
         if text:
-            if text[0] and text[1]:
+            if text[header.index("l1")] and text[header.index("l2")]:
                 document = {"pdf_file": pdf_file,
                             "document_id": doc_id,
                             "document_name": doc_name,
-                            "l1": text[0],
-                            "l2": text[1],
-                            "variant": text[2]
+                            "l1": text[header.index("l1")],
+                            "l2": text[header.index("l2")],
+                            "variant": text[header.index("variant")]
                             }
+                if extra_fields:
+                    for field in extra_fields:
+                        document[field] = text[header.index(field)]
                 LOGGER.debug(f"Subiendo linea #{total_lines}::{document}")
                 # TODO: Change to bulk
                 res = es.index(index=settings.INDEX, body=document)
@@ -172,8 +166,6 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
     LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
     os.remove(csv_name)
     return total_lines
-
-# === Información de documento===
 
 
 def get_document_info(_id):
@@ -260,3 +252,9 @@ def update_index_name(new_index_name):
         yaml.dump(env_configs, f)
     settings.INDEX = new_index_name
     return 0
+
+
+def get_default_fields():
+    with open('elastic-config.json') as json_file:
+        configs = json.loads(json_file.read())
+    return list(configs['mapping']['properties'].keys())

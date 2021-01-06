@@ -23,7 +23,6 @@ LOGGER = logging.getLogger(__name__)
 
 # Cliente de `elasticsearch`
 es = Elasticsearch([settings.ELASTIC_URL])
-# === Listar documentos ===
 
 
 def list_docs(request):
@@ -46,7 +45,6 @@ def list_docs(request):
     return render(request, "corpus-admin/docs-list.html",
                   {'total': total, 'docs': docs, 'variants': variants})
 
-# === Nuevo Documento ===
 
 
 def new_doc(request):
@@ -467,7 +465,8 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
                                  {', '.join(data.keys())}\
                                  </b>fueron configurados exitosamente")
         # Upload document as usual
-        lines = csv_uploader(csv_file_name, document_name, pdf_file_name)
+        lines = csv_uploader(csv_file_name, document_name, pdf_file_name,
+                             extra_fields=list(data.keys()))
         notification = 'El documento <b>' + document_name + \
                        '</b> fue guardado correctamente. <b>' + \
                        str(lines) + ' líneas</b> agregadas al corpus.'

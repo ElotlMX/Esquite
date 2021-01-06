@@ -104,8 +104,11 @@ def search(request):
             mappings = es.indices.get_mapping(index=settings.INDEX)
             del mappings[settings.INDEX]['mappings']['properties']['document_id']
             del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
-            breakpoint()
-            fields = mappings[settings.INDEX]['mappings']['properties'].keys()
+            fields = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+            # Ordening fields
+            fields.insert(0, fields.pop(fields.index("l1")))
+            fields.insert(1, fields.pop(fields.index("l2")))
+            fields.insert(2, fields.pop(fields.index("variant")))
             return render(request, "searcher/searcher.html",
                           {'form': form, 'data': data,
                            'total': documents_count,
