@@ -103,11 +103,9 @@
     pdf = $("#id_pdf").val()
 
     $btn = $("#new-doc-btn")
-    spinner = 'Subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
-    $btn.html(spinner).prop('disabled', true);
-    $("#new-doc-form").submit().then(() => {
-      alert("something")
-    })
+    let spinner = 'Subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+    $btn.html(spinner) //.prop('disabled', true);
+    $("#new-doc-form").submit();
 
   })
 </script>

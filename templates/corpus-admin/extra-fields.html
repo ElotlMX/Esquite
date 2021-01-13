@@ -2,73 +2,125 @@
 {% load static %}
 
 {% block content %}
-  <h1 class="my-4">Descripción del documento</h1>
+  <h1 class="my-4">Configuración de campos extra <i class="fa fa-question-circle-o"></i></h1>
   <hr class="mb-3">
   <div class="jumbotron pt-5 pb-2" id="new-doc-form-container">
-      <h4>Información general</h4>
       <div class="row">
-          <div class="col-6">
-            <ul>
-                <li>Nombre: {{ doc_name }}</li>
-                <li>Archivo PDF: {{ pdf_file }}</li>
-                <li>Archivo CSV: {{ csv_file_name }}</li>
-            </ul>
-          </div>
-          <div class="col-6">
-            <p>Líneas: {{ total_lines }}</p>
-          </div>
-      </div>
-      <h4>Preview (primeras 10 líneas)</h4>
-      TODO...
-
-      <form action="{% url 'extra-fields' csv_file_name doc_name pdf_file %}" method="post" id="extra-fields-form">
-      {% csrf_token %}
-      <div class="form-row">
-        <div class="form-group col-3">
-            <div class="custom-control custom-switch">
-              <input type="checkbox" class="custom-control-input"
-                                     id="config-fields-switch"
-                                     name="config-fields-switch"
-                                     data-toggle="collapse"
-                                     data-target="#collapse-extra-fields">
-              <label class="custom-control-label"
-                  for="config-fields-switch">Incluir campos extra</label>
-            </div>
-        </div>
-      </div>
-      <div id="collapse-extra-fields" class="collapse">
-          <div class="card card-body">
-              <div class="form-row">
-              {% for field in fields  %}
-                <div class="form-group col-6" id="{{field}}-form-field">
-                  <label for="{{field}}-form-field" class="col-form-label">Tipo para:
-                    <code>{{field|upper}}</code></label>
-                  <select name="{{field}}" class="form-control"
-                    id="{{field}}-optional-field">
-                    <option value="text">Texto</option>
-                    <option value="keyword">Palabras clave</option>
-                  </select>
-                </div>
-              {% endfor %}
+          <div class="col">
+           <div class="card border-primary w-80">
+              <div class="card-header bg-primary text-white">
+                  <h4>Vista previa</h4>
               </div>
-          </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered">
+                      <thead class="thead-dark">
+                        <tr>
+                        {% for h in header %}
+                            <th scope="col">{{ h }}</th>
+                        {% endfor %}
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {% for rows in preview_lines  %}
+                            <tr>
+                            {% for field in rows %}
+                                <td>{{ field }}</td>
+                            {% endfor %}
+                            </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+                  </div>
+              </div>
+            </div>
+          </div> <!--col-->
       </div>
-      <div class="form-group row">
+      <div class="row mt-3">
+          <div class="col">
+              <div class="card border-primary">
+                  <div class="card-header bg-primary text-white">
+                      <h4>Información General</h4>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fa fa-file"></i> Nombre: {{doc_name}}  </li>
+                    <li class="list-group-item"><i class="fa fa-file-pdf-o"></i>
+                        PDF: {{ pdf_file }} </li>
+                    <li class="list-group-item"><i class="fa
+                            fa-file-excel-o"></i> CSV: {{csv_file_name}} </li>
+                    <li class="list-group-item"><i class="fa fa-th-list"></i> # de
+                        líneas: {{ total_lines }} </li>
+                  </ul>
+              </div>
+            </div>
+            <div class="col">
+              <form action="{% url 'extra-fields' csv_file_name doc_name pdf_file %}" method="post" id="extra-fields-form">
+              {% csrf_token %}
+                <div class="card border-success">
+                      <div id="extra-fields-card-header" class="card-header bg-success text-white">
+                          <div class="form-row">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                  <input type="checkbox" class="custom-control-input"
+                                                         id="config-fields-switch"
+                                                         name="config-fields-switch"
+                                                         data-toggle="collapse"
+                                                         data-target="#collapse-extra-fields"
+                                                         checked>
+                                 <label class="custom-control-label"
+                                            for="config-fields-switch"><h4>Incluir campos
+                                                extra</h4></label>
+                                </div>
+                            </div>
+                          </div>
+                      </div>
+                      <div id="collapse-extra-fields" class="card-body collpase show">
+                        <ul class="list-group list-group-flush">
+                          {% for field in fields  %}
+                          <li class="list-group-item">
+                            <div class="form-group" id="{{field}}-form-field">
+                              <label for="{{field}}-form-field" class="col-form-label">Tipo para:
+                                <code>{{field|upper}}</code></label>
+                              <select name="{{field}}" class="form-control"
+                                id="{{field}}-optional-field">
+                                <option value="text">Texto</option>
+                                <option value="keyword">Palabras clave</option>
+                              </select>
+                            </div>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                  </div>
+            </div>
+      </div><!-- row-->
+      <div class="row mt-3">
         <div class="col-md-2 pt-2">
           <a href="{% url 'new-doc' %}" class="badge badge-light">
             <i class="fa fa-arrow-left"></i> Regresar
           </a>
         </div>
-        <div class="col col-md-2">
+        <div class="col col-md-3">
           <button type="submit" class="btn btn-primary btn-block mt-2"
-              id="new-doc-btn">Guardar <i class="fa fa-save"></i></button>
+              id="config-btn">Configurar y guardar datos <i class="fa fa-cog"></i></button>
         </div>
         <div class="col col-md-2">
           <button type="button" class="btn btn-danger btn-block mt-2" data-toggle="modal" data-target="#csv-format">Ayuda
-            <i class="fa fa-file-excel-o"></i></button>
+            <i class="fa fa-question-circle-o"></i></button>
         </div>
       </div>
     </form>
   </div>
 
 {% endblock %}
+
+{% block javascript  %}
+<script charset="utf-8">
+    $('#collapse-extra-fields').on('hide.bs.collapse', function () {
+        $("#extra-fields-card-header").addClass("bg-danger").removeClass("bg-success");
+    })
+    $('#collapse-extra-fields').on('show.bs.collapse', function () {
+        $("#extra-fields-card-header").addClass("bg-success").removeClass("bg-danger");
+    })
+</script>
+{% endblock  %}

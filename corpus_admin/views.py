@@ -72,19 +72,22 @@ def new_doc(request):
             pdf_uploader(data_form['pdf'], data_form['pdf'].name)
             with open(csv_file_name, 'r', encoding='utf-8') as f:
                 header = f.readline().strip('\n').split(',')
-                csv_file = f.read()
+                # Removing last new line symbol
+                csv_file = f.read().strip('\n')
             extra_fields = check_extra_fields(header)
             if extra_fields:
-                lines = csv_file.split('\n')
-                total_lines = len(lines) - 1 # restando el header
+                rows = csv_file.split('\n')
+                total_lines = len(rows)
                 notification = f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
                 messages.warning(request, notification)
+                pre_rows = rows[:5]
+                pre_rows = [txt for txt in csv.reader(pre_rows,  delimiter=',', quotechar='"')]
                 return render(request, "corpus-admin/extra-fields.html",
                               {"fields": extra_fields, 'doc_name':
                                data_form['nombre'], 'pdf_file':
                                data_form['pdf'].name, 'total_lines':
-                               total_lines, 'preview_lines': lines[:10],
-                               'csv_file_name': csv_file_name})
+                               total_lines, 'preview_lines': pre_rows,
+                               'header':header, 'csv_file_name': csv_file_name})
 
             else: # Upload the csv file as usual
                 if os.path.isfile(csv_file_name):
@@ -340,7 +343,6 @@ def index_config(request):
     """
     default_fields = ["l1", "l2", "variant", "document_name", "pdf_file"]
     if request.method == "POST":
-        breakpoint()
         data = request.POST
         # Aditional fields
         if set(fields) - set(default_fields) != set():

@@ -219,6 +219,7 @@
         columns.push({"data": field})
       }
 
+      // Silence dataTable errors
       $.fn.dataTable.ext.errMode = "none"
       let table = $("#corpus-table").DataTable({
         data: data_s,
