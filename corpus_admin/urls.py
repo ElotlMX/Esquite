@@ -10,6 +10,5 @@ urlpatterns = [
     path('delete/', views.delete_doc, name='delete'),
     path('export-corpus-data/', views.export_data, name="export-corpus-data"),
     path('index-config/', views.index_config, name="index-config"),
-    path('fields-detector/', views.fields_detector, name="fields-detector"),
     path('extra-fields/csv/<str:csv_file_name>/doc/<str:document_name>/pdf/<str:pdf_file_name>/', views.extra_fields, name="extra-fields")
 ]

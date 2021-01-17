@@ -10,7 +10,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
 from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
-                   IndexConfigForm, AutofillForm)
+                   IndexConfigForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info, csv_writer, check_extra_fields,
                       update_config, update_index_name)
@@ -354,12 +354,10 @@ def index_config(request):
             data_config['mappings']['properties'][optional_field] = {'type': 'keyword'}
         index_name = settings.INDEX
         form = IndexConfigForm()
-        autofill_form = AutofillForm()
         return render(request, "corpus-admin/index-config.html",
                       {
                           "form": form, "index_name": index_name,
                           'aditional_fields': aditional_fields,
-                          "autofill_form": autofill_form
                       })
     else:
         analysis = {"idioma": "spanish"}
@@ -376,12 +374,10 @@ def index_config(request):
         mappings = data['mappings']
         fields = mappings['properties']
         index_name = settings.INDEX
-        autofill_form = AutofillForm()
         return render(request, "corpus-admin/index-config.html",
                       {
                         "index_name": index_name, 'mappings': mappings,
                           'index_config': index_config, 'analysis': analysis,
-                          "autofill_form": autofill_form,
                           'fields': fields,
                       })
 

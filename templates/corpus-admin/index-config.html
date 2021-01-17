@@ -103,13 +103,6 @@
                       data-toggle="modal" data-target="#edit-settings-modal"
                       id="edit-settings-btn"> Editar <i class="fa fa-edit"></i>
               </button>
-                <span data-toggle="tooltip" data-placement="right"
-                    title="Sube un archivo CSV e intentaremos autodetectar los campos">
-                  <button id="autofill-modal-btn" type="button" class="btn btn-default"
-                      data-toggle="modal" data-target="#autofill-modal">
-                    Autodetectar <i class="fa fa-cogs"></i>
-                  </button>
-                </span>
             </div>
         </div>
     </div>
@@ -144,37 +137,6 @@
   </div>
 </div>
 
-<!-- Autofill CSV Modal -->
-<div class="modal fade" id="autofill-modal" tabindex="-1" role="dialog"
-    aria-labelledby="autofill-modal" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="autofill-title">Sube un archivo csv</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    <form id="autofill-form" action="{% url 'fields-detector' %}" method="post" enctype="multipart/form-data">
-      <div class="modal-body">
-         {% csrf_token %}
-          <div class="form-row">
-            <div class="form-group col">
-                <div class="custom-file">
-                  {{autofill_form.csv}}
-                  <label for="csv-field" class="custom-file-label" id="file-chosen-name">{{autofill_form.csv.label}}</label>
-                </div>
-            </div>
-          </div>
-       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-success">Analizar <i class="fa fa-eye"></i></button>
-      </div>
-    </form>
-    </div>
-  </div>
-</div>
 
 <!-- Edit Settings Modal -->
 <div class="modal fade" id="edit-settings-modal" tabindex="-1" role="dialog"
@@ -300,18 +262,6 @@
         $("#btn-group-form").before(formField);
             fieldsCount++
         })
-    })
-
-    /*Manage custom upload button file name*/
-    const actualBtn = document.getElementById('id_csv');
-    const fileChosen = document.getElementById('file-chosen-name');
-    const indexConfForm = $('form#index-config-form')
-    const saveConfBtn = $('#save-settings-btn')
-    actualBtn.addEventListener('change', function(){
-      const fileName = this.files[0].name
-      fileChosen.textContent = fileName
-      //saveConfBtn.html(`Enviar ${fileName} <i class='fa fa-file-excel-o'>`)
-      //saveConfBtn.attr("class", "btn btn-primary")
     })
 </script>
 {% endblock javascript %}
