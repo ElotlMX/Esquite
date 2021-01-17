@@ -109,7 +109,7 @@ def csv_writer(csv_file):
     return True
 
 
-def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=[]):
+def csv_uploader(csv_name, doc_name, pdf_file, doc_id=""):
     """**Función encargada de cargar nuevas líneas al corpus**
 
     Manipula los archivos mandados desde formulario y los carga al
@@ -137,22 +137,18 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=[]):
     if not doc_id:
         doc_id = str(uuid.uuid4()).replace('-', '')[:24]
     rows = raw_csv.split('\n')
+    header = rows[0].lower().split(",")
     # Quitando cabecera del csv
-    header = rows[0].split(",")
     rows.pop(0)
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
         if text:
             if text[header.index("l1")] and text[header.index("l2")]:
                 document = {"pdf_file": pdf_file,
                             "document_id": doc_id,
-                            "document_name": doc_name,
-                            "l1": text[header.index("l1")],
-                            "l2": text[header.index("l2")],
-                            "variant": text[header.index("variant")]
-                            }
-                if extra_fields:
-                    for field in extra_fields:
-                        document[field] = text[header.index(field)]
+                            "document_name": doc_name
+                           }
+                for field in header:
+                    document[field] = text[header.index(field)]
                 LOGGER.debug(f"Subiendo linea #{total_lines}::{document}")
                 # TODO: Change to bulk
                 res = es.index(index=settings.INDEX, body=document)

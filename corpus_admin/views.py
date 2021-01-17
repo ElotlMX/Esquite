@@ -46,7 +46,6 @@ def list_docs(request):
                   {'total': total, 'docs': docs, 'variants': variants})
 
 
-
 def new_doc(request):
     """
     **Vista que muestra el formulario para cargar nuevos documentos al
@@ -71,8 +70,8 @@ def new_doc(request):
             csv_file_name = data_form['csv'].name
             pdf_uploader(data_form['pdf'], data_form['pdf'].name)
             with open(csv_file_name, 'r', encoding='utf-8') as f:
-                header = f.readline().strip('\n').split(',')
-                # Removing last new line symbol
+                header = f.readline().lower().strip('\n').split(',')
+                # Removing last new line
                 csv_file = f.read().strip('\n')
             extra_fields = check_extra_fields(header)
             if extra_fields:
@@ -87,7 +86,7 @@ def new_doc(request):
                                data_form['nombre'], 'pdf_file':
                                data_form['pdf'].name, 'total_lines':
                                total_lines, 'preview_lines': pre_rows,
-                               'header':header, 'csv_file_name': csv_file_name})
+                               'header': header, 'csv_file_name': csv_file_name})
 
             else: # Upload the csv file as usual
                 if os.path.isfile(csv_file_name):
@@ -100,7 +99,6 @@ def new_doc(request):
                 lines = csv_uploader(csv_file_name, data_form['nombre'],
                                          data_form['pdf'].name)
                 # TODO: Checar si existe el archivo antes de subirlo
-                # TODO: Barra de progreso de subida
                 notification = 'El documento <b>' + data_form['nombre'] + \
                                '</b> fue guardado correctamente. <b>' + \
                                str(lines) + ' líneas</b> agregadas al corpus.'
@@ -116,8 +114,6 @@ def new_doc(request):
     else:
         form = NewDocumentForm()
         return render(request, "corpus-admin/new-doc.html", {'form': form})
-
-# === Contenido de documentos ===
 
 
 def doc_preview(request, _id):
@@ -162,8 +158,6 @@ def doc_preview(request, _id):
                       "fields": fields
                   })
 
-# === Edición de documentos ===
-
 
 def doc_edit(request, _id):
     """
@@ -190,7 +184,6 @@ def doc_edit(request, _id):
                 messages.add_message(request, messages.WARNING, notification)
             else:
                 set_name = ''
-
             if data_form['pdf'] is not None:
                 pdf_name = data_form['pdf'].name
                 set_file = f"ctx._source.put('pdf_file', '{pdf_name}');"
@@ -200,7 +193,6 @@ def doc_edit(request, _id):
                 messages.add_message(request, messages.WARNING, notification)
             else:
                 set_file = ''
-
             if set_file or set_name:
                 update_rules = {
                     "script": {
@@ -229,8 +221,6 @@ def doc_edit(request, _id):
                           "doc_file": doc['file'],
                           "id": _id
                       })
-
-# === Agregar lineas a documento ===
 
 
 def add_doc_data(request, _id):
@@ -268,8 +258,6 @@ def add_doc_data(request, _id):
                           "id": _id
                       })
 
-# === Borrar documentos ===
-
 
 def delete_doc(request):
     """**Vista encargada de eliminar documentos del corpus**
@@ -290,12 +278,26 @@ def delete_doc(request):
 
 
 def export_data(request):
+    """**Vista que exporta la base de datos completa del índice**
+
+    Vista llamada desde el botón de *exportar* en el administrador del corpus.
+    Se genera un respaldo de la base de datos en formato ``csv`` con el que se
+    puede restaurar en otro índice de Elasticsearch.
+
+    * `:param request:` Objeto *HttpRequets* para pasar el estado de la app a
+        través del sistema
+    * `:type:` *HttpRequest*
+    """
     project_name = settings.NAME
+    # Setting file metadata
     response = HttpResponse(content_type="text/csv")
-    response['Content-Disposition'] = f"attachment; filename={project_name}-data.csv"
+    date = datetime.datetime.now()
+    format_date = date.strftime("%d-%m-%Y")
+    response['Content-Disposition'] = f"attachment;filename={project_name}-bkp-{format_date}.csv"
     writer = csv.writer(response)
-    csv_header = ["l1", "l2", "variant", "document_name",
-                  "pdf_file", "document_id"]
+    mappings = es.indices.get_mapping(index=settings.INDEX)
+    csv_header = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+    # Getting all data from index
     query = '{"query": {"match_all": {}}}'
     r = es.search(index=settings.INDEX, body=query, scroll="1m", size=1000)
     data_response = r["hits"]
@@ -315,26 +317,19 @@ def export_data(request):
         if "l1" not in fields or "l2" not in fields:
             LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
             continue
-        elif "variant" not in fields:
-            row.append(data["l1"])
-            row.append(data["l2"])
-            row.append("")
-            row.append(data["document_name"])
-            row.append(data["pdf_file"])
-            row.append(data["document_id"])
         else:
-            row.append(data["l1"])
-            row.append(data["l2"])
-            row.append(data["variant"])
-            row.append(data["document_name"])
-            row.append(data["pdf_file"])
-            row.append(data["document_id"])
+            # Filling list to sort csv row text later
+            row = ["" for _ in range(len(csv_header))]
+            for field in data:
+                # Sorting text on row by header position
+                header_position = csv_header.index(field)
+                row[header_position] = data[field]
         writer.writerow(row)
     return response
 
 
 def index_config(request):
-    """Configura un índice de elasticsearch
+    """**Configura un índice de elasticsearch**
 
     Permite configurar o modificar la configuración de un índice de
     elasticsearch por medio de un formulario.
@@ -391,54 +386,6 @@ def index_config(request):
                       })
 
 
-def fields_detector(request):
-    analysis = {"idioma": "spanish"}
-    default_fields = ["l1", "l2", "variant", "document_name", "pdf_file"]
-    fields = dict()
-    if request.method == "POST":
-        form = AutofillForm(request.POST, request.FILES)
-        if form.is_valid():
-            data = form.cleaned_data
-            csv_file = data['csv']
-            csv_writer(csv_file)
-            with open(csv_file.name, 'r', encoding="utf-8") as f:
-                fields = f.readline()
-            fields = fields.strip('\n').split(',')
-            # Aditional fields
-            if set(fields) - set(default_fields) != set():
-                aditional_fields = set(fields) - set(default_fields)
-            else:
-                aditional_fields = []
-                notification = "No detectamos ningun campo adicional en el archivo CSV que subiste :o"
-                messages.warning(request, notification)
-                messages.info(request, f"Campos mínimos: {', '.join(default_fields)}")
-            with open("elastic-config.json", 'r') as f:
-                json_file = f.read()
-            data = json.loads(json_file)
-            for optional_field in aditional_fields:
-                data['mappings']['properties'][optional_field] = {'type': 'keyword'}
-            index_config = data['settings']['index']
-            analyzer = index_config['analysis']['analyzer']
-            analyzer_name = list(analyzer.keys())[0]
-            analysis['filtros'] = analyzer[analyzer_name]['filter']
-            analysis['nombre'] = analyzer_name
-            mappings = data['mappings']
-            fields = mappings['properties']
-            index_name = settings.INDEX
-            autofill_form = AutofillForm()
-        return render(request, "corpus-admin/index-config.html",
-                      {
-                        "index_name": index_name, 'mappings': mappings,
-                        'index_config': index_config, 'analysis': analysis,
-                        "autofill_form": autofill_form,
-                        'aditional_fields': aditional_fields,
-                          'fields': fields, 'form': form, "default_fields":
-                          default_fields
-                      })
-    else:
-        return HttpResponseRedirect('/corpus-admin/index-config/')
-
-
 def extra_fields(request, csv_file_name, document_name, pdf_file_name):
     """Configura los campos extra detectados en un ``CSV``
 
@@ -458,14 +405,20 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
             data = dict(request.POST)
             del data['config-fields-switch']
             del data['csrfmiddlewaretoken']
-            with open("elastic-config.json", 'r') as f:
-                json_file = f.read()
-            configs = json.loads(json_file)
+            # If user already create custom configurations
+            if os.path.isfile('user-elastic-config.json'):
+                with open('user-elastic-config.json') as json_file:
+                    configs = json.loads(json_file.read())
+            # Using default configurations
+            else:
+                with open('elastic-config.json') as json_file:
+                    configs = json.loads(json_file.read())
             for field, field_type in data.items():
                 configs['mappings']['properties'][field] = {'type': field_type[0]}
             try:
                 es.indices.put_mapping(configs['mappings'], index=settings.INDEX)
             except es_exceptions.RequestError as e:
+                messages.error(request, "Error al configurar índice :(")
                 # TODO: Tell to the user that something goes wrong!
                 print(e)
             new_mappings = es.indices.get_mapping(index=settings.INDEX)
@@ -477,8 +430,7 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
                                  {', '.join(data.keys())}\
                                  </b>fueron configurados exitosamente")
         # Upload document as usual
-        lines = csv_uploader(csv_file_name, document_name, pdf_file_name,
-                             extra_fields=list(data.keys()))
+        lines = csv_uploader(csv_file_name, document_name, pdf_file_name)
         notification = 'El documento <b>' + document_name + \
                        '</b> fue guardado correctamente. <b>' + \
                        str(lines) + ' líneas</b> agregadas al corpus.'
