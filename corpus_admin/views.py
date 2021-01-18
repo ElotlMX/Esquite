@@ -13,7 +13,7 @@ from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
                    IndexConfigForm)
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info, csv_writer, check_extra_fields,
-                      update_config, update_index_name)
+                      update_config, update_index_name, get_index_config)
 from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
                               query_kreator)
 from elasticsearch import Elasticsearch
@@ -141,6 +141,7 @@ def doc_preview(request, _id):
     current_variants = get_variants()
     if len(current_variants) == 1:
         current_variants = {}
+    # TODO: Make a function for this
     mappings = es.indices.get_mapping(index=settings.INDEX)
     del mappings[settings.INDEX]['mappings']['properties']['document_id']
     del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
@@ -401,14 +402,7 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
             data = dict(request.POST)
             del data['config-fields-switch']
             del data['csrfmiddlewaretoken']
-            # If user already create custom configurations
-            if os.path.isfile('user-elastic-config.json'):
-                with open('user-elastic-config.json') as json_file:
-                    configs = json.loads(json_file.read())
-            # Using default configurations
-            else:
-                with open('elastic-config.json') as json_file:
-                    configs = json.loads(json_file.read())
+            configs = get_index_config()
             for field, field_type in data.items():
                 configs['mappings']['properties'][field] = {'type': field_type[0]}
             try:

@@ -248,7 +248,13 @@ def update_index_name(new_index_name):
     return 0
 
 
-def get_default_fields():
-    with open('elastic-config.json') as json_file:
-        configs = json.loads(json_file.read())
-    return list(configs['mapping']['properties'].keys())
+def get_index_config():
+    # If user already create custom configurations
+    if os.path.isfile('user-elastic-config.json'):
+        with open('user-elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    # Using default configurations
+    else:
+        with open('elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    return configs
