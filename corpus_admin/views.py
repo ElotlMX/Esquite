@@ -103,7 +103,7 @@ def new_doc(request):
                                '</b> fue guardado correctamente. <b>' + \
                                str(lines) + ' líneas</b> agregadas al corpus.'
                 messages.add_message(request, messages.INFO, notification)
-                return HttpResponseRedirect('/corpus-admin/')
+                return HttpResponseRedirect('/corpus-admin/new/')
         else:
             if "nombre" in form.errors:
                 form.fields["nombre"].widget.attrs["class"] += " is-invalid"
@@ -242,8 +242,11 @@ def add_doc_data(request, _id):
             data_form = form.cleaned_data
             doc = get_document_info(_id)
             csv_writer(data_form['csv'])
-            lines = csv_uploader(data_form['csv'], doc['name'], doc['file'],
-                                _id)
+            # TODO: Check extra fields
+            lines = csv_uploader(data_form['csv'].name,
+                                 doc['name'],
+                                 doc['file'],
+                                 _id)
             notification = 'El documento <b>' + doc['name'] + \
                            '</b> fue actualizado correctamente. <b>' + \
                            str(lines) + ' líneas</b> agregadas.'
@@ -364,24 +367,21 @@ def index_config(request):
         analysis = {"idioma": "spanish"}
         fields = dict()
         # Just visualize the current configuration
-        with open("elastic-config.json", 'r') as f:
-            json_file = f.read()
-        data = json.loads(json_file)
-        index_config = data['settings']['index']
+        config = get_index_config()
+        index_config = config['settings']['index']
         analyzer = index_config['analysis']['analyzer']
         analyzer_name = list(analyzer.keys())[0]
         analysis['filtros'] = analyzer[analyzer_name]['filter']
         analysis['nombre'] = analyzer_name
-        mappings = data['mappings']
+        mappings = config['mappings']
         fields = mappings['properties']
         index_name = settings.INDEX
         return render(request, "corpus-admin/index-config.html",
                       {
                         "index_name": index_name, 'mappings': mappings,
-                          'index_config': index_config, 'analysis': analysis,
-                          'fields': fields,
+                        'index_config': index_config, 'analysis': analysis,
+                        'fields': fields,
                       })
-
 
 def extra_fields(request, csv_file_name, document_name, pdf_file_name):
     """Configura los campos extra detectados en un ``CSV``
@@ -398,6 +398,7 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
     :rtype: None
     """
     if request.method == "POST":
+        has_extra_fields = False
         if "config-fields-switch" in request.POST:
             data = dict(request.POST)
             del data['config-fields-switch']
@@ -414,13 +415,15 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
             new_mappings = es.indices.get_mapping(index=settings.INDEX)
             configs['mappings'] = new_mappings[settings.INDEX]['mappings']
             update_config(configs)
+            has_extra_fields = True
             messages.add_message(request,
                                  messages.SUCCESS,
                                  f"Los campos extra <b>\
                                  {', '.join(data.keys())}\
                                  </b>fueron configurados exitosamente")
         # Upload document as usual
-        lines = csv_uploader(csv_file_name, document_name, pdf_file_name)
+        lines = csv_uploader(csv_file_name, document_name, pdf_file_name,
+                             extra_fields=has_extra_fields)
         notification = 'El documento <b>' + document_name + \
                        '</b> fue guardado correctamente. <b>' + \
                        str(lines) + ' líneas</b> agregadas al corpus.'

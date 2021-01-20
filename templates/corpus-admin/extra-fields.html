@@ -56,7 +56,7 @@
             <div class="col">
               <form action="{% url 'extra-fields' csv_file_name doc_name pdf_file %}" method="post" id="extra-fields-form">
               {% csrf_token %}
-                <div class="card border-success">
+                <div class="card border-success" id="extra-fields-card">
                       <div id="extra-fields-card-header" class="card-header bg-success text-white">
                           <div class="form-row">
                             <div class="form-group">
@@ -105,22 +105,76 @@
               id="config-btn">Configurar y guardar datos <i class="fa fa-cog"></i></button>
         </div>
         <div class="col col-md-2">
-          <button type="button" class="btn btn-danger btn-block mt-2" data-toggle="modal" data-target="#csv-format">Ayuda
+          <button type="button" class="btn btn-danger btn-block mt-2"
+              data-toggle="modal" data-target="#extra-fields-help">Ayuda
             <i class="fa fa-question-circle-o"></i></button>
         </div>
       </div>
     </form>
   </div>
 
+<div class="modal fade" id="extra-fields-help" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-diaog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Configuración de campos
+          extra</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><b>Detectamos campos extras</b> adicionales a los <i>default</i> o que
+        no estaban presentes en la cabecera de los archivos <code>csv</code> que
+        has cargado hasta ahora.</p>
+        <p>Puedes <b>ignorar</b> los campos extra haciendo click en el
+        <i>switch</i> de la tarjeta verde (inferior derecha). Si estas ignorando
+        los campos extra cambiará de color a rojo y ocultará los campos.</p>
+        <img class="img-fluid" src="{% static 'img/ignore-fields.png' %}" alt="imagen de switch que
+        incluye los campos extra"/>
+        <p class="mt-2">Para incluir los campos extra deber indicar de que tipo
+        son. Los tipos actuales son los siguientes:
+        <ul>
+            <li><b>TEXTO (<code>text</code>):</b> Tipo de dato que indexa campos
+            de texto. Estos campos pueden ser analizados por un analizador de
+            lenguaje preexistente de elasticsearch. Campo optimizado para
+            búsqueda.</li>
+            <li><b>PALABRAS CLAVE (<code>keyword</code>):</b> Usado para
+                contenido estructurado como IDs, direcciones de correo, codigos
+                postales, etiquetas, etc. Generalmente usados para ordenar
+                resultados de búsqueda, análisis o búsquedas especificas.</li>
+        </ul>
+        El tipo del campo influye en como es tratada esa información por el motor de búsqueda.</p>
+      </div>
+      <div class="modal-footer text-muted">
+        <p><b>NOTA:</b> Si ignoras los campos extra la información de sus
+        columnas en el <code>csv</code> no se agregará a la base de datos.</p>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascript  %}
 <script charset="utf-8">
+    let $cardHeader = $("#extra-fields-card-header")
     $('#collapse-extra-fields').on('hide.bs.collapse', function () {
-        $("#extra-fields-card-header").addClass("bg-danger").removeClass("bg-success");
+        $cardHeader.addClass("bg-danger").removeClass("bg-success");
+        $cardHeader.parent().addClass("border-danger").removeClass("border-success")
     })
     $('#collapse-extra-fields').on('show.bs.collapse', function () {
-        $("#extra-fields-card-header").addClass("bg-success").removeClass("bg-danger");
+        $cardHeader.addClass("bg-success").removeClass("bg-danger");
+        $cardHeader.parent().addClass("border-success").removeClass("border-danger")
     })
+
+    $confBtn = $("#config-btn")
+    $confBtn.on("click", (e) => {
+        e.preventDefault()
+        let spinner = 'Configurando y subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+        $confBtn.html(spinner).prop('disabled', true)
+        $("#extra-fields-form").submit()
+    })
+
+
 </script>
 {% endblock  %}
