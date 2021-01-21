@@ -141,9 +141,12 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     # Quitando cabecera del csv
     rows.pop(0)
     if extra_fields:
-        fields = get_index_config()["mappings"]["properties"]
-    else:
+        # Toma en cuenta los campos del header del csv
         fields = header
+    else:
+        # Agrega solo los campos existentes en el indice
+        fields = get_index_config()["mappings"]["properties"]
+        fields = set(header).intersection(set(fields))
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
         if text:
             if text[header.index("l1")] and text[header.index("l2")]:
