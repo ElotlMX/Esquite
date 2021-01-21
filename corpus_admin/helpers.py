@@ -1,11 +1,15 @@
-# Funciones utilitarias del modulo `corpus_admin`
-# --------------------------------------------
 import os
 import uuid
 import csv
+import json
+import yaml
 import logging
+import django
 from django.conf import settings
+from django.contrib import messages
+from django.urls import reverse
 from elasticsearch import Elasticsearch
+from elasticsearch import exceptions as es_exceptions
 from searcher.helpers import get_variants
 
 LOGGER = logging.getLogger(__name__)
@@ -13,15 +17,13 @@ LOGGER = logging.getLogger(__name__)
 # Cliente de `elasticsearch`
 es = Elasticsearch([settings.ELASTIC_URL])
 
-# === Información del Corpus ===
 
-
-def get_corpus_info():
+def get_corpus_info(request):
     """**Función que obtiene la información general del corpus**
 
     Está función utiliza el framework de ``Elasticsearch`` llamado
     *aggregations* para obtener los ids del corpus. Con cada uno se
-    obtienen los nombres de documentos, nombres de archivos y total.
+    obtienen los nombres de documentos, nombres de archivos y total:>>.
 
     :return: El total de documentos y una lista con información de los documentos
     :rtype: int, list
@@ -40,17 +42,29 @@ def get_corpus_info():
     docs = []
     total = 0
     LOGGER.info("Buscando documentos")
-    r = es.search(index=settings.INDEX, body=ids_filters)
-    buckets = r['aggregations']['ids']['buckets']
-    LOGGER.info("Documentos actuales::" + str(len(buckets)))
-    for bucket in buckets:
-        total += int(bucket["doc_count"])
-        document = get_document_info(bucket['key'])
-        document['count'] = bucket['doc_count']
-        docs.append(document)
+    try:
+        r = es.search(index=settings.INDEX, body=ids_filters)
+        buckets = r['aggregations']['ids']['buckets']
+        LOGGER.info("Documentos actuales::" + str(len(buckets)))
+        for bucket in buckets:
+            total += int(bucket["doc_count"])
+            document = get_document_info(bucket['key'])
+            document['count'] = bucket['doc_count']
+            docs.append(document)
+    except es_exceptions.ConnectionError as e:
+        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
+        LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
+        total = 0
+        docs = []
+    except es_exceptions.NotFoundError as e:
+        LOGGER.error("No se encontró el indice::" + settings.INDEX)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
+        total = 0
+        docs = []
+        messages.warning(request, f"Parece que no existe el índice <b>{settings.INDEX}</b>")
+        messages.info(request, f"Por favor configura un índice <a href=\"{reverse('index-config')}\">aquí</a>")
     return total, docs
-
-# === Cargador de PDFs ===
 
 
 def pdf_uploader(file, name):
@@ -74,7 +88,7 @@ def pdf_uploader(file, name):
     return True
 
 
-def csv_writer(csv_file, file_name):
+def csv_writer(csv_file):
     """**Escribe un archivo ``csv`` de forma temporal**
 
     Esta función escribe el ``csv`` en disco para posteriormente
@@ -87,17 +101,15 @@ def csv_writer(csv_file, file_name):
     :return: ``True`` si se guardo correctamente
     :rtype: bool
     """
-    LOGGER.debug("Guardando CSV temporal::{}".format(file_name))
+    LOGGER.debug(f"Guardando CSV temporal::{csv_file.name}")
     # Guardando en disco ante de procesar los datos
-    with open(file_name, 'wb+') as f:
+    with open(csv_file.name, 'wb+') as f:
         for chunk in csv_file.chunks():
             f.write(chunk)
     return True
 
-# === Cargador de CSV  ===
 
-
-def csv_uploader(csv_file, doc_name, file_name, doc_id=""):
+def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     """**Función encargada de cargar nuevas líneas al corpus**
 
     Manipula los archivos mandados desde formulario y los carga al
@@ -106,57 +118,59 @@ def csv_uploader(csv_file, doc_name, file_name, doc_id=""):
     segunda columna sea el texto en otomí y la tercera columna sea la
     variante(s)
 
-    :param csv_file: Archivo csv con el texto alineado
-    :type: File
+    :param csv_name: Nombre del archivo csv con el texto alineado
+    :type: str
     :param doc_name: Nombre del documento a cargar
     :type: str
-    :param file_name: Nombre del archivo PDF del documento
+    :param pdf_file: Nombre del archivo PDF del documento
     :type: str
     :return: Número de líneas cargadas al corpus
     :rtype: int
     """
-    LOGGER.info("Subiendo nuevo CSV::{}".format(doc_name))
-    if csv_file.multiple_chunks():
-        LOGGER.warning("Documento grande {:.2f}MB".format(
-            csv_file.size / (1000 * 1000)))
-    csv_writer(csv_file, file_name)
+    LOGGER.info(f"Subiendo nuevo CSV::{csv_name}")
     # Subiendo al indice de Elasticsearch
-    LOGGER.info("Subiendo al indice de Elasticsearch")
-    with open(file_name, 'r', encoding='utf-8') as f:
+    LOGGER.info(f"Subiendo al indice de Elasticsearch::{settings.INDEX}")
+    with open(csv_name, 'r', encoding='utf-8') as f:
         raw_csv = f.read()
     total_lines = 0
     # Si no existe el documento se crea un nuevo id
     if not doc_id:
         doc_id = str(uuid.uuid4()).replace('-', '')[:24]
     rows = raw_csv.split('\n')
+    header = rows[0].lower().split(",")
     # Quitando cabecera del csv
     rows.pop(0)
+    if extra_fields:
+        # Toma en cuenta los campos del header del csv
+        fields = header
+    else:
+        # Agrega solo los campos existentes en el indice
+        fields = get_index_config()["mappings"]["properties"]
+        fields = set(header).intersection(set(fields))
     for text in csv.reader(rows, delimiter=',', quotechar='"'):
         if text:
-            if text[0] and text[1]:
-                document = {"pdf_file": file_name,
+            if text[header.index("l1")] and text[header.index("l2")]:
+                document = {"pdf_file": pdf_file,
                             "document_id": doc_id,
-                            "document_name": doc_name,
-                            "l1": text[0],
-                            "l2": text[1],
-                            "variant": text[2]
-                            }
-                LOGGER.debug("Subiendo linea #{}::{}".format(total_lines,
-                                                             document))
+                            "document_name": doc_name
+                           }
+
+                for field in fields:
+                    if field in ["document_name", "pdf_file", "document_id"]:
+                        continue
+                    else:
+                        document[field] = text[header.index(field)]
+                LOGGER.debug(f"Subiendo linea #{total_lines}::{document}")
+                # TODO: Change to bulk
                 res = es.index(index=settings.INDEX, body=document)
                 total_lines += 1
-                LOGGER.info("Upload estatus #{}::{}".format(total_lines,
-                                                            res['result']))
+                LOGGER.info(f"Upload estatus #{total_lines}::{res['result']}")
             else:
-                LOGGER.warning("Omitiendo la linea #{} en blanco::{}".format(
-                    total_lines - 1,
-                    text))
-    LOGGER.info("Lineas agregadas::{}".format(total_lines))
-    LOGGER.debug("Eliminando csv temporal::{}".format(file_name))
-    os.remove(file_name)
+                LOGGER.warning(f"Omitiendo la linea #{total_lines - 1} en blanco::{text}")
+    LOGGER.info(f"Lineas agregadas::{total_lines}")
+    LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
+    os.remove(csv_name)
     return total_lines
-
-# === Información de documento===
 
 
 def get_document_info(_id):
@@ -193,3 +207,65 @@ def get_document_info(_id):
     return {"name": name, "file": file, "id": _id}
 
 
+def check_extra_fields(fields, full=False):
+    """Revisa si existen campos adicionales a los default
+
+    :param fields: Campos del usuario presentes en la cabecera del ``csv``
+    :type: list
+    :param full: Bandera opcional si se requieren los campos completos. Por
+    ejemplo cuando se sube un respaldo de la base de datos
+    :type: bool
+    :return: Los campos adicionales encontrados si existen
+    :rtype: set
+    """
+    # If user already create custom configurations
+    if os.path.isfile('user-elastic-config.json'):
+        with open('user-elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    # Using default configurations
+    else:
+        with open('elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    default_fields = configs['mappings']['properties'].keys()
+    if full:
+        # Remove additional fields
+        del default_fields['document_id']
+        del default_fields['document_name']
+        del default_fields['pdf_file']
+    # Aditional fields
+    if set(fields) - set(default_fields) != set():
+        aditional_fields = set(fields) - set(default_fields)
+    else:
+        aditional_fields = set()
+    return aditional_fields
+
+
+def update_config(config):
+    """Actualiza las configuraciones locales de elasticsearch
+
+    """
+    with open('user-elastic-config.json', 'w') as json_file:
+        json.dump(config, json_file, indent=2)
+    return 0
+
+
+def update_index_name(new_index_name):
+    with open("env.yaml", 'r') as f:
+        env_configs = yaml.load(f, Loader=yaml.FullLoader)
+        env_configs['INDEX'] = new_index_name
+    with open("env.yaml", 'w') as f:
+        yaml.dump(env_configs, f)
+    settings.INDEX = new_index_name
+    return 0
+
+
+def get_index_config():
+    # If user already create custom configurations
+    if os.path.isfile('user-elastic-config.json'):
+        with open('user-elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    # Using default configurations
+    else:
+        with open('elastic-config.json') as json_file:
+            configs = json.loads(json_file.read())
+    return configs

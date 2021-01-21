@@ -42,7 +42,7 @@
     </form>
   </div>
 
-<!-- Modal -->
+<!-- Help Modal -->
 <div class="modal fade" id="csv-format" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-diaog-centered" role="document">
     <div class="modal-content">
@@ -53,10 +53,12 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Esta aplicación provee una interface interna de administración de documentos. Si se quiere subir material al
-        corpus deberá ser en formato <b>.csv</b> separado por comas. Es <b>indispensable </b>que exista la cabecera ya que la primer
-        línea del archivo se ignora por defecto. Actualmente se tiene la siguiente convención para la subida de nuevos
-        documentos</p>
+        <p>Esta aplicación provee una interface interna de administración de
+        documentos. Si se quiere subir material al corpus deberá ser en formato
+        <b>.csv</b> separado por comas.</p>
+        <p>Es <b>indispensable </b>que exista la cabecera ya que la primer
+        línea del archivo se ignora por defecto. Actualmente se tiene la
+        siguiente convención para la subida de nuevos documentos: </p>
         <table class="table">
           <thead>
             <tr>
@@ -83,8 +85,10 @@
             </tr>
           </tbody>
         </table>
-        <p><b>NOTA:</b> En caso de que la variante tenga ISO se requiere que venga entre parentesis al final del nombre de la
-        variante como se muestra en la tabla anterior. De no existir variante dicho campo <b>deberá</b> estar vacío</p>
+        <p><b>NOTA:</b> En caso de que la variante tenga ISO es necesario que
+        este entre parentesis al final del nombre de la variante como se
+        muestra en la tabla anterior. De no existir variante dicho campo
+        <b>deberá</b> estar vacío</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -96,18 +100,16 @@
 
 {% block javascript %}
 <script charset="utf-8">
-  $("#new-doc-btn").on("click", (e) => {
+  let $btn = $("#new-doc-btn")
+  $btn.on("click", (e) => {
     e.preventDefault()
     name = $("#id_nombre").val()
     csv = $("#id_csv").val()
     pdf = $("#id_pdf").val()
 
-    $btn = $("#new-doc-btn")
-    spinner = 'Subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+    let spinner = 'Subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
     $btn.html(spinner).prop('disabled', true);
-    $("#new-doc-form").submit().then(() => {
-      alert("something")
-    })
+    $("#new-doc-form").submit();
 
   })
 </script>

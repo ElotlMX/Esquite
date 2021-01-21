@@ -86,7 +86,7 @@ def about(request):
     :return: Vista de acerca del corpus
     """
     LOGGER.info("Entrando a about")
-    total, docs = get_corpus_info()
+    total, docs = get_corpus_info(request)
     try:
         repo = Repo('.')
         git = repo.git

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1 class="my-4">Configuración de campos extra <i class="fa fa-question-circle-o"></i></h1>
+  <hr class="mb-3">
+  <div class="jumbotron pt-5 pb-2" id="new-doc-form-container">
+      <div class="row">
+          <div class="col">
+           <div class="card border-primary w-80">
+              <div class="card-header bg-primary text-white">
+                  <h4>Vista previa</h4>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered">
+                      <thead class="thead-dark">
+                        <tr>
+                        {% for h in header %}
+                            <th scope="col">{{ h }}</th>
+                        {% endfor %}
+                        </tr>
+                      </thead>
+                      <tbody>
+                          {% for rows in preview_lines  %}
+                            <tr>
+                            {% for field in rows %}
+                                <td>{{ field }}</td>
+                            {% endfor %}
+                            </tr>
+                          {% endfor %}
+                      </tbody>
+                  </table>
+                  </div>
+              </div>
+            </div>
+          </div> <!--col-->
+      </div>
+      <div class="row mt-3">
+          <div class="col">
+              <div class="card border-primary">
+                  <div class="card-header bg-primary text-white">
+                      <h4>Información General</h4>
+                  </div>
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="fa fa-file"></i> Nombre: {{doc_name}}  </li>
+                    <li class="list-group-item"><i class="fa fa-file-pdf-o"></i>
+                        PDF: {{ pdf_file }} </li>
+                    <li class="list-group-item"><i class="fa
+                            fa-file-excel-o"></i> CSV: {{csv_file_name}} </li>
+                    <li class="list-group-item"><i class="fa fa-th-list"></i> # de
+                        líneas: {{ total_lines }} </li>
+                  </ul>
+              </div>
+            </div>
+            <div class="col">
+              <form action="{% url 'extra-fields' csv_file_name doc_name pdf_file %}" method="post" id="extra-fields-form">
+              {% csrf_token %}
+                <div class="card border-success" id="extra-fields-card">
+                      <div id="extra-fields-card-header" class="card-header bg-success text-white">
+                          <div class="form-row">
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                  <input type="checkbox" class="custom-control-input"
+                                                         id="config-fields-switch"
+                                                         name="config-fields-switch"
+                                                         data-toggle="collapse"
+                                                         data-target="#collapse-extra-fields"
+                                                         checked>
+                                 <label class="custom-control-label"
+                                            for="config-fields-switch"><h4>Incluir campos
+                                                extra</h4></label>
+                                </div>
+                            </div>
+                          </div>
+                      </div>
+                      <div id="collapse-extra-fields" class="card-body collpase show">
+                        <ul class="list-group list-group-flush">
+                          {% for field in fields  %}
+                          <li class="list-group-item">
+                            <div class="form-group" id="{{field}}-form-field">
+                              <label for="{{field}}-form-field" class="col-form-label">Tipo para:
+                                <code>{{field|upper}}</code></label>
+                              <select name="{{field}}" class="form-control"
+                                id="{{field}}-optional-field">
+                                <option value="text">Texto</option>
+                                <option value="keyword">Palabras clave</option>
+                              </select>
+                            </div>
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                  </div>
+            </div>
+      </div><!-- row-->
+      <div class="row mt-3">
+        <div class="col-md-2 pt-2">
+          <a href="{% url 'new-doc' %}" class="badge badge-light">
+            <i class="fa fa-arrow-left"></i> Regresar
+          </a>
+        </div>
+        <div class="col col-md-3">
+          <button type="submit" class="btn btn-primary btn-block mt-2"
+              id="config-btn">Configurar y guardar datos <i class="fa fa-cog"></i></button>
+        </div>
+        <div class="col col-md-2">
+          <button type="button" class="btn btn-danger btn-block mt-2"
+              data-toggle="modal" data-target="#extra-fields-help">Ayuda
+            <i class="fa fa-question-circle-o"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+<div class="modal fade" id="extra-fields-help" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-diaog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Configuración de campos
+          extra</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><b>Detectamos campos extras</b> adicionales a los <i>default</i> o que
+        no estaban presentes en la cabecera de los archivos <code>csv</code> que
+        has cargado hasta ahora.</p>
+        <p>Puedes <b>ignorar</b> los campos extra haciendo click en el
+        <i>switch</i> de la tarjeta verde (inferior derecha). Si estas ignorando
+        los campos extra cambiará de color a rojo y ocultará los campos.</p>
+        <img class="img-fluid" src="{% static 'img/ignore-fields.png' %}" alt="imagen de switch que
+        incluye los campos extra"/>
+        <p class="mt-2">Para incluir los campos extra deber indicar de que tipo
+        son. Los tipos actuales son los siguientes:
+        <ul>
+            <li><b>TEXTO (<code>text</code>):</b> Tipo de dato que indexa campos
+            de texto. Estos campos pueden ser analizados por un analizador de
+            lenguaje preexistente de elasticsearch. Campo optimizado para
+            búsqueda.</li>
+            <li><b>PALABRAS CLAVE (<code>keyword</code>):</b> Usado para
+                contenido estructurado como IDs, direcciones de correo, codigos
+                postales, etiquetas, etc. Generalmente usados para ordenar
+                resultados de búsqueda, análisis o búsquedas especificas.</li>
+        </ul>
+        El tipo del campo influye en como es tratada esa información por el motor de búsqueda.</p>
+      </div>
+      <div class="modal-footer text-muted">
+        <p><b>NOTA:</b> Si ignoras los campos extra la información de sus
+        columnas en el <code>csv</code> no se agregará a la base de datos.</p>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript  %}
+<script charset="utf-8">
+    let $cardHeader = $("#extra-fields-card-header")
+    $('#collapse-extra-fields').on('hide.bs.collapse', function () {
+        $cardHeader.addClass("bg-danger").removeClass("bg-success");
+        $cardHeader.parent().addClass("border-danger").removeClass("border-success")
+    })
+    $('#collapse-extra-fields').on('show.bs.collapse', function () {
+        $cardHeader.addClass("bg-success").removeClass("bg-danger");
+        $cardHeader.parent().addClass("border-success").removeClass("border-danger")
+    })
+
+    $confBtn = $("#config-btn")
+    $confBtn.on("click", (e) => {
+        e.preventDefault()
+        let spinner = 'Configurando y subiendo <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'
+        $confBtn.html(spinner).prop('disabled', true)
+        $("#extra-fields-form").submit()
+    })
+
+
+</script>
+{% endblock  %}

@@ -65,7 +65,6 @@ def search(request):
             elif data_form["idioma"] == "L2":
                 idioma = settings.L2.lower()
                 lang_query = "l2"
-
             query = query_kreator(f'{lang_query}:({user_query}){variantes}')
             LOGGER.debug("Indice::" + settings.INDEX)
             try:
@@ -95,20 +94,28 @@ def search(request):
                 # TODO: Mandar correos para notificar servers caidos
                 documents_count = 0
             if documents_count != 0:
-                status = results_to_csv(data_response, current_variants)
+                status = results_to_csv(data_response["hits"], current_variants)
                 LOGGER.info("Los resultados de la consulta se guardaron::"\
                             + str(status))
                 data = data_processor(data_response, lang_query, user_query)
-                row = []
-                # TODO: Store results in case of download
             else:
                 data = []
+            # TODO: Make a function for this
+            mappings = es.indices.get_mapping(index=settings.INDEX)
+            del mappings[settings.INDEX]['mappings']['properties']['document_id']
+            del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
+            fields = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+            # Ordening fields
+            fields.insert(0, fields.pop(fields.index("l1")))
+            fields.insert(1, fields.pop(fields.index("l2")))
+            fields.insert(2, fields.pop(fields.index("variant")))
             return render(request, "searcher/searcher.html",
                           {'form': form, 'data': data,
                            'total': documents_count,
                            'idioma': idioma,
                            'query_text': user_query,
-                           'total_variants': len(current_variants)
+                           'total_variants': len(current_variants),
+                           'fields': fields
                            })
         else:
             user_data = form.cleaned_data

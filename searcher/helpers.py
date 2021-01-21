@@ -180,7 +180,7 @@ def variant_to_query(variantes):
     return query
 
 
-def results_to_csv(data_response, variants):
+def results_to_csv(data, variants):
     """**Función que escribe los resultados de la consulta en archivo csv**
 
     Guarda los resultados de la consulta en formato ``csv`` en caso de
@@ -199,27 +199,28 @@ def results_to_csv(data_response, variants):
     row = []
     file_name = "query-results.csv"
     path_to_save = settings.BASE_DIR + settings.MEDIA_ROOT + file_name
-    query_results = data_response['hits']
+    mappings = es.indices.get_mapping(index=settings.INDEX)
+    del mappings[settings.INDEX]['mappings']['properties']['document_id']
+    del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
+    del mappings[settings.INDEX]['mappings']['properties']['document_name']
     with open(path_to_save, "w") as csv_file:
         writer = csv.writer(csv_file)
+        csv_header = list(mappings[settings.INDEX]['mappings']['properties'].keys())
         # Writing header
-        writer.writerow(["l1", "l2", "variante"])
-        for data in query_results:
-            try:
-                row.append(data['_source']["l1"])
-                row.append(data['_source']["l2"])
-                if len(variants):
-                    row.append(data['_source']["variant"])
+        writer.writerow(csv_header)
+        for hit in data:
+            result = hit["_source"]
+            row = ["" for _ in range(len(csv_header))]
+            for field in result:
+                # Exclude fields when export query results to csv
+                if field in ["document_id", "pdf_file", "document_name"]:
+                    continue
                 else:
-                    row.append("")
-                writer.writerow(row)
-            except KeyError:
-                LOGGER.warning("No existe campo. Se omite línea")
-            row = []
+                    header_position = csv_header.index(field)
+                    row[header_position] = result[field]
+            writer.writerow(row)
     return True
 
-
-# === Scrapper de Ethnologue ===
 
 
 def ethno_table_maker(soup):
@@ -341,7 +342,11 @@ def get_variants():
     except es_exceptions.ConnectionError as e:
         LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
         LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
-        LOGGER.error("Url de indice::" + settings.ELASTIC_URL)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
         # Diccionario porque se utilizara el metodo items() en forms
+        variants = {'status': 'error'}
+    except es_exceptions.NotFoundError as e:
+        LOGGER.error("No se encontró el indice::" + settings.INDEX)
+        LOGGER.error("URL::" + settings.ELASTIC_URL)
         variants = {'status': 'error'}
     return variants
