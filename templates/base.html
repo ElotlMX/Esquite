@@ -22,10 +22,16 @@
     /* Colores del formulario de búsqueda */
     #form-container{
         color: {{ COLORS.text.form }};
-				background: {{ COLORS.background.form }};
+		background: {{ COLORS.background.form }};
+    }
+    /* Color del borde de la caja de búsqueda*/
+
+    #id_busqueda.form-control{
+        border: 1.5px solid {{ COLORS.border.button }};
+        border-right: 0;
     }
 
-		/* Color de la barra  de  navegacion*/
+	/* Color de la barra  de  navegacion*/
     nav > a.navbar-brand, .nav-link{
       color: {{ COLORS.text.nav }} !important;
     }
@@ -33,26 +39,31 @@
     /* Colores de botones */
     #search-btn, #export-btn, .buttons-csv, .buttons-excel, .btn-keyboard{
 			background-color: {{ COLORS.background.button }};
-			border: 3px solid {{ COLORS.border.button }};
+			border: 2px solid {{ COLORS.border.button }};
 			color: {{ COLORS.text.button }};
     }
 
     /* Colores de botones cuando pasa el mouse sobre ellos */
     .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover, #export-btn:hover{
-				background-color: {{ COLORS.background.hover }};
+		background-color: {{ COLORS.background.hover }};
         font-weight: bold;
-				color: {{ COLORS.text.hover }};
+		color: {{ COLORS.text.hover }};
     }
 
     /* Colores del resultado de busqueda en forma textual */
     .result-notify{
-				color: {{ COLORS.text.result }};
+		color: {{ COLORS.text.result }};
         font-style: italic;
     }
 
     /* Color del texto resaltado en general */
     b{
-			color: {{ COLORS.text.highlight }};
+        color: {{ COLORS.text.bold }};
+    }
+
+    em{
+        background: {{ COLORS.text.highlight }};
+        font-style: italic;
     }
 
     /* Colores de la línea separador */
@@ -71,12 +82,12 @@
   <img class="img-fluid" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
 	<nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-light" style="background: {{ COLORS.background.nav }}">
     <a href="{% url 'index' %}" class="navbar-brand">{{ PROJECT_NAME }}</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tsunkua-navbar"
-            aria-controls="tsunkua-navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#esquite-navbar"
+            aria-controls="esquite-navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="tsunkua-navbar">
+    <div class="collapse navbar-collapse" id="esquite-navbar">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item {% if request.resolver_match.url_name == 'ayuda' %} active {% endif %}">
           <a href="{% url 'ayuda' %}" class="nav-link">Ayuda <i class="fa fa-life-saver"></i></a>

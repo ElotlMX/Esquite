@@ -40,8 +40,8 @@ class SearchPostForm(forms.Form):
     elif variantes['status'] == 'error':
         VARIANTS = []
         variants_attrs['disabled'] = True
-    search_placeholder = 'Palabra o frase a buscar'
-    variant_label = 'Resultados por variante (opcional)'
+    search_placeholder = 'Búsqueda'
+    variant_label = 'Variantes'
     idioma = forms.ChoiceField(choices=LANGUAGES,
                                widget=forms.Select(
                                    attrs={'class': 'form-control'}))
