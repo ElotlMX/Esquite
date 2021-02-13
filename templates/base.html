@@ -22,18 +22,34 @@
     /* Colores del formulario de búsqueda */
     #form-container{
         color: {{ COLORS.text.form }};
-		background: {{ COLORS.background.form }};
+        background: {{ COLORS.background.form }};
     }
-    /* Color del borde de la caja de búsqueda*/
 
+    /* Color del borde de la caja de búsqueda*/
     #id_busqueda.form-control{
         border: 1.5px solid {{ COLORS.border.button }};
         border-right: 0;
     }
 
-	/* Color de la barra  de  navegacion*/
-    nav > a.navbar-brand, .nav-link{
-      color: {{ COLORS.text.nav }} !important;
+	/* Colores de la barra de  navegacion*/
+    .navbar-custom{
+        background-color: {{ COLORS.background.nav }};
+    }
+
+    .navbar-custom .navbar-brand,
+    .navbar-custom .navbar-text {
+        color: {{ COLORS.text.nav }};
+    }
+
+    .navbar-custom .navbar-nav .nav-link {
+        color: {{ COLORS.text.nav }};
+    }
+
+    /* change the color of active or hovered links */
+    .navbar-custom .nav-item.active .nav-link,
+    .navbar-custom .nav-item:focus .nav-link,
+    .navbar-custom .nav-item:hover .nav-link {
+        color: {{ COLORS.text.bold }};
     }
 
     /* Colores de botones */
@@ -79,8 +95,8 @@
   </div>
   {% endif %}
 <div class="container">
-  <img class="img-fluid" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
-	<nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-light" style="background: {{ COLORS.background.nav }}">
+  <img class="img-fluid mx-auto d-block" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
+  <nav id="barra-navegacion" class="navbar navbar-custom navbar-expand-lg navbar-light">
     <a href="{% url 'index' %}" class="navbar-brand">{{ PROJECT_NAME }}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#esquite-navbar"
             aria-controls="esquite-navbar" aria-expanded="false" aria-label="Toggle navigation">

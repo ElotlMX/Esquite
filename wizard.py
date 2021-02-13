@@ -126,10 +126,12 @@ def set_colors(config):
     config['COLORS'] = {"text": {}, "background": {}, "border": {}}
     background_color = input('\t * Color de fondo [#ffffff]>>') or "#ffffff"
     text_color = input('\t * Color de texto [#000000]>>') or "#000000"
+    bold_color = input('\t Color de negritas [#000000]>>') or "#0000000"
     highlight_color = input('\t * Color de resaltado [#000000]>>') or "#000000"
     text_fields = {
         "highlight": highlight_color, "result": text_color, "nav": text_color,
-        "form": text_color, "button": text_color, "hover": highlight_color
+        "form": text_color, "button": text_color, "hover": highlight_color,
+        "bold": bold_color
     }
     background_fields = {
         "nav": background_color, "form": background_color,
