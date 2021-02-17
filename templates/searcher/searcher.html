@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-  <div class="jumbotron pt-5 pb-2 mt-5" id="form-container">
+  <div class="jumbotron pt-5 pb-3 mt-4" id="form-container">
     <form action="{% url 'search' %}" method="post">
       {% csrf_token %}
       <div class="form-group">
@@ -174,7 +174,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
+<script type="text/javascript" charset="utf-8">
 
   function fuzzy_search(){
       let new_query = [];
