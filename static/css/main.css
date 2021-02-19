@@ -1,10 +1,17 @@
-em{
-    background: yellow;
-    font-style: italic;
+.flex-shrink-0 {
+    flex-shrink: 0 !important;
+}
+
+.text-medium{
+    font-size: 0.9em;
 }
 
 a.navbar-brand{
     font-size: 1.7em;
+}
+
+img#banner-image{
+    border-radius: 0 0 .3em .3em;
 }
 
 a.nav-link{
@@ -89,4 +96,8 @@ button#autofill-modal-btn{
   font-family: monospace;
   border-radius: 0.3rem;
   cursor: pointer;
+}
+
+.footer{
+    border-radius: .3em .3em 0 0;
 }
