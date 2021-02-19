@@ -1,10 +1,17 @@
-em{
-    background: yellow;
-    font-style: italic;
+.flex-shrink-0 {
+    flex-shrink: 0 !important;
+}
+
+.text-medium{
+    font-size: 0.9em;
 }
 
 a.navbar-brand{
     font-size: 1.7em;
+}
+
+img#banner-image{
+    border-radius: 0 0 .3em .3em;
 }
 
 a.nav-link{
@@ -18,15 +25,21 @@ hr{
   background-image: linear-gradient(to right, transparent, rgba(95,33,95,0.75), transparent);
 }
 
+/* Form styles */
 #form-container{
     font-size: 1.3em;
+}
+
+input#id_busqueda{
+    height: 3em;
+    font-size: inherit;
 }
 
 .select2 {
     width: 100% !important;
 }
 
-.label-variante{
+.label-sm{
     font-size: 0.8em;
 }
 
@@ -83,4 +96,8 @@ button#autofill-modal-btn{
   font-family: monospace;
   border-radius: 0.3rem;
   cursor: pointer;
+}
+
+.footer{
+    border-radius: .3em .3em 0 0;
 }

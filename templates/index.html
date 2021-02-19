@@ -2,21 +2,13 @@
 {% load static %}
 
 {% block content %}
-  <h1 class="my-4">Consulta del Corpus</h1>
-  <hr class="mb-3">
-  <div class="jumbotron pt-5 pb-2" id="form-container">
-    <form action="{% url 'search' %}" method="post">
+  <h2 class="mt-4">Consulta el corpus</h2>
+  <hr />
+  <div class="jumbotron pt-5 pb-3" id="form-container">
+    <form action="{% url 'search' %}" method="post" >
       {% csrf_token %}
-      <div class="form-group row">
-        <label for="id_idioma" class="col-sm-2 col-form-label text-right">{{ form.idioma.label }}</label>
-        <div class="col-sm-10">
-          {{ form.idioma }}
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="id_busqueda" class="col-sm-2 col-form-label text-right">{{ form.busqueda.label }}</label>
-        <div class="col-sm-10">
-          <div class="input-group">
+      <div class="form-group">
+          <div class="input-group input-group-lg">
             {{ form.busqueda }}
             <div class="input-group-append">
               <button type="submit" class="btn btn-default" id="search-btn">
@@ -24,13 +16,16 @@
               </button>
             </div>
           </div>
-        </div>
       </div>
-      <div class="form-group row align-items-center">
-        <label for="id_variante" class="col-sm-2 col-form-label text-right label-variante">{{ form.variante.label }}</label>
-        <div class="col-sm-10">
-          {{ form.variante }}
-        </div>
+      <div class="form-row">
+          <div class="form-group col-12 col-md-2">
+            <label for="id_idioma" class="label-sm">{{ form.idioma.label }}</label>
+            {{ form.idioma }}
+          </div>
+          <div class="form-group col-12 col-md-10">
+            <label for="id_variante" class="label-sm">{{ form.variante.label }}</label>
+            {{ form.variante }}
+          </div>
       </div>
 
       <!--Neo Keyborad-->
@@ -40,8 +35,8 @@
           <p class="text-right mt-2">Téclado <i class="fa fa-keyboard-o"></i></p>
         </div>
           {% for key in KEYBOARD %}
-          <div class="col-4 col-md-1">
-            <button type="button" id="{{key}}-key" class="btn btn-default btn-lg btn-keyboard ml-md-2 mt-1 btn-block" value="{{key}}">{{key}}</button>
+          <div class="col-4 col-md-1 text-center">
+            <button type="button" id="{{key}}-key" class="btn btn-default btn-lg btn-keyboard mt-1" value="{{key}}">{{key}}</button>
           </div>
           {% empty %}
             <p class="text-center text-monospace">No se encontró teclado personalizado <i class="fa fa-ban"></i></p>
@@ -66,11 +61,11 @@
 {% endblock %}
 
 {% block javascript %}
-  <script>
+  <script type="text/javascript" charset="utf-8">
   $(function () {
     $("#id_variante").select2({
       {% if total_variants %}
-      placeholder: "Selecciona una o más variantes",
+      placeholder: "Selecciona una o más variantes para filtrar",
       {% else %}
       placeholder: "Sin variantes disponibles",
       {% endif %}

@@ -2,38 +2,30 @@
 {% load static %}
 
 {% block content %}
-  <h1 class="my-4">Consulta del Corpus</h1>
-  <hr class="mb-3">
-  <div class="jumbotron pt-5 pb-2" id="form-container">
+  <div class="jumbotron pt-5 pb-3 mt-4" id="form-container">
     <form action="{% url 'search' %}" method="post">
       {% csrf_token %}
-        <div class="form-group row">
-          <label for="id_idioma" class="col-sm-2 col-form-label text-right">{{ form.idioma.label}}</label>
-          <div class="col-sm-10">
-            {{ form.idioma }}
-          </div>
-        </div>
-        <div class="form-group row">
-          <label for="id_busqueda" class="col-sm-2 col-form-label text-right">{{ form.busqueda.label}}</label>
-          <div class="col-sm-10">
-            <div class="input-group">
-              {{ form.busqueda }}
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-success" id="search-btn">
-                  <i class="fa fa-search" title="Lupa" aria-hidden="true"></i>
-                </button>
-              </div>
+      <div class="form-group">
+          <div class="input-group input-group-lg">
+            {{ form.busqueda }}
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-default" id="search-btn">
+                <i class="fa fa-search" title="Lupa" aria-hidden="true"></i>
+              </button>
             </div>
           </div>
-        </div>
-        <div class="form-group row align-items-center">
-          <label for="id_variante" class="col-sm-2 col-form-label text-right label-variante">
-            {{ form.variante.label }}
-          </label>
-          <div class="col-sm-10">
+      </div>
+      <div class="form-row">
+          <div class="form-group col-12 col-md-2">
+            <label for="id_idioma" class="label-sm">{{ form.idioma.label }}</label>
+            {{ form.idioma }}
+          </div>
+          <div class="form-group col-12 col-md-10">
+            <label for="id_variante" class="label-sm">{{ form.variante.label }}</label>
             {{ form.variante }}
           </div>
-        </div>
+      </div>
+
         {% if KEYBOARD %}
         <div class="form-group row collapse" id="keyboard-container">
           <div class="col-12 col-md-2">
@@ -42,7 +34,7 @@
             <!--TODO: Manejar muchas teclas >= 8-->
           {% for key in KEYBOARD %}
           <div class="col-4 col-md-1">
-            <button type="button" id="{{key}}-key" class="btn btn-default btn-lg btn-keyboard ml-md-2 mt-1 btn-block" value="{{key}}">{{key}}</button>
+            <button type="button" id="{{key}}-key" class="btn btn-default btn-lg btn-keyboard mt-1" value="{{key}}">{{key}}</button>
           </div>
           {% empty %}
             <p class="text-center text-monospace">No se encontró teclado personalizado <i class="fa fa-ban"></i></p>
@@ -63,6 +55,7 @@
       </div>
       {% endif %}
     </form>
+    <!-- Información de Resultados -->
     <div class="container-fluid">
       <div class="row">
           <h3 id="query-text" class="col-12">{{ query_text }}</h3>
@@ -70,8 +63,7 @@
       <div class="row">
         {% if total != 0 %}
           {% if total < 6 and "~" not in query_text %}
-            <p class="col-12 col-sm-8 result-notify">Encontramos {{ total }} resultados relacionados con
-              <i class="fa fa-long-arrow-right"></i> <b>{{ query_text }}</b> en <b>{{ idioma }}</b> |
+              <p class="col-12 col-sm-8 result-notify"><b>{{ total }}</b> resultados en <b>{{ idioma }}</b> |
               <button class="btn btn-info btn-sm" id="#fuzzy-search" data-toggle="tooltip" data-placement="right"
                       title="La búsqueda difusa puede traer más resultados" onclick="fuzzy_search();">
                 Búsqueda difusa <i class="fa fa-magic"></i>
@@ -83,19 +75,16 @@
               </div>
             </div>
           {% else %}
-            <p class="col-12 col-sm-8 result-notify">Encontramos {{ total }} resultados relacionados con
-              <i class="fa fa-long-arrow-right"></i> <b>{{ query_text }}</b> en <b>{{ idioma }}</b>
-            </p>
+            <p class="col-12 col-sm-8 result-notify"> <b>{{ total }}</b> resultados en <b>{{ idioma }}</b></p>
             <div class="col-12 col-sm-4 result-notify text-right" id="export-btn-container">
               <div class="btn-group">
-								<a href="{% url 'download_results' %}" id="export-btn" class="btn btn-success">Exportar <i class="fa fa-download"></i></a>
+                  <a href="{% url 'download_results' %}" id="export-btn" class="btn btn-success">Exportar <i class="fa fa-download"></i></a>
               </div>
             </div>
           {% endif %}
         {% else %}
           {% if "~" not in query_text %}
-            <p class="col-12 result-notify"><i class="fa fa-warning"></i> No encontramos
-              resultados para <i class="fa fa-long-arrow-right"></i> <b> {{ query_text }} </b> en <b>{{ idioma }}</b> |
+            <p class="col-12 result-notify"><i class="fa fa-warning"></i> Sin resultados para <b>"{{ query_text }}"</b> en <b>{{ idioma }}</b> |
             <button class="btn btn-info btn-sm" id="#fuzzy-search" data-toggle="tooltip" data-placement="right"
                       title="La búsqueda difusa puede traer más resultados" onclick="fuzzy_search();">
                 Búsqueda difusa <i class="fa fa-magic"></i>
@@ -103,14 +92,15 @@
             </p>
           {% else %}
             {% if not form_error %}
-            <p class="col-12 result-notify"><i class="fa fa-warning"></i> No encontramos
-              resultados para <i class="fa fa-long-arrow-right"></i> <b> {{ query_text }} </b> en <b>{{ idioma }}</b></p>
+            <p class="col-12 result-notify"><i class="fa fa-warning"></i> Sin resultados para <b>"{{ query_text }}"</b> en <b>{{ idioma }}</b></p>
             {% endif %}
           {% endif %}
         {% endif %}
       </div>
     </div>
   </div>
+
+  <!-- Resultados -->
   {% if total %}
     <div class="table-responsive-sm">
       <table class="table table-striped table-hover" id="corpus-table">
@@ -184,7 +174,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
+<script type="text/javascript" charset="utf-8">
 
   function fuzzy_search(){
       let new_query = [];
@@ -231,7 +221,7 @@
     {% endif %}
     $("#id_variante").select2({
       {% if total_variants %}
-      placeholder: "Selecciona una o más variantes",
+      placeholder: "Selecciona una o más variantes para filtrar",
       {% else %}
       placeholder: "Sin variantes disponibles",
       {% endif %}

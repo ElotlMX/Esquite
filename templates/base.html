@@ -2,19 +2,19 @@
 {% load google_analytics_tags %}
 
 <!DOCTYPE html>
-<html lang="es">
+<html class="h-100" lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content='text/html; charset=US-ASCII' http-equiv='Content-Type'>
   <meta content='{{META_DESC}}' name='description'>
-  <title>Corpus Paralelo {{ PROJECT_NAME }}</title>
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" >
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
-  <link rel="stylesheet" href="{% static 'data-tables/datatables.min.css' %}"/>
+  <title>{{ PROJECT_NAME }} - Corpus Paralelo</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" type="text/css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.7/css/fork-awesome.min.css" type="text/css" integrity="sha256-gsmEoJAws/Kd3CjuOQzLie5Q3yshhvmo7YNtBG7aaEY=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4/dt-1.10.23/b-1.6.5/b-html5-1.6.5/r-2.2.7/sp-1.2.2/datatables.min.css" type="text/css" />
   <link rel="stylesheet" href="{% static 'css/sweetalert2.min.css' %}" />
-  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}"/>
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/select2.min.css' %}" type="text/css" media="screen" charset="utf-8">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" >
   <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}">
   <style type="text/css" media="screen">
     /* Colores del proyecto */
@@ -22,113 +22,201 @@
     /* Colores del formulario de búsqueda */
     #form-container{
         color: {{ COLORS.text.form }};
-				background: {{ COLORS.background.form }};
+        background: {{ COLORS.background.form }};
     }
 
-		/* Color de la barra  de  navegacion*/
-    nav > a.navbar-brand, .nav-link{
-      color: {{ COLORS.text.nav }} !important;
+    /* Color del borde de la caja de búsqueda*/
+    #id_busqueda.form-control{
+        border: 1.5px solid {{ COLORS.border.button }};
+        border-right: 0;
+    }
+
+	/* Colores de la barra de  navegacion*/
+    .navbar-custom{
+        background-color: {{ COLORS.background.nav }};
+    }
+
+    .navbar-custom .navbar-brand,
+    .navbar-custom .navbar-text {
+        color: {{ COLORS.text.nav }};
+    }
+
+    .navbar-custom .navbar-nav .nav-link {
+        color: {{ COLORS.text.nav }};
+    }
+
+    /* change the color of active or hovered links */
+    .navbar-custom .nav-item.active .nav-link,
+    .navbar-custom .nav-item:focus .nav-link,
+    .navbar-custom .nav-item:hover .nav-link,
+    .navbar-custom .navbar-brand:hover{
+        color: {{ COLORS.text.navbutton}};
     }
 
     /* Colores de botones */
     #search-btn, #export-btn, .buttons-csv, .buttons-excel, .btn-keyboard{
-			background-color: {{ COLORS.background.button }};
-			border: 3px solid {{ COLORS.border.button }};
-			color: {{ COLORS.text.button }};
+        background-color: {{ COLORS.background.button }};
+        border: 2px solid {{ COLORS.border.button }};
+        color: {{ COLORS.text.button }};
     }
 
     /* Colores de botones cuando pasa el mouse sobre ellos */
-    .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover, #export-btn:hover{
-				background-color: {{ COLORS.background.hover }};
+    .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover,
+    #export-btn:hover, .list-group-item:hover {
+        background-color: {{ COLORS.background.hover }};
         font-weight: bold;
-				color: {{ COLORS.text.hover }};
+        color: {{ COLORS.text.hover }};
     }
 
     /* Colores del resultado de busqueda en forma textual */
     .result-notify{
-				color: {{ COLORS.text.result }};
+        color: {{ COLORS.text.result }};
         font-style: italic;
     }
 
     /* Color del texto resaltado en general */
     b{
-			color: {{ COLORS.text.highlight }};
+        color: {{ COLORS.text.bold }};
+    }
+
+    em{
+        background: {{ COLORS.text.highlight }};
+        color: {{ COLORS.text.button }};
+        font-style: italic;
+        padding: 1.5px;
+        border-radius: 0.3em;
     }
 
     /* Colores de la línea separador */
     hr{
       background-image: linear-gradient(to right, transparent, rgba(0,0,0,0.75), transparent);
     }
+
+    .footer {
+        background-color: {{ COLORS.background.footer }};
+        color: {{ COLORS.text.button }};
+    }
+
+    footer li > a, p#esquite-credits > a{
+        color: {{ COLORS.text.footer }};
+    }
+
+    footer li > a:hover, p#esquite-credits > a:hover{
+        color: {{ COLORS.text.hover }};
+    }
+
+    a{
+        color: {{ COLORS.text.bold }};
+    }
+
+    a:hover {
+        color: {{ COLORS.text.hover }};
+    }
   </style>
 </head>
-<body>
+<body class="d-flex flex-column h-100">
   {% if google_analytics_id %}
   <div style="display:none">
     <img src="{% google_analytics %}" width="0" height="0"/>
   </div>
   {% endif %}
-<div class="container">
-  <img class="img-fluid" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
-	<nav id="barra-navegacion" class="navbar navbar-expand-lg navbar-light" style="background: {{ COLORS.background.nav }}">
-    <a href="{% url 'index' %}" class="navbar-brand">{{ PROJECT_NAME }}</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#tsunkua-navbar"
-            aria-controls="tsunkua-navbar" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+<main role="main" class="flex-shrink-0 mb-4">
+    <div class="container">
+        <header>
+          <nav id="barra-navegacion" class="navbar navbar-custom navbar-expand-lg navbar-light">
+            <a href="{% url 'index' %}" class="navbar-brand">
+                <img  src="{% static "img/brand-logo.png" %}"
+                          class="d-inline-block" width="60" height="60" alt="{{PROJECT_NAME}} logo"/>
+                {{ PROJECT_NAME }}
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#esquite-navbar"
+                    aria-controls="esquite-navbar" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <div class="collapse navbar-collapse" id="tsunkua-navbar">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item {% if request.resolver_match.url_name == 'ayuda' %} active {% endif %}">
-          <a href="{% url 'ayuda' %}" class="nav-link">Ayuda <i class="fa fa-life-saver"></i></a>
-        </li>
-        <li class="nav-item {% if request.resolver_match.url_name == 'links' %} active {% endif %}">
-          <a href="{% url 'links' %}" class="nav-link">Ligas de interés <i class="fa fa-external-link"></i></a>
-        </li>
-        <li class="nav-item dropdown {% if request.resolver_match.url_name == 'about' or request.resolver_match.url_name == 'participantes' %} active {% endif %}">
-          <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Acerca de
-          </a>
-          <div class="dropdown-menu" aria-labelledby="about-dropdown">
-            <a class="dropdown-item" href="{% url 'about' %}">Acerca del Corpus <i class="fa fa-info-circle"></i></a>
-            <a class="dropdown-item" href="{% url 'participantes' %}">Participantes <i class="fa fa-group"></i></a>
+            <div class="collapse navbar-collapse" id="esquite-navbar">
+              <ul class="navbar-nav ml-auto">
+                <li class="ml-2 mt-1 nav-item {% if request.resolver_match.url_name == 'ayuda' %} active {% endif %}">
+                  <a href="{% url 'ayuda' %}" class="nav-link">Ayuda <i class="fa fa-life-saver"></i></a>
+                </li>
+                <li class="ml-2 mt-1 nav-item {% if request.resolver_match.url_name == 'links' %} active {% endif %}">
+                  <a href="{% url 'links' %}" class="nav-link">Ligas de interés <i class="fa fa-external-link"></i></a>
+                </li>
+                <li class="ml-2 mt-1 nav-item dropdown {% if request.resolver_match.url_name == 'about' or request.resolver_match.url_name == 'participantes' %} active {% endif %}">
+                  <a class="nav-link dropdown-toggle" href="#" id="about-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Acerca de
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="about-dropdown">
+                    <a class="mt-1 dropdown-item" href="{% url 'about' %}">Acerca del Corpus <i class="fa fa-info-circle"></i></a>
+                    <a class="mt-1 dropdown-item" href="{% url 'participantes' %}">Participantes <i class="fa fa-group"></i></a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <img id="banner-image" class="img-fluid mx-auto d-block" src="{% static "img/banner.png" %}" alt="Banner {{ PROJECT_NAME }}">
+        </header>
+      {% if messages %}
+        {% for message in messages %}
+          <div class="mt-3 alert messages {{ message.tags }} alert-dissmisible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+              <i class="fa fa-times-rectangle-o"></i> {{ message|safe }}
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+              <i class="fa fa-warning"></i> {{ message|safe }}
+            {% else %}
+              <i class="fa fa-info-circle"></i> {{ message|safe }}
+            {% endif %}
           </div>
-        </li>
-      </ul>
+        {% endfor %}
+      {% endif %}
+
+      {% block content %}
+      {% endblock %}
     </div>
-  </nav>
-  {% if messages %}
-    {% for message in messages %}
-      <div class="mt-3 alert messages {{ message.tags }} alert-dissmisible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-          <i class="fa fa-times-rectangle-o"></i> {{ message|safe }}
-        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-          <i class="fa fa-warning"></i> {{ message|safe }}
-        {% else %}
-          <i class="fa fa-info-circle"></i> {{ message|safe }}
-        {% endif %}
-      </div>
-    {% endfor %}
-  {% endif %}
+</main>
 
-  {% block content %}
-  {% endblock %}
-</div>
-
-<hr >
-<footer class="text-center">
-  <br>
-  {{ PROJECT_NAME }} 2020 | <i class="fa fa-rocket"></i> por <a href="https://github.com/ElotlMX/Esquite/" target="_blank">Esquite <i class="fa fa-github"></i></a> | Hecho con <i class="fa fa-heart"></i> por <a href="https://elotl.mx">Comunidad Elotl</a>
+<div class="container mt-auto text-medium">
+<footer class="footer py-3">
+        <div class="row text-center">
+            <div class="col">
+                <h6>AYUDA</h6>
+                <ul class="list-unstyled">
+                    <li><a  href="{% url 'ayuda' %}">Búsquedas avanzadas</a></li>
+                </ul>
+            </div>
+            <div class="col">
+                <h6>ELOTL</h6>
+                <ul class="list-unstyled">
+                    <li><a href="http://www.elotl.mx" target="_blank">Comunidad Elotl</a></li>
+                    <li><a href="http://www.elotl.mx/blog/" target="_blank">Blog Elotl</a></li>
+                </ul>
+            </div>
+            <div class="col">
+                <h6>CORPUS SIMILARES</h6>
+                <ul class="list-unstyled">
+                    <li><a href="http://www.corpus.unam.mx/axolotl"
+                           target="_blank">Axolotl</a></li>
+                    <li><a href="http://tsunkua.elotl.mx/"
+                           target="_blank">Tsunkua</a></li>
+                </ul>
+            </div>
+        </div>
+        <div id="esquite-credits" class="row">
+            <div class="col text-center">
+              <p id="esquite-credits" class="mb-0">{{ PROJECT_NAME }} 2020 | <i class="fa fa-rocket"></i> por <a href="https://github.com/ElotlMX/Esquite/" target="_blank">Esquite <i class="fa fa-github"></i></a> | Hecho con <i class="fa fa-heart"></i> por <a href="https://elotl.mx">Comunidad Elotl</a></p>
+            </div>
+        </div>
 </footer>
+    </div>
 </body>
-<script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'data-tables/datatables.min.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.23/b-1.6.5/b-html5-1.6.5/r-2.2.7/sp-1.2.2/datatables.min.js"></script>
 <script type="text/javascript" src="{% static 'js/sweetalert2.all.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/select2.full.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/select2.full.min.js' %}" charset="utf-8"></script>
 <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
 {% block javascript %}{% endblock %}
 </html>
