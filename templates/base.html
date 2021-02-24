@@ -27,30 +27,31 @@
 
     /* Color del borde de la caja de búsqueda*/
     #id_busqueda.form-control{
-        border: 1.5px solid {{ COLORS.border.button }};
+        border: 1.5px solid {{ COLORS.border.input }};
         border-right: 0;
     }
 
-	/* Colores de la barra de  navegacion*/
+	/* Colores de la barra de navegacion*/
     .navbar-custom{
         background-color: {{ COLORS.background.nav }};
     }
 
+    /* Colores de los textos de la barra de navegación */
     .navbar-custom .navbar-brand,
-    .navbar-custom .navbar-text {
+    .navbar-custom .navbar-text,
+    .navbar-custom .navbar-nav .nav-link{
         color: {{ COLORS.text.nav }};
     }
 
-    .navbar-custom .navbar-nav .nav-link {
-        color: {{ COLORS.text.nav }};
-    }
-
-    /* change the color of active or hovered links */
-    .navbar-custom .nav-item.active .nav-link,
+    /* Cambio de color al pasar sobre links o con liks activos */
     .navbar-custom .nav-item:focus .nav-link,
     .navbar-custom .nav-item:hover .nav-link,
     .navbar-custom .navbar-brand:hover{
-        color: {{ COLORS.text.navbutton}};
+        color: {{ COLORS.text.navhover }};
+    }
+
+    .navbar-custom .nav-item.active .nav-link{
+        color: {{ COLORS.text.navactive }};
     }
 
     /* Colores de botones */
@@ -63,9 +64,9 @@
     /* Colores de botones cuando pasa el mouse sobre ellos */
     .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover,
     #export-btn:hover, .list-group-item:hover {
-        background-color: {{ COLORS.background.hover }};
+        background-color: {{ COLORS.background.btnhover }};
         font-weight: bold;
-        color: {{ COLORS.text.hover }};
+        color: {{ COLORS.text.btnhover }};
     }
 
     /* Colores del resultado de busqueda en forma textual */
@@ -80,37 +81,35 @@
     }
 
     em{
-        background: {{ COLORS.text.highlight }};
-        color: {{ COLORS.text.button }};
+        background: {{ COLORS.background.highlight }};
+        color: {{ COLORS.text.highlight }};
         font-style: italic;
         padding: 1.5px;
         border-radius: 0.3em;
     }
 
-    /* Colores de la línea separador */
-    hr{
-      background-image: linear-gradient(to right, transparent, rgba(0,0,0,0.75), transparent);
-    }
+    /* Colores del footer */
 
     .footer {
         background-color: {{ COLORS.background.footer }};
-        color: {{ COLORS.text.button }};
+        color: {{ COLORS.text.footer}};
     }
 
+    /* Colores de los enlaces */
     footer li > a, p#esquite-credits > a{
-        color: {{ COLORS.text.footer }};
+        color: {{ COLORS.text.links }};
     }
 
     footer li > a:hover, p#esquite-credits > a:hover{
-        color: {{ COLORS.text.hover }};
+        color: {{ COLORS.text.hoverlinks }};
     }
 
     a{
-        color: {{ COLORS.text.bold }};
+        color: {{ COLORS.text.links }};
     }
 
     a:hover {
-        color: {{ COLORS.text.hover }};
+        color: {{ COLORS.text.hoverlinks }};
     }
   </style>
 </head>
