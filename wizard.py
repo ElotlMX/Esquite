@@ -81,7 +81,7 @@ def set_services(config):
              de los servicios
     :rtype: dict
     """
-    config['INDEX'] = input('\t * Índice de Elasticsearch>> ') or "default"
+    config['INDEX'] = input('\t * Índice de Elasticsearch[default]>> ') or "default"
     protocol = input("\t * Protocolo HTTP o HTTPS [http]>>")
     ip = input("\t * Nombre o IP del servidor de Elasticsearch [localhost]>>")
     port = input("\t * Puerto del servidor de Elasticsearch [9200]>>")
@@ -204,7 +204,20 @@ def create_user_templates(base_dir):
     try:
         # Try to create templates
         print("\t# Creando templates HTML de usuariæ")
-        open(about_file, 'a').close()
+        with open(about_file, 'w+') as about_f:
+            default_about_string = """
+      <p>Este corpus <b>paralelo</b> permite búsquedas de palabras o frases
+      dentro de una colección de documentos bilingües digitalizados
+      (traducciones).</p>
+      <p>El sistema desplegará aquel conjunto de fragmentos/oraciones que
+      contienen la palabra buscada en la lengua seleccionada, así como las
+      oraciones paralelas asociadas en la otra lengua, es decir, sus
+      traducciones.</p>
+      <p>Este tipo de sistemas son útiles para estudiosos, aprendices y
+      hablantes de la lengua que quieran observar cómo se traduce cierta palabra
+      o frase dependiendo del contexto y de la fuente.</p>
+            """
+            about_f.write(default_about_string)
         open(links_file, 'a').close()
         open(help_file, 'a').close()
         open(colabs_file, 'a').close()
