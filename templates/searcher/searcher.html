@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-  <div class="jumbotron pt-5 pb-3 mt-4" id="form-container">
+  <div class="jumbotron pt-5 pb-3 mt-4 shadow" id="form-container">
     <form action="{% url 'search' %}" method="post">
       {% csrf_token %}
       <div class="form-group">
@@ -71,7 +71,7 @@
             </p>
             <div class="col-12 col-sm-4 result-notify text-right" id="export-btn-container">
               <div class="btn-group">
-								<a href="{% url 'download_results' %}" id="export-btn" class="btn btn-success">Exportar <i class="fa fa-download"></i></a>
+                  <a href="{% url 'download_results' %}" id="export-btn" class="btn btn-success">Exportar <i class="fa fa-download"></i></a>
               </div>
             </div>
           {% else %}
@@ -84,7 +84,7 @@
           {% endif %}
         {% else %}
           {% if "~" not in query_text %}
-            <p class="col-12 result-notify"><i class="fa fa-warning"></i> Sin resultados para <b>"{{ query_text }}"</b> en <b>{{ idioma }}</b> |
+            <p class="col-12 result-notify"><i class="fa fa-warning"></i> Sin resultados para <b>{{ query_text }}</b> en <b>{{ idioma }}</b> |
             <button class="btn btn-info btn-sm" id="#fuzzy-search" data-toggle="tooltip" data-placement="right"
                       title="La búsqueda difusa puede traer más resultados" onclick="fuzzy_search();">
                 Búsqueda difusa <i class="fa fa-magic"></i>
@@ -92,7 +92,7 @@
             </p>
           {% else %}
             {% if not form_error %}
-            <p class="col-12 result-notify"><i class="fa fa-warning"></i> Sin resultados para <b>"{{ query_text }}"</b> en <b>{{ idioma }}</b></p>
+            <p class="col-12 result-notify"><i class="fa fa-warning"></i> Sin resultados para <b>{{ query_text }}</b> en <b>{{ idioma }}</b></p>
             {% endif %}
           {% endif %}
         {% endif %}

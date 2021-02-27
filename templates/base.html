@@ -32,25 +32,37 @@
     }
 
 	/* Colores de la barra de navegacion*/
-    .navbar-custom{
+    .navbar-custom,
+    .navbar-custom .dropdown-menu{
         background-color: {{ COLORS.background.nav }};
     }
 
     /* Colores de los textos de la barra de navegación */
     .navbar-custom .navbar-brand,
     .navbar-custom .navbar-text,
-    .navbar-custom .navbar-nav .nav-link{
+    .navbar-custom .navbar-nav .nav-link,
+        .navbar-custom #hamburger-icon{
         color: {{ COLORS.text.nav }};
     }
 
     /* Cambio de color al pasar sobre links o con liks activos */
     .navbar-custom .nav-item:focus .nav-link,
     .navbar-custom .nav-item:hover .nav-link,
-    .navbar-custom .navbar-brand:hover{
+    .navbar-custom .navbar-brand:hover,
+    .navbar-custom #hamburger-icon:hover{
+        text-decoration: underline;
         color: {{ COLORS.text.navhover }};
     }
 
+    .navbar-custom .dropdown-item:hover{
+        background-color: {{ COLORS.background.button }};
+        color: {{ COLORS.text.btnhover }};
+    }
+
+
     .navbar-custom .nav-item.active .nav-link{
+        text-decoration: underline;
+        font-weight: bold;
         color: {{ COLORS.text.navactive }};
     }
 
@@ -60,6 +72,7 @@
         border: 2px solid {{ COLORS.border.button }};
         color: {{ COLORS.text.button }};
     }
+
 
     /* Colores de botones cuando pasa el mouse sobre ellos */
     .btn-keyboard:hover, #search-btn:hover, .contact-btn:hover,
@@ -73,6 +86,10 @@
     .result-notify{
         color: {{ COLORS.text.result }};
         font-style: italic;
+    }
+
+    #query-text{
+        color: {{ COLORS.text.form }};
     }
 
     /* Color del texto resaltado en general */
@@ -122,7 +139,7 @@
 <main role="main" class="flex-shrink-0 mb-4">
     <div class="container">
         <header>
-          <nav id="barra-navegacion" class="navbar navbar-custom navbar-expand-lg navbar-light">
+          <nav id="barra-navegacion" class="navbar navbar-custom navbar-expand-lg">
             <a href="{% url 'index' %}" class="navbar-brand">
                 <img  src="{% static "img/brand-logo.png" %}"
                           class="d-inline-block" width="60" height="60" alt="{{PROJECT_NAME}} logo"/>
@@ -130,7 +147,7 @@
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#esquite-navbar"
                     aria-controls="esquite-navbar" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+                <i id="hamburger-icon" class="fa fa-bars"></i>
             </button>
 
             <div class="collapse navbar-collapse" id="esquite-navbar">
@@ -178,6 +195,7 @@
 </main>
 
 <div class="container mt-auto text-medium">
+<hr />
 <footer class="footer py-3">
         <div class="row text-center">
             <div class="col">
