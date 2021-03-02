@@ -1,3 +1,9 @@
+/* Increase font size of templates */
+#help-container, #participants-container, #about-container, #links-container{
+    font-size: 1.3em;
+}
+
+
 .flex-shrink-0 {
     flex-shrink: 0 !important;
 }
@@ -18,11 +24,15 @@ a.nav-link{
     font-size: 1em;
 }
 
+#hamburger-icon{
+    font-size: 1.5em;
+}
+
 hr{
   border: 1px;
   height: 1px;
   width: 80%;
-  background-image: linear-gradient(to right, transparent, rgba(95,33,95,0.75), transparent);
+  background-image: linear-gradient(to right, transparent, rgba(0,0,0,0.75), transparent);
 }
 
 /* Form styles */

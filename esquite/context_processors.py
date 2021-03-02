@@ -1,5 +1,6 @@
 import logging
 import re
+from datetime import date
 from django.conf import settings
 
 LOGGER = logging.getLogger(__name__)
@@ -25,9 +26,10 @@ def project_info(request):
     La información que se establece es *nombre*, *nombre de la organización*,
     *colaboradoras* y *redes sociales*. Las últimas dos son listas de python.
     """
+    current_year = date.today().year
     return {'PROJECT_NAME': settings.NAME, 'ORG_NAME': settings.ORG_NAME,
             'COLABS': settings.COLABS, 'SOCIAL': settings.SOCIAL,
-            'META_DESC': settings.META_DESC}
+            'META_DESC': settings.META_DESC, 'YEAR': current_year}
 
 
 def google_analytics(request):

@@ -1,4 +1,5 @@
 #!env/bin/python
+import os
 import secrets
 import sys
 from pprint import pprint
@@ -80,13 +81,17 @@ def set_services(config):
              de los servicios
     :rtype: dict
     """
-    config['INDEX'] = input('\t * Índice de Elasticsearch>> ') or "default"
+    config['INDEX'] = input('\t * Índice de Elasticsearch[default]>> ') or "default"
     protocol = input("\t * Protocolo HTTP o HTTPS [http]>>")
     ip = input("\t * Nombre o IP del servidor de Elasticsearch [localhost]>>")
     port = input("\t * Puerto del servidor de Elasticsearch [9200]>>")
     config['URL'] = set_url(protocol, ip, port)
+    index_flag = input("\t  Deseas crear el índice  [Y/n]>>")
     config['GOOGLE_ANALYTICS'] = input('\t * Token Google Analytics (OPCIONAL)>> ')
-    create_index(config)
+    if index_flag == "y" or index_flag == "Y" or index_flag == "":
+        create_index(config)
+    else:
+        print(f"\t⚙ Se Omitie la creación del indice {config['INDEX']} ⚙ ")
     return config
 
 
@@ -123,25 +128,43 @@ def set_colors(config):
              proyecto
     :rtype: dict
     """
-    config['COLORS'] = {"text": {}, "background": {}, "border": {}}
-    background_color = input('\t * Color de fondo [#ffffff]>>') or "#ffffff"
-    text_color = input('\t * Color de texto [#000000]>>') or "#000000"
-    bold_color = input('\t Color de negritas [#000000]>>') or "#0000000"
-    highlight_color = input('\t * Color de resaltado [#000000]>>') or "#000000"
+    primary = '#fbda65'
+    primary_hover = '#fdecb2'
+    secondary = '#06a594'
+    secondary_hover = '#69c9be'
+    secondary_active= '#048476'
+    text_color = '#000000'
+    text_color_alt = '#ffffff'
     text_fields = {
-        "highlight": highlight_color, "result": text_color, "nav": text_color,
-        "form": text_color, "button": text_color, "hover": highlight_color,
-        "bold": bold_color
+        "button": text_color_alt,
+        "btnhover": primary,
+        "form": text_color,
+        "bold": secondary,
+        "highlight": secondary_active,
+        "nav": secondary,
+        "navhover": secondary_hover,
+        "navactive": secondary_active,
+        "result": text_color,
+        "footer": text_color,
+        "links": secondary,
+        "hoverlinks": secondary_hover
     }
     background_fields = {
-        "nav": background_color, "form": background_color,
-        "button": background_color, "hover": text_color
+        "form": primary_hover,
+        "button": secondary,
+        "btnhover": secondary_hover,
+        "nav": primary,
+        "footer": text_color_alt,
+        "highlight": primary_hover
     }
-    border_fields = {"button": text_color}
-    config['COLORS']['text'] = text_fields
-    config['COLORS']['background'] = background_fields
-    config['COLORS']['border'] = border_fields
+    border_fields = {
+            "button": secondary,
+            "input": secondary
+            }
+    config['COLORS'] = {"text": text_fields, "background": background_fields,
+            "border": border_fields}
     return config
+
 
 def api_limits(config):
     """Establece valores de limites para la API
@@ -168,6 +191,41 @@ def api_limits(config):
     return config
 
 
+def create_user_templates(base_dir):
+    user_templates_dir = os.path.join(base_dir, "templates/user")
+    # Creating user templates dir if not exists
+    if not os.path.isdir(user_templates_dir):
+        os.mkdir(user_templates_dir)
+    # User templates
+    about_file = os.path.join(user_templates_dir, "about-user.html")
+    links_file = os.path.join(user_templates_dir, "links-user.html")
+    help_file = os.path.join(user_templates_dir, "help-user.html")
+    colabs_file = os.path.join(user_templates_dir, "participants-user.html")
+    try:
+        # Try to create templates
+        print("\t# Creando templates HTML de usuariæ")
+        with open(about_file, 'w+') as about_f:
+            default_about_string = """
+      <p>Este corpus <b>paralelo</b> permite búsquedas de palabras o frases
+      dentro de una colección de documentos bilingües digitalizados
+      (traducciones).</p>
+      <p>El sistema desplegará aquel conjunto de fragmentos/oraciones que
+      contienen la palabra buscada en la lengua seleccionada, así como las
+      oraciones paralelas asociadas en la otra lengua, es decir, sus
+      traducciones.</p>
+      <p>Este tipo de sistemas son útiles para estudiosos, aprendices y
+      hablantes de la lengua que quieran observar cómo se traduce cierta palabra
+      o frase dependiendo del contexto y de la fuente.</p>
+            """
+            about_f.write(default_about_string)
+        open(links_file, 'a').close()
+        open(help_file, 'a').close()
+        open(colabs_file, 'a').close()
+    except FileExistsError:
+        print("\t[WARN] No se pueden crear archivos porque parece que ya existen")
+    except PermissionError:
+        print("\t[ERROR] No se permite crear archivos en f{user_templates_dir}")
+
 
 def main():
     """Función principal del asistente de configuración
@@ -177,15 +235,20 @@ def main():
     """
     print("Asistente de configuración del backend 🧙\n")
     print("# Configuraciones Generales (1/3)")
-    config = set_project_info({})
-    # Generando Token Secreto
+    config = dict()
+    config = set_project_info(config)
+    # Creando templates de usuariæ
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    create_user_templates(base_dir)
+    # Generando Token Secreto del proyecto
     config['SECRET_KEY'] = secrets.token_urlsafe(50)
     # Dejando por defecto el modo Debug Encendido
     config['DEBUG'] = 'True'
     print("# Configuración de ELASTICSEARCH (2/3)")
     config = set_services(config)
-    # Vacio por defecto
-    config['KEYBOARD'] = []
+    # Teclas del teclado
+    teclas = "test"
+    config['KEYBOARD'] = list(teclas)
     print("# Colores del proyecto (HEXADECIMALES) (3/3)")
     config = set_colors(config)
     # Configurando limites para la API

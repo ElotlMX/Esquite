@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<div id="about-container" class="container">
   <div class="row">
     <div class="col-12">
       <h1 class="mt-3">Acerca del corpus</h1>
@@ -9,11 +9,9 @@
   </div>
   <hr />
   <div class="row">
-    <div class="col-12">
-			{{ ABOUT_USER|safe}}
-      <p class="text-monospace text-center">Actualmente contamos con <b>{{ total }}</b> líneas paralelas y
-        <b>{{ docs|length }}</b> documentos
-      </p>
+    <div class="col">
+      {{ ABOUT_USER|safe|cut:"<br>"}}
+      <p class="text-monospace text-center">Actualmente contamos con <b>{{ total }}</b> líneas paralelas y <b>{{ docs|length }}</b> documentos</p>
     </div>
   </div>
 <div class="row">

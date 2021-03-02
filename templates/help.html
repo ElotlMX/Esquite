@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container">
+<div id="help-container" class="container">
     <div class="row">
       <div class="col-12">
         <h1 class="mt-3">Ayuda</h1>
@@ -47,9 +47,8 @@
         <p>Recuerda que las las lenguas tienen diferentes normas de escritura
         y grafías. Debes tomar en cuenta los caracteres especiales específicos
         de cada lengua al hacer una búsqueda.</p>
-        {{ HELP_USER|safe }}
-        <p>Los resultados pueden descargarse en formato <code>.csv</code> <i class="fa fa-file-text-o"></i>  y
-        <code>.xlsx</code> <i class="fa fa-file-excel-o"></i></p>
+        {{ HELP_USER|safe|cut:"<br>" }}
+        <p>Los resultados pueden descargarse en formato <code>.csv</code> <i class="fa fa-file-text-o"></i></p>
       </div>
     </div>
   </div>

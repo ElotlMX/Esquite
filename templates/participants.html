@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<div id="participants-container" class="container">
 	<div class="row">
 		<div class="col-12">
 			<h1 class="mt-3">Participantes</h1>
@@ -10,16 +10,17 @@
 	<hr />
 	<div class="row">
 		<div class="col-12">
-			<p>El proyecto <b>{{ PROJECT_NAME }}</b> es un corpus paralelo <b>{{ L1 }}-{{ L2 }}</b> mantenido por <b>{{ ORG_NAME }}</b></p>
-      {{ PARTICIPANTS_USER|safe }}
-			{% if COLABS %}
-				<p>En particular, agradecemos la asesoría y participación de las siguientes estudiantes e investigadoras:</p>
-				<p><b>{% for colab in COLABS %} {{colab}}, {% endfor %}</b></p>
-			{% endif %}
-			<p>Esta plataforma digital fue originalmente creada por colaboradores y voluntarios de la
-			<a href="https://elotl.mx" target="_blank">Comunidad Elotl</a>; está destinada a personas que deseen poner en línea corpus
-			paralelos para las lenguas habladas en México.</p>
-			<p>El código de este proyecto tiene una licencia MPL 2.0. <a href="https://www.mozilla.org/en-US/MPL/" target="_blank">Consúltala aquí</a></p>
+		  <p>El proyecto <b>{{ PROJECT_NAME }}</b> es un corpus paralelo <b>{{ L1 }}-{{ L2 }}</b> mantenido por <b>{{ ORG_NAME }}</b></p>
+          {{ PARTICIPANTS_USER|safe|cut:"<br>" }}
+		  {% if COLABS %}
+		    <p>En particular, agradecemos la asesoría y participación de las siguientes estudiantes e investigadoras:</p>
+			<p><b>{% for colab in COLABS %} {{colab}}, {% endfor %}</b></p>
+		  {% endif %}
+			<p>Esta plataforma digital fue originalmente creada por
+            colaboradoras y voluntarias de la <a href="https://elotl.mx" target="_blank">Comunidad Elotl</a>;
+            está destinada a personas que deseen poner en línea corpus paralelos
+            para las lenguas habladas en México.</p>
+			<p>El código del proyecto tiene una licencia MPL 2.0. <a href="https://www.mozilla.org/en-US/MPL/" target="_blank">Consúltala aquí</a></p>
 		</div>
 	</div>
 	<h3 class="mt-2">Contacto</h3>

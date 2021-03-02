@@ -4,7 +4,7 @@
 {% block content %}
   <h2 class="mt-4">Consulta el corpus</h2>
   <hr />
-  <div class="jumbotron pt-5 pb-3" id="form-container">
+  <div class="jumbotron pt-5 pb-3 shadow" id="form-container">
     <form action="{% url 'search' %}" method="post" >
       {% csrf_token %}
       <div class="form-group">
