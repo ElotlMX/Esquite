@@ -123,3 +123,12 @@ structure you can check our
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
 	```
+    
+# Docker image alternative: `Esquite-Docker`
+Alternatively, it is possible to use Esquite and deploy it in an easier way by using our official Docker image.
+
+Detailed documentation is available on:
+
+- Esquite-Docker Github : https://github.com/ElotlMX/Esquite-docker
+- Esquite-Docker Dockerhub : https://hub.docker.com/r/elotlmx/esquite
+
