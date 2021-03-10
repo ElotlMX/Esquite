@@ -63,7 +63,6 @@ def get_corpus_info(request):
         total = 0
         docs = []
         messages.warning(request, f"Parece que no existe el índice <b>{settings.INDEX}</b>")
-        messages.info(request, f"Por favor configura un índice <a href=\"{reverse('index-config')}\">aquí</a>")
     return total, docs
 
 
