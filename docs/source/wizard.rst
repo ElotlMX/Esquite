@@ -20,6 +20,16 @@ Archivo de configuración
 
 .. code-block:: yaml
 
+    API:
+      limit_results:
+        anon: 10
+        user: 100
+      num_proxies: 0
+      throttles:
+        burst_anon: 20/hour
+        burst_user: 50/hour
+        sustain_anon: 50/day
+        sustain_user: 200/day
     COLABS:
       - Hari Seldon
       - Salvon Hardin
@@ -34,34 +44,49 @@ Archivo de configuración
       - d
     GOOGLE_ANALYTICS: 'UA-XXXXXXXXX-X'
     INDEX: index-name
-    LANG_1: "Español"
-    LANG_2: "Galactico"
+    L1: "Español"
+    L2: "Galactico"
     NAME: ENCICLOPEDIA GALACTICA
     ORG_NAME: FUNDACION
     COLORS:
-        background:
-          button: '#ffffff'
-          form: '#ffffff'
-          hover: '#000000'
-          nav: '#ffffff'
-        border:
-          button: 'black'
-        text:
-          button: '#000000'
-          form: '#000000'
-          highlight: '#000000'
-          hover: 'white'
-          nav: '#000000'
-          result: '#000000'
+      background:
+        btnhover: '#69c9be'
+        button: '#06a594'
+        footer: '#ffffff'
+        form: '#fdecb2'
+        highlight: '#fdecb2'
+        nav: '#fbda65'
+      border:
+        button: '#06a594'
+        input: '#06a594'
+      text:
+        bold: '#06a594'
+        btnhover: '#fbda65'
+        button: '#ffffff'
+        footer: '#000000'
+        form: '#000000'
+        highlight: '#048476'
+        hoverlinks: '#69c9be'
+        links: '#06a594'
+        nav: '#06a594'
+        navactive: '#048476'
+        navhover: '#69c9be'
+        result: '#000000'
     SECRET_KEY: '"<llave-secreta-autogenerada>"'
-    SOCIAL:
-      site: https://example.com/
-      blog: https://example.com/blog/
-      email: mail@example.com
-      facebook: https://www.facebook.com/fundacion/
-      twitter: https://twitter.com/fundacion/
-      github: https://github.com/fundacion/
+    LINKS:
+        social:
+          site: https://example.com/
+          blog: https://example.com/blog/
+          email: mail@example.com
+          facebook: https://www.facebook.com/fundacion/
+          twitter: https://twitter.com/fundacion/
+          github: https://github.com/fundacion/
+        corpora:
+            axolotl: "https://www.axolotl-corpus.mx/search"
+            kolo: "https://kolo.elotl.mx/"
+            job: "https://job.elotl.mx/"
     URL: http://elasticsearch-ip:9600/
+    META_DESC: Corpus paralelo del Español al Galactico.
 
 .. warning::
 

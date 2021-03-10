@@ -3,12 +3,15 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Bienvenidx a la documentación de Esquite 🌽
+Bienvenidæ a la documentación de Esquite 🌽
 ===========================================
 
-Puedes comenzar con la instalación :ref:`instalation` del *framework* y despues
-seguir alguno de nuestros tutoriales :ref:`tutorials` para que configures y
+Puedes comenzar con la :ref:`instalation` y después
+seguir alguno de nuestros :ref:`tutorials` para que configures y
 personalices tu propia instancia de Esquite.
+
+Adicionalmente esta disponible nuestra
+`imagen oficial de Docker <https://github.com/ElotlMX/Esquite-docker>`_ para el *framework*.
 
 `Documentación de la API <api.html>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -23,11 +26,21 @@ corpus paralelos (textos bilingües) y que desean tener un sistema web que les
 permita subir, administrar realizar búsquedas de palabras o frases en sus
 corpus.
 
-Este software esta basado en ``django`` y utiliza ``elasticsearch`` como motor
-de búsquedas y gestión de documentos. Una instancia del *framework* es el
-corpus paralelo `TSU̱NKUA <https://tsunkua.elotl.mx/>`_ que permite consultar
-documentos bilingües digitalizados y alineados de distintas variantes del
-otomí.
+Este software funciona con ``django`` para el *backend* y utiliza
+``elasticsearch`` como motor de búsquedas y gestión de documentos. Ejemplos de
+instancias del *framework* son las siguientes:
+
+* `TSU̱NKUA <https://tsunkua.elotl.mx/>`_: corpus paralelo con documentos bilingües digitalizados y alineados de distintas variantes del otomí.
+
+.. image:: static/img/tsunkua.png
+   :target: https://tsunkua.elotl.mx/
+   :alt: Corpus paralelo TSU̱NKUA
+
+* `KOLO <https://kolo.elotl.mx/>`_: corpus paralelo con documentos bilingües digitalizados y alineados de las lenguas mixtekas.
+
+.. image:: static/img/kolo.png
+   :target: https://kolo.elotl.mx/
+   :alt: Corpus paralelo KOLO
 
 Tabla de contenidos
 -------------------
