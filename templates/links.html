@@ -10,16 +10,31 @@
     <hr />
     <div class="row">
       <div class="col-12">
-        <h3>Comunidad</h3>
-        <ul>
-          <li><a href="https://elotl.mx">Comunidad Elotl MX</a></li>
-          <li><a href="https://elotl.mx/blog">Blog de Elotl Mx</a></li>
-        </ul>
         <h3>Corpus similares</h3>
         <ul>
-          <li><a href="http://www.corpus.unam.mx/axolotl">Corpus Axolotl</a></li>
-          <li><a href="https://tsunkua.elotl.mx/">Corpus TSU̱NKUA</a></li>
+            {% for corpus_name, link  in LINKS.corpora.items %}
+            <li><a href="{{ link }}" target="_blank">Corpus {{ corpus_name|lower }}</a></li>
+            {% endfor %}
         </ul>
+        <h3>Contacto</h3>
+        <div class="row">
+            <div class="col text-center ">
+                <div class="btn-group btn-group-lg" role="group" aria-label="Botones de contacto">
+                    <a type="button" class="btn btn-default contact-btn" href="{{LINKS.social.site}}" data-toggle="tooltip" data-placement="top"
+                                            title="sitio web" aria-label=""> <i class="fa fa-globe-w fa-2x"></i></a>
+                    <a type="button" class="btn btn-default contact-btn" href="{{LINKS.social.blog}}" data-toggle="tooltip" data-placement="top"
+                                            title="blog"> <i class="fa fa-book fa-2x"></i></a>
+                    <a type="button" class="btn btn-default contact-btn" href="mailto:{{LINKS.social.email}}" data-toggle="tooltip" data-placement="top"
+                                            title="email"> <i class="fa fa-envelope fa-2x"></i></a>
+                    <a type="button" class="btn btn-default contact-btn" href="{{LINKS.social.facebook}}" data-toggle="tooltip" data-placement="top"
+                                            title="facebook"> <i class="fa fa-facebook fa-2x"></i></a>
+                    <a type="button" class="btn btn-default contact-btn" href="{{LINKS.social.twitter}}" data-toggle="tooltip" data-placement="top"
+                                            title="twitter"> <i class="fa fa-twitter fa-2x"></i></a>
+                    <a type="button" class="btn btn-default contact-btn" href="{{LINKS.social.github}}" data-toggle="tooltip" data-placement="top"
+                                            title="github"> <i class="fa fa-github fa-2x"></i></a>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
     <div class="row">

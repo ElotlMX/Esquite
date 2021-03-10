@@ -17,11 +17,10 @@ except FileNotFoundError:
     # Setting dummy dict for build the docs correctly at Read The Docs
     env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
            "KEYBOARD": [], "COLORS": [], "L1": "", "L2": "",
-           "INDEX": "test", "SOCIAL": [], "URL": "localhost", "COLABS": [],
+           "INDEX": "test", "LINKS": {}, "URL": "localhost", "COLABS": [],
            "NAME": "", "GOOGLE_ANALYTICS": "", "API": {"num_proxies": 0},
            'META_DESC': ''}
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = eval(env['DEBUG'])
 if DEBUG:
     ALLOWED_HOSTS = []
@@ -34,16 +33,15 @@ ORG_NAME = env['ORG_NAME']
 
 META_DESC = env['META_DESC']
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env['SECRET_KEY']
 
 KEYBOARD = env['KEYBOARD']
 
-# Colores
+# Colors
 
 COLORS = env['COLORS']
 
-# Lenguas
+# Lenguages
 
 L1 = env['L1']
 
@@ -55,9 +53,9 @@ INDEX = env["INDEX"]
 
 API = env['API']
 
-# Social links
+# Links
 
-SOCIAL = env['SOCIAL']
+LINKS = env['LINKS']
 
 # Colaboradoras del proyecto
 
