@@ -41,7 +41,8 @@
     .navbar-custom .navbar-brand,
     .navbar-custom .navbar-text,
     .navbar-custom .navbar-nav .nav-link,
-        .navbar-custom #hamburger-icon{
+    .navbar-custom .dropdown-item,
+    .navbar-custom #hamburger-icon{
         color: {{ COLORS.text.nav }};
     }
 
@@ -205,19 +206,18 @@
                 </ul>
             </div>
             <div class="col">
-                <h6>ELOTL</h6>
+                <h6>{{ ORG_NAME|default:"Comunidad" }}</h6>
                 <ul class="list-unstyled">
-                    <li><a href="http://www.elotl.mx" target="_blank">Comunidad Elotl</a></li>
-                    <li><a href="http://www.elotl.mx/blog/" target="_blank">Blog Elotl</a></li>
+                    <li><a href="{{LINKS.social.site}}">Sitio {{ ORG_NAME|title }}</a></li>
+                    <li><a href="{{ LINKS.social.blog }}">Blog {{ ORG_NAME|title }}</a></li>
                 </ul>
             </div>
             <div class="col">
                 <h6>CORPUS SIMILARES</h6>
                 <ul class="list-unstyled">
-                    <li><a href="http://www.corpus.unam.mx/axolotl"
-                           target="_blank">Axolotl</a></li>
-                    <li><a href="http://tsunkua.elotl.mx/"
-                           target="_blank">Tsunkua</a></li>
+                    {% for corpus_name, link  in LINKS.corpora.items %}
+                    <li><a href="{{ link }}" target="_blank">{{ corpus_name|upper }}</a></li>
+                    {% endfor %}
                 </ul>
             </div>
         </div>

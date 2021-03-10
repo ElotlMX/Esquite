@@ -6,7 +6,7 @@ Babel==2.7.0
 backcall==0.1.0
 beautifulsoup4==4.8.1
 billiard==3.3.0.23
-celery-progress==0.0.9
+celery==3.1.26.post2
 certifi==2019.6.16
 chardet==3.0.4
 coreapi==2.3.3
@@ -18,7 +18,7 @@ django-google-analytics-app==4.4.0
 djangorestframework==3.11.1
 docutils==0.15.2
 drf-yasg==1.17.1
-elasticsearch==7.0.2
+elasticsearch==7.11.0
 gitdb==4.0.2
 GitPython==3.1.0
 idna==2.8

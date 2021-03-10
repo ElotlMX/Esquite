@@ -30,7 +30,7 @@ def set_project_info(config):
     config['L2'] = input("\t * Segunda lengua del corpus (l2)>> ").title()
     # Colaboradoras vacio por defecto
     config['COLABS'] = []
-    config['SOCIAL'] = {k: "" for k in social}
+    config['LINKS'] = {'social': {k: "" for k in social}, 'corpora': dict()}
     config['META_DESC'] = input("\t * Descripción del sitio (etiqueta meta de html): ")
     return config
 

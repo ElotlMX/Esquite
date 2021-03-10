@@ -28,7 +28,7 @@ def project_info(request):
     """
     current_year = date.today().year
     return {'PROJECT_NAME': settings.NAME, 'ORG_NAME': settings.ORG_NAME,
-            'COLABS': settings.COLABS, 'SOCIAL': settings.SOCIAL,
+            'COLABS': settings.COLABS, 'LINKS': settings.LINKS,
             'META_DESC': settings.META_DESC, 'YEAR': current_year}
 
 
