@@ -2,10 +2,11 @@
 import os
 import secrets
 import sys
-from pprint import pprint
 import json
 import yaml
+import click
 import elasticsearch
+from pprint import pprint
 from elasticsearch import Elasticsearch
 
 
@@ -31,7 +32,7 @@ def set_project_info(config):
     # Colaboradoras vacio por defecto
     config['COLABS'] = []
     config['LINKS'] = {'social': {k: "" for k in social}, 'corpora': dict()}
-    config['META_DESC'] = input("\t * Descripción del sitio (etiqueta meta de html): ")
+    config['META_DESC'] = input("\t * Descripción (etiqueta meta html): ")
     return config
 
 
@@ -87,7 +88,7 @@ def set_services(config):
     port = input("\t * Puerto del servidor de Elasticsearch [9200]>>")
     config['URL'] = set_url(protocol, ip, port)
     index_flag = input("\t  Deseas crear el índice  [Y/n]>>")
-    config['GOOGLE_ANALYTICS'] = input('\t * Token Google Analytics (OPCIONAL)>> ')
+    config['GOOGLE_ANALYTICS'] = input('\t * Token Google Analytics []>> ')
     if index_flag == "y" or index_flag == "Y" or index_flag == "":
         create_index(config)
     else:
@@ -103,8 +104,8 @@ def create_index(config):
     print("\t⚙ Creando el índice con configuraciones por defecto ⚙")
     try:
         es_client.indices.create(index=config['INDEX'], body=es_config)
-    except elasticsearch.exceptions.ConnectionError as e:
-        print("[ERROR]: No se pudo conectar con la instancia de Elasticsearch :(")
+    except elasticsearch.exceptions.ConnectionError:
+        print("[ERROR]: No se pudo conectar a la instancia de Elasticsearch :(")
         print("¿Instalaste elasticsearch?")
         print("Guia de instalación: https://www.elastic.co/guide/en/elasticsearch/reference/7.9/install-elasticsearch.html")
         sys.exit(1)
@@ -132,7 +133,7 @@ def set_colors(config):
     primary_hover = '#fdecb2'
     secondary = '#06a594'
     secondary_hover = '#69c9be'
-    secondary_active= '#048476'
+    secondary_active = '#048476'
     text_color = '#000000'
     text_color_alt = '#ffffff'
     text_fields = {
@@ -162,7 +163,7 @@ def set_colors(config):
             "input": secondary
             }
     config['COLORS'] = {"text": text_fields, "background": background_fields,
-            "border": border_fields}
+                        "border": border_fields}
     return config
 
 
@@ -191,11 +192,18 @@ def api_limits(config):
     return config
 
 
-def create_user_templates(base_dir):
+def create_user_scheme(base_dir):
     user_templates_dir = os.path.join(base_dir, "templates/user")
+    user_static_dir = os.path.join(base_dir, "static/user")
     # Creating user templates dir if not exists
     if not os.path.isdir(user_templates_dir):
         os.mkdir(user_templates_dir)
+    # Creating user statics dirs if not exists
+    if not os.path.isdir(user_static_dir):
+        os.mkdir(user_static_dir)
+        os.mkdir(os.path.join(user_static_dir, 'js'))
+        os.mkdir(os.path.join(user_static_dir, 'css'))
+        os.mkdir(os.path.join(user_static_dir, 'img'))
     # User templates
     about_file = os.path.join(user_templates_dir, "about-user.html")
     links_file = os.path.join(user_templates_dir, "links-user.html")
@@ -222,44 +230,116 @@ def create_user_templates(base_dir):
         open(help_file, 'a').close()
         open(colabs_file, 'a').close()
     except FileExistsError:
-        print("\t[WARN] No se pueden crear archivos porque parece que ya existen")
+        print("\t[WARN] No se pueden crear archivos. Parece que ya existen")
     except PermissionError:
         print("\t[ERROR] No se permite crear archivos en f{user_templates_dir}")
 
 
-def main():
-    """Función principal del asistente de configuración
+@click.command()
+@click.option('-q', '--quick', is_flag=True,
+              help="Lanza el configurador en modo rápido (configuraciones por \
+                    defecto)")
+def main(quick):
+    """Asistente de configuración de esquite wizard 🧙
 
-    Genera token secreto del proyecto y escribe las configuraciones
-    en el archivo ``env.yaml`` en la raíz del proyecto.
+    Este *script* se encarga de asistir a la usuaria para generar el archivo
+    `env.yaml` que contiene las configuraciones generales del framework.
+    El archivo mencionado es **necesario** para que el proyecto funcione
+    correctamente.
     """
-    print("Asistente de configuración del backend 🧙\n")
-    print("# Configuraciones Generales (1/3)")
-    config = dict()
-    config = set_project_info(config)
-    # Creando templates de usuariæ
+    click.secho("Asistente de configuración del backend 🧙\n", fg='green')
+    # Configuraciones comúnes
+    # Creando directorios de usuariæ
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    create_user_templates(base_dir)
+    create_user_scheme(base_dir)
     # Generando Token Secreto del proyecto
-    config['SECRET_KEY'] = secrets.token_urlsafe(50)
-    # Dejando por defecto el modo Debug Encendido
-    config['DEBUG'] = 'True'
-    print("# Configuración de ELASTICSEARCH (2/3)")
-    config = set_services(config)
-    # Teclas del teclado
-    teclas = "test"
-    config['KEYBOARD'] = list(teclas)
-    print("# Colores del proyecto (HEXADECIMALES) (3/3)")
-    config = set_colors(config)
-    # Configurando limites para la API
-    config = api_limits(config)
-    print("# Generando archivo para la configuración:")
-    print("⚙"*50)
-    pprint(config)
-    print("⚙"*50)
+    token = secrets.token_urlsafe(50)
+    # Si se indica el modo interactivo
+    if not quick:
+        click.echo("# Configuraciones Generales (1/3)")
+        config = dict()
+        config = set_project_info(config)
+        config['SECRET_KEY'] = token
+        # Dejando por defecto el modo Debug Encendido
+        config['DEBUG'] = 'True'
+        click.echo("# Configuración de ELASTICSEARCH (2/3)")
+        config = set_services(config)
+        # Teclas del teclado
+        teclas = "test"
+        config['KEYBOARD'] = list(teclas)
+        click.echo("# Colores del proyecto (HEXADECIMALES) (3/3)")
+        config = set_colors(config)
+        # Configurando limites para la API
+        config = api_limits(config)
+    else:
+        # Configuración default
+        config = {
+            'API': {
+                'limit_results': {'anon': 10, 'user': 100},
+                'num_proxies': 0,
+                'throttles': {
+                    'burst_anon': '20/hour',
+                    'burst_user': '50/hour',
+                    'sustain_anon': '50/day',
+                    'sustain_user': '200/day'
+                }
+            },
+            'COLABS': [],
+            'COLORS': {
+                'background': {
+                    'btnhover': '#69c9be',
+                    'button': '#06a594',
+                    'footer': '#ffffff',
+                    'form': '#fdecb2',
+                    'highlight': '#fdecb2',
+                    'nav': '#fbda65'
+                },
+                'border': {'button': '#06a594', 'input': '#06a594'},
+                'text': {
+                    'bold': '#06a594',
+                    'btnhover': '#fbda65',
+                    'button': '#ffffff',
+                    'footer': '#000000',
+                    'form': '#000000',
+                    'highlight': '#048476',
+                    'hoverlinks': '#69c9be',
+                    'links': '#06a594',
+                    'nav': '#06a594',
+                    'navactive': '#048476',
+                    'navhover': '#69c9be',
+                    'result': '#000000'
+                }
+            },
+            'DEBUG': 'True',
+            'GOOGLE_ANALYTICS': '',
+            'INDEX': 'default',
+            'KEYBOARD': ['k', 'e', 'y', 's'],
+            'L1': 'L1',
+            'L2': 'L2',
+            'LINKS': {
+                'corpora': {},
+                'social': {
+                    'blog': '',
+                    'email': '',
+                    'facebook': '',
+                    'github': '',
+                    'site': '',
+                    'twitter': ''
+                }
+            },
+            'META_DESC': 'Framework de corpus paralelos Esquite',
+            'NAME': 'ESQUITE',
+            'ORG_NAME': 'ELOTLMX',
+            'SECRET_KEY': f'{token}',
+            'URL': 'http://localhost:9200/'
+        }
+    click.echo("# Generando archivo para la configuración:")
+    click.secho("⚙"*50, fg='yellow')
+    pprint(config, indent=2, width=80)
+    click.secho("⚙"*50, fg='yellow')
     with open("env.yaml", 'w') as conf_file:
         yaml.dump(config, conf_file)
-    print("# Terminado :)")
+    click.echo("# Terminado :)")
 
 
 if __name__ == "__main__":
