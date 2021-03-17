@@ -1,14 +1,17 @@
 import logging
 import re
+import os
 from datetime import date
 from django.conf import settings
 
 LOGGER = logging.getLogger(__name__)
 
+
 def keyboard(request):
     """**Configura variable de entorno para teclaod personalizado**
     """
     return {'KEYBOARD': settings.KEYBOARD}
+
 
 def languages(request):
     """**Configura variables de entorno de las lenguas**"""
@@ -27,9 +30,16 @@ def project_info(request):
     *colaboradoras* y *redes sociales*. Las últimas dos son listas de python.
     """
     current_year = date.today().year
+    banner_path = os.path.join(settings.STATICFILES_DIRS[0],
+                               'user/img/banner.png')
+    if os.path.isfile(banner_path):
+        banner_path = 'user/img/banner.png'
+    else:
+        banner_path = 'img/banner.png'
     return {'PROJECT_NAME': settings.NAME, 'ORG_NAME': settings.ORG_NAME,
             'COLABS': settings.COLABS, 'LINKS': settings.LINKS,
-            'META_DESC': settings.META_DESC, 'YEAR': current_year}
+            'META_DESC': settings.META_DESC, 'YEAR': current_year,
+            'BANNER': banner_path}
 
 
 def google_analytics(request):
