@@ -14,6 +14,7 @@ __pycache__/
 
 # User files
 templates/user/*
+static/user/*
 user-elastic-config.json
 
 # Enviroment Variables
