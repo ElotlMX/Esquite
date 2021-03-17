@@ -192,11 +192,18 @@ def api_limits(config):
     return config
 
 
-def create_user_templates(base_dir):
+def create_user_scheme(base_dir):
     user_templates_dir = os.path.join(base_dir, "templates/user")
+    user_static_dir = os.path.join(base_dir, "static/user")
     # Creating user templates dir if not exists
     if not os.path.isdir(user_templates_dir):
         os.mkdir(user_templates_dir)
+    # Creating user statics dirs if not exists
+    if not os.path.isdir(user_static_dir):
+        os.mkdir(user_static_dir)
+        os.mkdir(os.path.join(user_static_dir, 'js'))
+        os.mkdir(os.path.join(user_static_dir, 'css'))
+        os.mkdir(os.path.join(user_static_dir, 'img'))
     # User templates
     about_file = os.path.join(user_templates_dir, "about-user.html")
     links_file = os.path.join(user_templates_dir, "links-user.html")
@@ -241,16 +248,18 @@ def main(quick):
     correctamente.
     """
     click.secho("Asistente de configuración del backend 🧙\n", fg='green')
+    # Configuraciones comúnes
+    # Creando directorios de usuariæ
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    create_user_scheme(base_dir)
+    # Generando Token Secreto del proyecto
+    token = secrets.token_urlsafe(50)
     # Si se indica el modo interactivo
     if not quick:
         click.echo("# Configuraciones Generales (1/3)")
         config = dict()
         config = set_project_info(config)
-        # Creando templates de usuariæ
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        create_user_templates(base_dir)
-        # Generando Token Secreto del proyecto
-        config['SECRET_KEY'] = secrets.token_urlsafe(50)
+        config['SECRET_KEY'] = token
         # Dejando por defecto el modo Debug Encendido
         config['DEBUG'] = 'True'
         click.echo("# Configuración de ELASTICSEARCH (2/3)")
@@ -321,7 +330,7 @@ def main(quick):
             'META_DESC': 'Framework de corpus paralelos Esquite',
             'NAME': 'ESQUITE',
             'ORG_NAME': 'ELOTLMX',
-            'SECRET_KEY': 'dFhqFizdg-cJXKsXE7S9N-Nkmvs3GvpC574hOQ422q8zgN2kpOq_6OLiJgL6-R1svMA',
+            'SECRET_KEY': f'{token}',
             'URL': 'http://localhost:9200/'
         }
     click.echo("# Generando archivo para la configuración:")
