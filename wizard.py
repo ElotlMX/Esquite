@@ -331,7 +331,7 @@ def main(quick):
             'NAME': 'ESQUITE',
             'ORG_NAME': 'ELOTLMX',
             'SECRET_KEY': f'{token}',
-            'URL': 'http://localhost:9200/'
+            'URL': 'http://esquite-elasticsearch:9200/'
         }
     click.echo("# Generando archivo para la configuración:")
     click.secho("⚙"*50, fg='yellow')
