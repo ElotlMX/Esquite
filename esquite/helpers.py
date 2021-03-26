@@ -1,4 +1,7 @@
+import os
 import secrets
+from os import listdir
+from os.path import isfile, join
 
 
 def set_minimal_env(token="dummy-token"):
@@ -102,3 +105,41 @@ def env_validator(env_configs):
             empty_configs.append(field)
     wrong_configs = {"warn": empty_configs, "error": error_configs}
     return env_configs, wrong_configs
+
+
+def get_user_file(static_path, file_path):
+    """**Función que obtiene ruta de un archivo de usuario**
+
+    Revisa si existe un archivo de usuario en ``static_path`` + ``file_path``.
+    Sino, devuelve la cadena vacía.
+
+    :param static_path: Ruta de archivos estaticos
+    :type: str
+    :param file_path: Ruta del archivo a buscar
+    :type: str
+    :returns: Ruta del archivo relativa a los estaticos si existe el archivo.
+    Si no, la cadena vacía
+    :rtype: str
+    """
+    full_path = os.path.join(static_path, file_path)
+    if isfile(full_path):
+        return file_path
+    else:
+        return ''
+
+
+def get_user_files(static_path, folder_path):
+    """**Función que obtiene las rutas de archivos de usuario**
+
+    Obtiene los archivos de usuario de la carpeta ``folder_path``
+
+    :param static_path: Ruta de archivos estaticos
+    :type: str
+    :param folder_path: Folder de los archivos de usuario
+    :type: str
+    :returns: Rutas de los archivos relativas a la carpeta de estaticos.
+    :rtype: list
+    """
+    full_path = os.path.join(static_path, folder_path)
+    paths = [join(folder_path, f) for f in listdir(full_path)]
+    return paths
