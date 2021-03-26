@@ -1,19 +1,16 @@
 import os
 import csv
 import logging
-import json
 import datetime
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
 from django.http import HttpResponseRedirect, HttpResponse
-from .forms import (NewDocumentForm, DocumentEditForm, AddDocumentDataForm,
-                   IndexConfigForm)
+from .forms import NewDocumentForm, DocumentEditForm, AddDocumentDataForm
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info, csv_writer, check_extra_fields,
-                      update_config, update_index_name, get_index_config)
-from searcher.helpers import (data_processor, doc_file_to_link, get_variants,
-                              query_kreator)
+                      update_config, get_index_config)
+from searcher.helpers import data_processor, get_variants, query_kreator
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
 
@@ -34,7 +31,6 @@ def list_docs(request):
     * `:return:` Lista de documentos del corpus con acciones por documento
     """
     # Errores en las variables de entorno del proyecto
-    breakpoint()
     if settings.WRONG_CONFIGS['error']:
         msg = "Configuraciones necesarias para sitio no se encuentran en \
         el archivo <code>env.yaml</code>."
@@ -95,9 +91,10 @@ def new_doc(request):
                                data_form['nombre'], 'pdf_file':
                                data_form['pdf'].name, 'total_lines':
                                total_lines, 'preview_lines': pre_rows,
-                               'header': header, 'csv_file_name': csv_file_name})
-
-            else: # Upload the csv file as usual
+                               'header': header,
+                               'csv_file_name': csv_file_name})
+            # Upload the csv file as usual
+            else:
                 if os.path.isfile(csv_file_name):
                     LOGGER.info(f"El archivo {csv_file_name} ya existe.")
                 else:
@@ -341,58 +338,6 @@ def export_data(request):
     return response
 
 
-def index_config(request):
-    """**Configura un índice de elasticsearch**
-
-    Permite configurar o modificar la configuración de un índice de
-    elasticsearch por medio de un formulario.
-
-    :returns: None
-    """
-    default_fields = ["l1", "l2", "variant", "document_name", "pdf_file"]
-    if request.method == "POST":
-        data = request.POST
-        # Aditional fields
-        if set(fields) - set(default_fields) != set():
-            aditional_fields = set(fields) - set(default_fields)
-        else:
-            aditional_fields = []
-            notification = "No detectamos ningun campo adicional en el archivo CSV que subiste :o"
-            messages.warning(request, notification)
-            messages.info(request, f"Campos mínimos: {', '.join(default_fields)}")
-        with open("elastic-config.json", 'r') as f:
-            json_file = f.read()
-        data_config = json.loads(json_file)
-        for optional_field in aditional_fields:
-            data_config['mappings']['properties'][optional_field] = {'type': 'keyword'}
-        index_name = settings.INDEX
-        form = IndexConfigForm()
-        return render(request, "corpus-admin/index-config.html",
-                      {
-                          "form": form, "index_name": index_name,
-                          'aditional_fields': aditional_fields,
-                      })
-    else:
-        analysis = {"idioma": "spanish"}
-        fields = dict()
-        # Just visualize the current configuration
-        config = get_index_config()
-        index_config = config['settings']['index']
-        analyzer = index_config['analysis']['analyzer']
-        analyzer_name = list(analyzer.keys())[0]
-        analysis['filtros'] = analyzer[analyzer_name]['filter']
-        analysis['nombre'] = analyzer_name
-        mappings = config['mappings']
-        fields = mappings['properties']
-        index_name = settings.INDEX
-        return render(request, "corpus-admin/index-config.html",
-                      {
-                        "index_name": index_name, 'mappings': mappings,
-                        'index_config': index_config, 'analysis': analysis,
-                        'fields': fields,
-                      })
-
-
 def extra_fields(request, csv_file_name, document_name, pdf_file_name):
     """Configura los campos extra detectados en un ``CSV``
 
@@ -417,11 +362,11 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
             for field, field_type in data.items():
                 configs['mappings']['properties'][field] = {'type': field_type[0]}
             try:
-                es.indices.put_mapping(configs['mappings'], index=settings.INDEX)
+                es.indices.put_mapping(configs['mappings'],
+                                       index=settings.INDEX)
             except es_exceptions.RequestError as e:
                 messages.error(request, "Error al configurar índice :(")
-                # TODO: Tell to the user that something goes wrong!
-                print(e)
+                messages.error(request, e)
             new_mappings = es.indices.get_mapping(index=settings.INDEX)
             configs['mappings'] = new_mappings[settings.INDEX]['mappings']
             update_config(configs)
