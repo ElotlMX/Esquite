@@ -15,6 +15,9 @@
   <link rel="stylesheet" href="{% static 'css/sweetalert2.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/select2.min.css' %}" type="text/css" media="screen" charset="utf-8">
   <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" >
+  {% for css_file in USER_CSS_FILES  %}
+  <link rel="stylesheet" href="{% static css_file %}" type="text/css" media="screen" charset="utf-8">
+  {% endfor %}
   <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}">
   <style type="text/css" media="screen">
     /* Colores del proyecto */
@@ -142,9 +145,7 @@
         <header>
           <nav id="barra-navegacion" class="navbar navbar-custom navbar-expand-lg">
             <a href="{% url 'index' %}" class="navbar-brand">
-                <img  src="{% static "img/brand-logo.png" %}"
-                          class="d-inline-block" width="60" height="60" alt="{{PROJECT_NAME}} logo"/>
-                {{ PROJECT_NAME }}
+                <img  src="{% static LOGO_PATH %}" class="d-inline-block" width="60" height="60" alt="{{PROJECT_NAME}} logo"/>{{ PROJECT_NAME }}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#esquite-navbar"
                     aria-controls="esquite-navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -171,7 +172,7 @@
               </ul>
             </div>
           </nav>
-          <img id="banner-image" class="img-fluid mx-auto d-block" src="{% static BANNER %}" alt="Banner {{ PROJECT_NAME }}">
+          <img id="banner-image" class="img-fluid mx-auto d-block" src="{% static BANNER_PATH %}" alt="Banner {{ PROJECT_NAME }}">
         </header>
       {% if messages %}
         {% for message in messages %}
@@ -235,5 +236,8 @@
 <script type="text/javascript" src="{% static 'js/sweetalert2.all.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/select2.full.min.js' %}" charset="utf-8"></script>
 <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+{% for js_file in USER_JS_FILES  %}
+<script type="text/javascript" src="{% static js_file %}"></script>
+{% endfor %}
 {% block javascript %}{% endblock %}
 </html>

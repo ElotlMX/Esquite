@@ -4,13 +4,10 @@ import csv
 import json
 import yaml
 import logging
-import django
 from django.conf import settings
 from django.contrib import messages
-from django.urls import reverse
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
-from searcher.helpers import get_variants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,7 +22,8 @@ def get_corpus_info(request):
     *aggregations* para obtener los ids del corpus. Con cada uno se
     obtienen los nombres de documentos, nombres de archivos y total:>>.
 
-    :return: El total de documentos y una lista con información de los documentos
+    :return: El total de documentos y una lista con información de los
+    documentos
     :rtype: int, list
     """
     ids_filters = {
@@ -57,12 +55,18 @@ def get_corpus_info(request):
         LOGGER.error("URL::" + settings.ELASTIC_URL)
         total = 0
         docs = []
-    except es_exceptions.NotFoundError as e:
+        msg = f"No se pudo conectar al índice: <i>{settings.INDEX}</i>"
+        messages.error(request, msg)
+        msg = "TIP: ¿Está corriendo la instancia de Elasticsearch? ¿Existe el \
+        índice?"
+        messages.info(request, msg)
+    except es_exceptions.NotFoundError:
         LOGGER.error("No se encontró el indice::" + settings.INDEX)
         LOGGER.error("URL::" + settings.ELASTIC_URL)
         total = 0
         docs = []
-        messages.warning(request, f"Parece que no existe el índice <b>{settings.INDEX}</b>")
+        msg = f"Parece que no existe el índice <b>{settings.INDEX}</b>"
+        messages.warning(request, msg)
     return total, docs
 
 
@@ -152,8 +156,7 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
                 document = {"pdf_file": pdf_file,
                             "document_id": doc_id,
                             "document_name": doc_name
-                           }
-
+                            }
                 for field in fields:
                     if field in ["document_name", "pdf_file", "document_id"]:
                         continue
@@ -165,7 +168,8 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
                 total_lines += 1
                 LOGGER.info(f"Upload estatus #{total_lines}::{res['result']}")
             else:
-                LOGGER.warning(f"Omitiendo la linea #{total_lines - 1} en blanco::{text}")
+                msg = f"Omitiendo linea #{total_lines - 1} en blanco::{text}"
+                LOGGER.warning(msg)
     LOGGER.info(f"Lineas agregadas::{total_lines}")
     LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
     os.remove(csv_name)

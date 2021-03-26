@@ -1,5 +1,4 @@
 import os
-import csv
 import logging
 import elasticsearch
 import requests
@@ -18,8 +17,6 @@ LOGGER = logging.getLogger(__name__)
 # Cliente de `elasticsearch`
 es = Elasticsearch([settings.ELASTIC_URL])
 
-# === Búsqueda ===
-
 
 def search(request):
     """**Realiza la búsqueda y muestra los resultados**
@@ -35,6 +32,7 @@ def search(request):
     :type: ``HttpRequest``
     :return: Resultados de búsqueda y formulario para nuevas búsquedas
     """
+    # TODO: Simplify this view
     if request.method == "POST":
         # Pasando información al formulario. Esta será reenviada al
         # template
@@ -81,22 +79,18 @@ def search(request):
             except elasticsearch.exceptions.RequestError as e:
                 LOGGER.error("Error al buscar::{}".format(e))
                 LOGGER.error("Query::" + data_form["busqueda"])
-                notification = "Búsqueda inválida. Vuelve a intentarlo ¯\\_(ツ)_/¯"
-                messages.warning(request, notification)
+                msg = "Búsqueda inválida. Vuelve a intentarlo ¯\\_(ツ)_/¯"
+                messages.warning(request, msg)
                 documents_count = 0
             except elasticsearch.exceptions.ConnectionError as e:
                 LOGGER.error("Error de conexión::{}".format(e))
-                LOGGER.error("No se pudo conectar al Indice de" +\
-                             "Elasticsearch::" + settings.INDEX)
-                notification = "Error de conexión al servidor " + \
-                               "Intentalo más tarde (；一_一)"
-                messages.error(request, notification)
-                # TODO: Mandar correos para notificar servers caidos
+                LOGGER.error("No se pudo conectar al índice::" + settings.INDEX)
+                msg = "Error de conexión al servidor. Intentalo más tarde (；一_一)"
+                messages.error(request, msg)
                 documents_count = 0
             if documents_count != 0:
                 status = results_to_csv(data_response["hits"], current_variants)
-                LOGGER.info("Los resultados de la consulta se guardaron::"\
-                            + str(status))
+                LOGGER.info(f"Resultados de consulta guardados::{str(status)}")
                 data = data_processor(data_response, lang_query, user_query)
             else:
                 data = []
@@ -154,7 +148,7 @@ def ethnologue_data(request, iso_variant):
             soup = BeautifulSoup(html_doc, 'html.parser')
             return HttpResponse(ethno_table_maker(soup))
         else:
-            return HttpResponse(f"<h3>No se encontraron datos :(</h3>")
+            return HttpResponse("<h3>No se encontraron datos :(</h3>")
     except requests.exceptions.ConnectionError as e:
         LOGGER.error("Error de conexión a Ethnologue::{}".format(e.request.body))
         LOGGER.error("Url Ethnologue::" + e.request.url)
@@ -177,7 +171,6 @@ def download_results(request):
         with open(file_path, 'r') as csv_file:
             data = csv_file.read()
         response = HttpResponse(data, content_type="text/csv")
-        response['Content-Disposition'] = f"inline; filename=resultados.csv"
+        response['Content-Disposition'] = "inline; filename=resultados.csv"
         return response
     raise Http404
-

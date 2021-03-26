@@ -1,5 +1,6 @@
 from django import forms
 
+
 class NewDocumentForm(forms.Form):
     """**Clase encargada de generar de forma dinámica el formulario
     que permite cargar nuevos documentos al corpus**
@@ -43,7 +44,8 @@ class DocumentEditForm(forms.Form):
 
     *Atributos*
 
-    * placeholder: Variable que modifica el placeholder del input para el nuevo nombre del documento
+    * placeholder: Variable que modifica el placeholder del input para el nuevo
+    nombre del documento
         :type: str
     * nombre: Objeto de django forms que renderea un elemento input de html
         :type: ``form.CharField``
@@ -57,11 +59,3 @@ class DocumentEditForm(forms.Form):
                                         'placeholder': placeholder}),
                              required=False)
     pdf = forms.FileField(label="PDF", required=False)
-
-
-class IndexConfigForm(forms.Form):
-    """**Genera formulario para editar índice de elasticsearch**
-    """
-    autofill_csv = forms.FileField(label="Autodetectar", required=False)
-
-    autofill_csv.widget.attrs.update({'hidden':''})

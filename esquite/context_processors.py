@@ -1,8 +1,8 @@
 import logging
 import re
-import os
 from datetime import date
 from django.conf import settings
+from .helpers import get_user_file, get_user_files
 
 LOGGER = logging.getLogger(__name__)
 
@@ -30,16 +30,17 @@ def project_info(request):
     *colaboradoras* y *redes sociales*. Las últimas dos son listas de python.
     """
     current_year = date.today().year
-    banner_path = os.path.join(settings.STATICFILES_DIRS[0],
-                               'user/img/banner.png')
-    if os.path.isfile(banner_path):
-        banner_path = 'user/img/banner.png'
-    else:
-        banner_path = 'img/banner.png'
+    static_path = settings.STATICFILES_DIRS[0]
+    default_banner = "img/banner.png"
+    default_logo = "img/logo.png"
+    banner_path = get_user_file(static_path, 'user/img/banner.png') or default_banner
+    logo_path = get_user_file(static_path, 'user/img/logo.png') or default_logo
     return {'PROJECT_NAME': settings.NAME, 'ORG_NAME': settings.ORG_NAME,
             'COLABS': settings.COLABS, 'LINKS': settings.LINKS,
             'META_DESC': settings.META_DESC, 'YEAR': current_year,
-            'BANNER': banner_path}
+            'BANNER_PATH': banner_path, 'LOGO_PATH': logo_path,
+            'USER_CSS_FILES': get_user_files(static_path, 'user/css/'),
+            'USER_JS_FILES': get_user_files(static_path, 'user/js/')}
 
 
 def google_analytics(request):

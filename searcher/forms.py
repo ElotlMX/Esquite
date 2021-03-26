@@ -1,7 +1,6 @@
 from django import forms
 from django.conf import settings
 from .helpers import get_variants
-# === Formulario de Búsqueda ===
 
 
 class SearchPostForm(forms.Form):

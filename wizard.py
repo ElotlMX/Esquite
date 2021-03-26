@@ -8,6 +8,7 @@ import click
 import elasticsearch
 from pprint import pprint
 from elasticsearch import Elasticsearch
+from esquite.helpers import set_minimal_env
 
 
 def set_project_info(config):
@@ -222,8 +223,8 @@ def create_user_scheme(base_dir):
       oraciones paralelas asociadas en la otra lengua, es decir, sus
       traducciones.</p>
       <p>Este tipo de sistemas son útiles para estudiosos, aprendices y
-      hablantes de la lengua que quieran observar cómo se traduce cierta palabra
-      o frase dependiendo del contexto y de la fuente.</p>
+      hablantes de la lengua que quieran observar cómo se traduce cierta
+      palabra o frase dependiendo del contexto y de la fuente.</p>
             """
             about_f.write(default_about_string)
         open(links_file, 'a').close()
@@ -273,66 +274,7 @@ def main(quick):
         config = api_limits(config)
     else:
         # Configuración default
-        config = {
-            'API': {
-                'limit_results': {'anon': 10, 'user': 100},
-                'num_proxies': 0,
-                'throttles': {
-                    'burst_anon': '20/hour',
-                    'burst_user': '50/hour',
-                    'sustain_anon': '50/day',
-                    'sustain_user': '200/day'
-                }
-            },
-            'COLABS': [],
-            'COLORS': {
-                'background': {
-                    'btnhover': '#69c9be',
-                    'button': '#06a594',
-                    'footer': '#ffffff',
-                    'form': '#fdecb2',
-                    'highlight': '#fdecb2',
-                    'nav': '#fbda65'
-                },
-                'border': {'button': '#06a594', 'input': '#06a594'},
-                'text': {
-                    'bold': '#06a594',
-                    'btnhover': '#fbda65',
-                    'button': '#ffffff',
-                    'footer': '#000000',
-                    'form': '#000000',
-                    'highlight': '#048476',
-                    'hoverlinks': '#69c9be',
-                    'links': '#06a594',
-                    'nav': '#06a594',
-                    'navactive': '#048476',
-                    'navhover': '#69c9be',
-                    'result': '#000000'
-                }
-            },
-            'DEBUG': 'True',
-            'GOOGLE_ANALYTICS': '',
-            'INDEX': 'default',
-            'KEYBOARD': ['k', 'e', 'y', 's'],
-            'L1': 'L1',
-            'L2': 'L2',
-            'LINKS': {
-                'corpora': {},
-                'social': {
-                    'blog': '',
-                    'email': '',
-                    'facebook': '',
-                    'github': '',
-                    'site': '',
-                    'twitter': ''
-                }
-            },
-            'META_DESC': 'Framework de corpus paralelos Esquite',
-            'NAME': 'ESQUITE',
-            'ORG_NAME': 'ELOTLMX',
-            'SECRET_KEY': f'{token}',
-            'URL': 'http://esquite-elasticsearch:9200/'
-        }
+        config = set_minimal_env(token)
     click.echo("# Generando archivo para la configuración:")
     click.secho("⚙"*50, fg='yellow')
     pprint(config, indent=2, width=80)
