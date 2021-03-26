@@ -1,12 +1,12 @@
-import os
 import logging
 from git import Repo, exc
 from django.shortcuts import render
-from corpus_admin.helpers import get_corpus_info, get_variants
+from corpus_admin.helpers import get_corpus_info
 from django.http import FileResponse, Http404
 from django.conf import settings
 from django.contrib import messages
 from searcher.forms import SearchPostForm
+from searcher.helpers import get_variants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -19,7 +19,6 @@ def index(request):
     :type: ``HttpRequest``
     :return: Vista principal
     """
-    LOGGER.info("Entrando a index")
     # Formulario de búsqueda en django
     form = SearchPostForm()
     # Agregando variantes desde el servidor
@@ -27,7 +26,8 @@ def index(request):
     if current_variants['status'] == 'success':
         del current_variants['status']
         if len(current_variants):
-            LOGGER.debug("Variantes actuales: " + ", ".join(list(current_variants.keys())))
+            str_variants = ", ".join(list(current_variants.keys()))
+            LOGGER.debug(f"Variantes: {str_variants}")
             form.fields['variante'].choices = current_variants.items()
         else:
             LOGGER.debug("No hay variantes")
@@ -101,8 +101,6 @@ def about(request):
     return render(request, "about.html",
                   {"total": total, "docs": docs, "commit": last_commit})
 
-# === Participantes ===
-
 
 def participants(request):
     """**Muestra la página de participantes**
@@ -117,8 +115,6 @@ def participants(request):
     """
     LOGGER.info("Entrando a participants")
     return render(request, "participants.html")
-
-# === Visor PDF ===
 
 
 def pdf_view(request, file_name):

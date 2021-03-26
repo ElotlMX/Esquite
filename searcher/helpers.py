@@ -1,5 +1,3 @@
-import os
-import json
 import logging
 import csv
 from django.conf import settings
@@ -10,6 +8,7 @@ LOGGER = logging.getLogger(__name__)
 
 # Cliente de `elasticsearch`
 es = Elasticsearch([settings.ELASTIC_URL])
+
 
 def highlighter(hit, idioma, query):
     """**Resalta la búsqueda realizada por el usuarix**
@@ -35,8 +34,7 @@ def highlighter(hit, idioma, query):
     elif idioma == "l2" and "highlight" not in hit:
         string = hit['_source']['l2']
         # Resaltado manual la lengua 2
-        hit['_source']['l2'] = string.replace(query,
-                                                  '<em>' + query + "</em>")
+        hit['_source']['l2'] = string.replace(query, '<em>' + query + "</em>")
     return hit
 
 
@@ -140,8 +138,6 @@ def query_kreator(term):
         }
     }
 
-# === Conversor de nombre a Link ===
-
 
 def doc_file_to_link(doc_name, doc_file, path):
     """**Función que liga el nombre de un documento con su archivo pdf**
@@ -156,8 +152,6 @@ def doc_file_to_link(doc_name, doc_file, path):
     :rtype: str
     """
     return f'<a href="{path + doc_file}" target="_blank">{doc_name}</a>'
-
-# === Conversor de Variante a Query===
 
 
 def variant_to_query(variantes):
@@ -222,7 +216,6 @@ def results_to_csv(data, variants):
     return True
 
 
-
 def ethno_table_maker(soup):
     """**Crea la tabla html con información de ethnologue**
 
@@ -268,8 +261,6 @@ def ethno_table_maker(soup):
     table += "</tbody></table>"
     return table
 
-# == Creación de botones que despliegan información por variante ==
-
 
 def ethno_btn_maker(variante):
     """**Crea botones ``html`` con información ethnologue**
@@ -283,14 +274,6 @@ def ethno_btn_maker(variante):
     :return: Cadenas con los botones en ``html``
     :rtype: str
     """
-    # TODO: Ver que hacer con el mapa
-    btn_map = '''
-    <button type="button" class="badge badge-pill badge-primary ethno-btn"
-        data-toggle="modal" data-target="#ethnologue-map"
-        title="Ver mapa de la variante (Ethnologue)">
-                    <i class="fa fa-map"></i>
-    </button>
-    '''
     iso = variante[variante.find('(')+1:variante.find(')')]
     btn_info = f'''
         <button type="button"
@@ -345,7 +328,7 @@ def get_variants():
         LOGGER.error("URL::" + settings.ELASTIC_URL)
         # Diccionario porque se utilizara el metodo items() en forms
         variants = {'status': 'error'}
-    except es_exceptions.NotFoundError as e:
+    except es_exceptions.NotFoundError:
         LOGGER.error("No se encontró el indice::" + settings.INDEX)
         LOGGER.error("URL::" + settings.ELASTIC_URL)
         variants = {'status': 'error'}

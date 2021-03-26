@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="{% static 'css/sweetalert2.min.css' %}" />
   <link rel="stylesheet" href="{% static 'css/select2.min.css' %}" type="text/css" media="screen" charset="utf-8">
   <link rel="stylesheet" href="{% static 'css/main.css' %}" type="text/css" >
+  <link rel="stylesheet" href="{% static 'user/css/user.css' %}" type="text/css" >
   <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}">
   <style type="text/css" media="screen">
     /* Colores del proyecto */
@@ -142,9 +143,7 @@
         <header>
           <nav id="barra-navegacion" class="navbar navbar-custom navbar-expand-lg">
             <a href="{% url 'index' %}" class="navbar-brand">
-                <img  src="{% static "img/brand-logo.png" %}"
-                          class="d-inline-block" width="60" height="60" alt="{{PROJECT_NAME}} logo"/>
-                {{ PROJECT_NAME }}
+                <img  src="{% static "img/brand-logo.png" %}" class="d-inline-block" width="60" height="60" alt="{{PROJECT_NAME}} logo"/>{{ PROJECT_NAME }}
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#esquite-navbar"
                     aria-controls="esquite-navbar" aria-expanded="false" aria-label="Toggle navigation">
