@@ -8,7 +8,7 @@ import click
 import elasticsearch
 from pprint import pprint
 from elasticsearch import Elasticsearch
-from corpus_admin.helpers import set_minimal_env
+from esquite.helpers import set_minimal_env
 
 
 def set_project_info(config):

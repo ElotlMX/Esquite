@@ -69,7 +69,7 @@ def set_minimal_env(token="dummy-token"):
                 'NAME': 'ESQUITE',
                 'ORG_NAME': 'ELOTLMX',
                 'SECRET_KEY': f'{token}',
-                'URL': 'http://localhost:9200/'
+                'URL': 'http://esquite-elasticsearch:9200/'
             }
     return config
 
