@@ -1,25 +1,20 @@
-"""
-Generadas por ``django-admin startproject`` usando Django ``2.2.2``.
-"""
-
 import os
 import yaml
+import secrets
 from django.contrib.messages import constants as messages
+from .helpers import set_minimal_env, env_validator
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 try:
     with open(os.path.join(BASE_DIR, "env.yaml"), 'r') as e:
         env = yaml.load(e, Loader=yaml.FullLoader)
+    env, WRONG_CONFIGS = env_validator(env)
 except FileNotFoundError:
-    print("[ERROR] Archivo de configuración env.yaml no encontrado")
-    # Setting dummy dict for build the docs correctly at Read The Docs
-    env = {"DEBUG": "False", "ORG_NAME": "", "SECRET_KEY": "dummy-key",
-           "KEYBOARD": [], "COLORS": [], "L1": "", "L2": "",
-           "INDEX": "test", "LINKS": {}, "URL": "localhost", "COLABS": [],
-           "NAME": "", "GOOGLE_ANALYTICS": "", "API": {"num_proxies": 0},
-           'META_DESC': ''}
+    print("[WARNING] Archivo de configuración env.yaml no encontrado")
+    print("[WARNING] Usando configuraciones por defecto")
+    # setting up minimal settings
+    env = set_minimal_env(secrets.token_urlsafe(50))
+
 
 DEBUG = eval(env['DEBUG'])
 if DEBUG:

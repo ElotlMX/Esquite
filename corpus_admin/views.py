@@ -3,8 +3,6 @@ import csv
 import logging
 import json
 import datetime
-import yaml
-from pprint import pprint
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib import messages
@@ -35,11 +33,22 @@ def list_docs(request):
     * `:type:` *HttpRequest*
     * `:return:` Lista de documentos del corpus con acciones por documento
     """
-    # TODO: Excepcion cuando no se pueda conectar al indice del corpus
-    LOGGER.info("Listando Documentos")
+    # Errores en las variables de entorno del proyecto
+    breakpoint()
+    if settings.WRONG_CONFIGS['error']:
+        msg = "Configuraciones necesarias para sitio no se encuentran en \
+        el archivo <code>env.yaml</code>."
+        str_fields = ", ".join(settings.WRONG_CONFIGS['error'])
+        msg += f" Modifica los campos: {str_fields} o ejecuta el asistente \
+            <code>wizard.py</code>."
+        messages.error(request, msg)
+        conf_docs_link = "https://esquite.readthedocs.io/es/latest/wizard.html#configuraciones"
+        messages.info(request, f"TIP: Revisar la documentación <a href='{conf_docs_link}'>aqui<a>")
+    if "COLORS" in settings.WRONG_CONFIGS['warn']:
+        messages.warning(request, "Los colores del proyecto no fueron \
+                         configurados")
     total, docs = get_corpus_info(request)
     variants = get_variants()
-    # TODO: Notificar de error al traer variantes
     del variants['status']
     LOGGER.info("Total::{}".format(total))
     return render(request, "corpus-admin/docs-list.html",
@@ -97,7 +106,7 @@ def new_doc(request):
                             csv_file.size / (1000 * 1000)))
                     csv_writer(data_form['csv'])
                 lines = csv_uploader(csv_file_name, data_form['nombre'],
-                                         data_form['pdf'].name)
+                                     data_form['pdf'].name)
                 # TODO: Checar si existe el archivo antes de subirlo
                 notification = 'El documento <b>' + data_form['nombre'] + \
                                '</b> fue guardado correctamente. <b>' + \
@@ -382,6 +391,7 @@ def index_config(request):
                         'index_config': index_config, 'analysis': analysis,
                         'fields': fields,
                       })
+
 
 def extra_fields(request, csv_file_name, document_name, pdf_file_name):
     """Configura los campos extra detectados en un ``CSV``
