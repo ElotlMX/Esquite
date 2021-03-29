@@ -45,7 +45,7 @@ pickleshare==0.7.5
 ply==3.11
 prompt-toolkit==3.0.5
 ptyprocess==0.6.0
-Pygments==2.4.2
+Pygments==2.7.4
 pyparsing==2.4.3
 pyrsistent==0.17.3
 pystache==0.5.4
