@@ -29,7 +29,7 @@
             <tr>
               <td>{{ doc.name }}</td>
               <td><b class="text-monospace">{{ doc.count }}</b></td>
-              <td><a href="{% url 'pdf_view' doc.file %}" >{{ doc.file }}</a></td>
+              <td><a target="_blank" href="{% url 'pdf_view' doc.file %}" >{{ doc.file }}</a></td>
             </tr>
           {% endfor %}
             <tr>

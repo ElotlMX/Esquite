@@ -46,7 +46,7 @@
            {% for doc in docs %}
             <tr>
               <td>{{ doc.name }}</td>
-              <td><a href="{% url 'pdf_view' doc.file %}" >{{ doc.file }}</a></td>
+              <td><a target="_blank" href="{% url 'pdf_view' doc.file %}" >{{ doc.file }}</a></td>
               <td><b>{{ doc.count }}</b></td>
               <td><a href="{% url 'preview' doc.id %}" class="btn btn-outline-success btn-block btn-sm btn-light">Ver <i class="fa fa-eye"></i></a></td>
               <td><a href="{% url 'edit' doc.id %}" class="btn btn-outline-primary btn-block btn-sm btn-light">Editar <span class="fa fa-pencil"></span></a></td>
