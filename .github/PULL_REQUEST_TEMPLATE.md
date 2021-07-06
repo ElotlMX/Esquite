@@ -1,12 +1,3 @@
----
-name: Pull request
-about: Suggest applicable changes for this project
-title: ''
-labels: ''
-assignees: ''
-
----
-
 Please include the next info:
 - A short descriptive tittle
 - A reference to a related issue in the repository.
