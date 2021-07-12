@@ -24,10 +24,11 @@ info:
 
       ## Corpus disponibles (índices)
 
-      | Nombre | Lenguas | Índice |
-      |--------|---------|--------|
-      | **Tsunkua** | Español-Otomí | `tsunkua-production` |
+      | Nombre      | Lenguas         | Índice               |
+      |-------------|-----------------|----------------------|
+      | **Tsunkua** | Español-Otomí   | `tsunkua-production` |
       | **Axolotl** | Español-Nahuatl | `axolotl-production` |
+      | **Kolo**    | Español-Mixteco | `kolo-production`    |
   version: 1.0.0
   title: Esquite API
   contact:

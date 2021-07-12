@@ -8,16 +8,6 @@ which is developed by the [Elotl Community](https://elotl.mx/). These are
 mostly guidelines, not rules. Feel free to propose changes to this document in a
 pull request
 
-## Table of content
-
-* [Code of Conduct](#code-of-conduct)
-* [I don't want to read this whole thing, I just have a question](#i-dont-want-to-read-this-whole-thing-i-just-have-a-question)
-* [Technical Contributions](#technical-contributions)
-    * [About the project](#about-the-project)
-    * [Code style guide](#code-style-guide)
-    * [Contribute with code](#contribute-with-code)
-    * [Making a Pull Request](#making-a-pull-request)
-
 ## Code of conduct
 
 We invite you keep the [Elotl Community](https://elotl.mx/) open and inclusive.
@@ -31,8 +21,8 @@ contact us in the following ways:
 - Writing an [issue](https://github.com/ElotlMX/Esquite/issues)
 - In our Social networks
   - [Twitter of Elotl](https://twitter.com/elotlmx/)
-  - [Facebook or Elotl](https://www.facebook.com/comunidadelotl/)
-  - [Twitter of Esquite Mantainer](https://twitter.com/umoqnier/)
+  - [Facebook of Elotl](https://www.facebook.com/comunidadelotl/)
+  - [Twitter of Esquite Maintainer](https://twitter.com/umoqnier/)
 - Writing an email to:
   - The community - *contacto at elotl.mx*
   - The maintainer - *diegobarriga at protonmail.com*
@@ -81,15 +71,62 @@ frontend. You can find an in-detail description of the project's structure in th
     * A summary of the features you are proposing or the bugs you are correcting
     * A mention to people that can review your code
 
-## Non-technical
+## Non-technical Contributions
 
 ### Report a bug via issues
 
-TODO...
+* Reporting any problem, issue or bug can make us improve **Esquite**.
+* To take it easier for us to resolve bugs and issues consider to provide these
+information:
+
+    1. Describe the bug
+    2. Steps to reproduce
+    3. Expected behavior
+    4. Screenshots (if any)
+    5. Platform used
+        * OS
+        * Device
+        * Browser
+        * Version
+    6. Additional context
+
+* We provide a template for issues that you can use. Consider using it.
 
 ### Suggest a feature or enhancement
 
-Todo...
+* Is your feature request related to a problem? Please describe.
+* Describe the solution you'd like.
+* Describe alternatives you've considered.
+* Additional context.
+
+### Corpus compilation
+
+Part of our labor it's to enable NLP technologies through datasets like [Tsu̱nkua](https://tsunkua.elotl.mx/).
+To achieve this we need to collect monolingual or bilingual corpora in different
+Mexican languages.
+
+You can help us identifying, digitalizing and preprocessing books and materials
+with monolingual or multilingual content. Currently we have open projects in the
+next languages:
+
+* Spanish-Náhuatl
+* Spanish-Otomí
+* Spanish-Mixteco
+* Spanish-O'dam
+
+However, we are in constant search of material in any languages pairs spoken in
+Mexico. Are you interested? contact us 😁
+
+### Diffusion
+
+In addition to the task related to research and development of technologies we
+maintain outreach activities of didactic material, events, initiatives, calls
+for proposals, related with minority languages. Be part of our community and
+help us to monitor relevant information to disseminate it through our social
+networks.
+
+Our blog is also open to collaborations related with technologies and languages
+spoken in Mexico.
 
 ## Sponsor
 
