@@ -111,6 +111,25 @@ def csv_writer(csv_file):
             f.write(chunk)
     return True
 
+def csv_reader(csv_filename):
+    """**Lee datos del corpus paralelo de un archivo ``csv``**
+
+    Esta función lee datos del corpus paralelo desde un archivo ``csv``.
+    Devuelve un par de objetos, el header como lista y el contenido
+    como cadena de texto.
+
+    :param csv_filename: Nombre del archivo ``csv``
+    :type csv_filename: str
+    :return: Header del archivo y el contenido como texto plano
+    :rtype: list, str
+    """
+    # TODO add exception
+    with open(csv_filename, 'r', encoding='utf-8') as f:
+        header = f.readline().lower().strip('\n').split(',')
+        # Removing last new line
+        csv_data = f.read().strip('\n')
+    return header, csv_data
+
 
 def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     """**Función encargada de cargar nuevas líneas al corpus**
