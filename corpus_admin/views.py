@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from .forms import NewDocumentForm, DocumentEditForm, AddDocumentDataForm
 from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
                       get_document_info, csv_writer, check_extra_fields,
-                      update_config, get_index_config)
+                      update_config, get_index_config, csv_reader)
 from searcher.helpers import data_processor, get_variants, query_kreator
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
@@ -71,37 +71,34 @@ def new_doc(request):
         form = NewDocumentForm(request.POST, request.FILES)
         if form.is_valid():
             data_form = form.cleaned_data
+            # Writing file on disk for performance propurses
+            # TODO Checar que el CSV sea CSV
             csv_writer(data_form['csv'])
+            # TODO Checar que name no tenga un nombre malicioso
             csv_file_name = data_form['csv'].name
+            # Reading from file
+            header, csv_file = csv_reader(csv_file_name)
+            # TODO: Checar que el pdf sea un pdf
             pdf_uploader(data_form['pdf'], data_form['pdf'].name)
-            with open(csv_file_name, 'r', encoding='utf-8') as f:
-                header = f.readline().lower().strip('\n').split(',')
-                # Removing last new line
-                csv_file = f.read().strip('\n')
             extra_fields = check_extra_fields(header)
             if extra_fields:
-                rows = csv_file.split('\n')
-                total_lines = len(rows)
+                pre_rows = []
+                # TODO checar una biblioteca que maneje mejor los csv
+                for row in csv.reader(csv_file.split('\n'), delimiter=',', quotechar='"', ):
+                    if row:
+                        pre_rows.append([text.strip() for text in row])
+                total_lines = len(pre_rows)
                 notification = f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
                 messages.warning(request, notification)
-                pre_rows = rows[:5]
-                pre_rows = [txt for txt in csv.reader(pre_rows,  delimiter=',', quotechar='"')]
                 return render(request, "corpus-admin/extra-fields.html",
                               {"fields": extra_fields, 'doc_name':
                                data_form['nombre'], 'pdf_file':
                                data_form['pdf'].name, 'total_lines':
-                               total_lines, 'preview_lines': pre_rows,
+                               total_lines, 'preview_lines': pre_rows[:5],
                                'header': header,
                                'csv_file_name': csv_file_name})
             # Upload the csv file as usual
             else:
-                if os.path.isfile(csv_file_name):
-                    LOGGER.info(f"El archivo {csv_file_name} ya existe.")
-                else:
-                    if csv_file.multiple_chunks():
-                        LOGGER.warning("Documento grande {:.2f}MB".format(
-                            csv_file.size / (1000 * 1000)))
-                    csv_writer(data_form['csv'])
                 lines = csv_uploader(csv_file_name, data_form['nombre'],
                                      data_form['pdf'].name)
                 # TODO: Checar si existe el archivo antes de subirlo
@@ -137,6 +134,7 @@ def doc_preview(request, _id):
     * `:return:` Contenido de un documento
     """
     query = query_kreator("document_id:" + _id)
+    # TODO: Agregar exception de error de conexion
     r = es.search(index=settings.INDEX, body=query)
     corpus = data_processor(r['hits'], "NONE", "")
     data = r['hits']['hits'][0]['_source']
