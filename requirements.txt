@@ -6,7 +6,7 @@ Babel==2.7.0
 backcall==0.1.0
 beautifulsoup4==4.8.1
 billiard==3.3.0.23
-celery==3.1.26.post2
+celery==5.2.2
 celery-progress==0.0.9
 certifi==2019.6.16
 chardet==3.0.4
