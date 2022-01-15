@@ -20,10 +20,10 @@ def get_corpus_info(request):
 
     Está función utiliza el framework de ``Elasticsearch`` llamado
     *aggregations* para obtener los ids del corpus. Con cada uno se
-    obtienen los nombres de documentos, nombres de archivos y total:>>.
+    obtienen los nombres de documentos, nombres de archivos y total.
 
     :return: El total de documentos y una lista con información de los
-    documentos
+        documentos
     :rtype: int, list
     """
     ids_filters = {
@@ -110,6 +110,7 @@ def csv_writer(csv_file):
         for chunk in csv_file.chunks():
             f.write(chunk)
     return True
+
 
 def csv_reader(csv_filename):
     """**Lee datos del corpus paralelo de un archivo ``csv``**
@@ -234,8 +235,8 @@ def check_extra_fields(fields, full=False):
 
     :param fields: Campos del usuario presentes en la cabecera del ``csv``
     :type: list
-    :param full: Bandera opcional si se requieren los campos completos. Por
-    ejemplo cuando se sube un respaldo de la base de datos
+    :param full: Bandera opcional si se requieren los campos completos.
+        Por ejemplo cuando se sube un respaldo de la base de datos
     :type: bool
     :return: Los campos adicionales encontrados si existen
     :rtype: set

@@ -5,7 +5,7 @@ Variables de entorno
 --------------------
 
 esquite.context\_processors
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: esquite.context_processors
    :members:
@@ -16,7 +16,7 @@ Configuraciones generales
 -------------------------
 
 esquite.settings
-^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^
 .. automodule:: esquite.settings
    :members:
    :undoc-members:
@@ -26,7 +26,7 @@ Rutas
 -----
 
 esquite.urls
-^^^^^^^^^^
+^^^^^^^^^^^^
 
 .. automodule:: esquite.urls
    :members:
@@ -37,7 +37,7 @@ Vistas
 ------
 
 esquite.views
-^^^^^^^^^^^
+^^^^^^^^^^^^^
 
 .. automodule:: esquite.views
    :members:
@@ -53,7 +53,7 @@ Configuración de servidor web
     tiene por defecto ya que este es solo para el ambiente de desarrollo
 
 esquite.wsgi
-^^^^^^^^^^
+^^^^^^^^^^^^
 
 .. automodule:: esquite.wsgi
    :members:

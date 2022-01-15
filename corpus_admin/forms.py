@@ -39,13 +39,13 @@ class AddDocumentDataForm(forms.Form):
 
 
 class DocumentEditForm(forms.Form):
-    """**Clase encargada de generar de forma dinámica el formulario que
-    permite modificar el nombre y el PDF de un documento existente**
+    """**Clase encargada de generar de forma dinámica el formulario
+    que permite modificar el nombre y el PDF de un documento existente**
 
     *Atributos*
 
-    * placeholder: Variable que modifica el placeholder del input para el nuevo
-    nombre del documento
+    * placeholder: Variable que modifica el placeholder del input para
+        el nuevo nombre del documento
         :type: str
     * nombre: Objeto de django forms que renderea un elemento input de html
         :type: ``form.CharField``
@@ -59,3 +59,4 @@ class DocumentEditForm(forms.Form):
                                         'placeholder': placeholder}),
                              required=False)
     pdf = forms.FileField(label="PDF", required=False)
+
