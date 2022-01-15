@@ -30,22 +30,6 @@ y frases en las dos lenguas.
 	<img src="https://elotl.mx/wp-content/uploads/2020/07/export_csv.png" width="52%" height="52%" />
 </p>
 
-## Contacto
-
-¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
-paralelo en línea? Contactamos: *contacto at elotl.mx*
-
-### Colaboradoras
-
-* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
-* **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
-* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing@jusanet.org*
-
-### Comunidad
-
-* Twitter: [@elotlmx](https://twitter.com/elotlmx)
-* Sitio: [https://elotl.mx/](https://elotl.mx)
-* Email: *contacto at elotl.mx*
 
 ## Documentación
 
@@ -59,31 +43,31 @@ y estructura del proyecto puedes revisar nuestra
 * `git`
 * [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) o mayor
 * `python3.6` o mayor
-	* `pip`
-	* Opcional: `virtualenv`: [Guía de instalación virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
+* `pip`
 
-### Instalación en servidor
+### Instalación
 
 1. Instalar y correr `elasticsearch`
 
-	**Nota**: Puedes consultar la página oficial de
+    **Nota**: Puedes consultar la página oficial de
 	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-	para completar este paso dependiendo de tu Sistema Operativo
+	para completar este paso dependiendo de tu Sistema Operativo.
+    Alternativamento puedes usar [docker](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) para una instalación más sencilla.
 
 2. Clona este repositorio
 
 	```shell
-	$ git clone https://github.com/ElotlMX/Esquite
+	$ git clone https://github.com/ElotlMX/Esquite --depth=1
 	```
 
 3. Preparación del entorno
 
-	Entrar a la carpeta del proyecto, crea un entorno virtual de `python` con
-	`virtualenv` y activarlo
+	Entrar a la carpeta del proyecto, crea un entorno virtual con `python` la
+    herramienta integrada `venv`. Activa el entorno
 
 	```shell
 	$ cd Esquite
-	$ virtualenv env -p /usr/bin/python3
+	$ python -m venv env
 	$ source env/bin/activate
 	```
 
@@ -99,16 +83,14 @@ y estructura del proyecto puedes revisar nuestra
 	(env)$ python wizard.py
 	```
 
-	**Nota**: El asistente menciona que debemos tener un índice de `elasticsearh`
-	previamente creado. Para crear dicho índice puede ejecutar el siguiente
-	comando.
+	**Nota**: El asistente crea un índice de `elasticsearh` automáticamente.
+    De forma alternativa puedes ejecutar el siguiente comando usando `curl`.
+    Las configuraciones usadas por defecto para la creación del indice se
+    encuentran en el archivo `elastic-config.json`
 
 	```shell
 	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<nombre-de-tu-indice>
 	```
-
-	Donde dice `<nombre-de-tu-indice>` deberás poner el nombre que desees
-	y ese será el nombre del índice para poner en el asistente de instalación.
 
 6. Aplicar migraciones de `django`
 
@@ -116,9 +98,41 @@ y estructura del proyecto puedes revisar nuestra
 	(env)$ python manage.py migrate
 	```
 
-6. Correr `django` en segundo plano
+7. Correr `django` en segundo plano
 
 	```shell
 	(env)$ python manage.py runserver 0.0.0.0:8000 &
 	```
+
+8. En un navegador en la dirección `http://localhost:8000/` verás Esquite
+   corriendo :)
+
+   **NOTA:** Para una instalación en servidor detallada contactanos
+
+## Docker image alternative: `Esquite-Docker`
+
+Opcionalmente, es posible usar y desplegar Esquite de forma más sencilla usando
+nuestra imagen oficial de Docker.
+
+La documentación detallada se encuentra en los siguientes enlaces:
+
+- [Esquite-Docker Github](https://github.com/ElotlMX/Esquite-docker)
+- [Esquite-Docker Dockerhub](https://hub.docker.com/r/elotlmx/esquite)
+
+## Contacto
+
+¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
+paralelo en línea? Contactamos: *contacto at elotl.mx*
+
+### Colaboradoras
+
+* **Leadership:** Xim ([@XimGuitierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
+* **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *umoqnier at riseup.net*
+* **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing at jusanet.org*
+
+### Comunidad
+
+* Twitter: [@elotlmx](https://twitter.com/elotlmx)
+* Sitio: [https://elotl.mx/](https://elotl.mx)
+* Email: *contacto at elotl.mx*
 

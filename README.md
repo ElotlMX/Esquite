@@ -114,8 +114,8 @@ using our official Docker image.
 
 Detailed documentation is available on:
 
-- Esquite-Docker Github : https://github.com/ElotlMX/Esquite-docker
-- Esquite-Docker Dockerhub : https://hub.docker.com/r/elotlmx/esquite
+- [Esquite-Docker Github](https://github.com/ElotlMX/Esquite-docker)
+- [Esquite-Docker Dockerhub](https://hub.docker.com/r/elotlmx/esquite)
 
 ## Contact
 
@@ -125,7 +125,7 @@ your parallel corpus? Contact us: *contacto at elotl.mx*
 ### Collaborators
 
 * **Collaborator:** Xim ([@XimGutierrez](https://twitter.com/XimGutierrez)) - *xim at unam.mx*
-* **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *diegobarriga at protonmail.com*
+* **Mantainer:** Diego B. ([@umoqnier](https://twitter.com/umoqnier)) - *umoqnier at riseup.net*
 * **DevOps**: Javier ([@jusafing](https://twitter.com/jusafing)) - *jusafing at jusanet.org*
 
 ### Community
