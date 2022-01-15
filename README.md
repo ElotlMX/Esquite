@@ -4,7 +4,8 @@
 [![License](https://img.shields.io/github/license/ElotlMX/Esquite?label=Licencia&style=flat)](https://github.com/ElotlMX/Esquite/blob/master/LICENSE)
 [![README ES](https://img.shields.io/badge/README-Espa%C3%B1ol-informational)](https://github.com/ElotlMX/Esquite/blob/master/README_ES.md)
 
-## About Esquite
+
+## What is Esquite?
 
 Esquite is a framework intended for people who have parallel corpus
 (bilingual texts) and wish to get a web system that allows them to upload
@@ -30,6 +31,92 @@ languages.
 	<img src="https://elotl.mx/wp-content/uploads/2020/07/export_csv.png" width="52%" height="52%" />
 </p>
 
+## Docs
+
+For a full [installation guide](https://esquite.readthedocs.io/es/latest/install.html),
+[tutorials](https://esquite.readthedocs.io/es/latest/tutorials.html) and project
+structure you can check our [documentation](https://esquite.readthedocs.io/es/latest/).
+
+## Dependencies
+
+* `git`
+* [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) or higher
+* `python 3.6` or higher
+* `pip`
+
+## Installation
+
+1. Install and run `elasticsearch`
+
+    **Note**: Check the official page of
+	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
+    to complete this step depending on your OS. Alternatively you can use
+    [docker](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) for easier installation.
+
+2. Clone this repo
+
+	```shell
+	$ git clone https://github.com/ElotlMX/Esquite --depth=1
+	```
+
+3. Environment settings
+
+    Change to the directory's project and create a virtual environment
+    with the `python` built-in command `venv`. Activate the environment
+
+	```shell
+	$ cd Esquite
+	$ python -m venv env
+	$ source env/bin/activate
+	```
+
+4. Install dependencies
+
+	```shell
+	(env)$ pip install -r requirements.txt
+	```
+
+5. Launch the installation wizard and type the information requested
+
+	```shell
+	(env)$ python wizard.py
+	```
+
+    **Note**: The wizard automatically create an `elasticsearch` index.
+    Alternatively you can run the `curl` command below to create an index
+    manually before running the wizard.
+    Default configs can be founded in the file `elastic-config.json`
+
+	```shell
+	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<index-name>
+	```
+
+6. Apply `django` migrations
+
+	```shell
+	(env)$ python manage.py migrate
+	```
+
+7. Run `django` in background
+
+	```shell
+	(env)$ python manage.py runserver 0.0.0.0:8000 &
+	```
+
+8. Go to your browser at `http://localhost:8000/` to see Esquite running :)
+
+    **Note:** For an in detail deployment guide see please contact us
+
+## Docker image alternative: `Esquite-Docker`
+
+Alternatively, it is possible to use Esquite and deploy it in an easier way by
+using our official Docker image.
+
+Detailed documentation is available on:
+
+- Esquite-Docker Github : https://github.com/ElotlMX/Esquite-docker
+- Esquite-Docker Dockerhub : https://hub.docker.com/r/elotlmx/esquite
+
 ## Contact
 
 Are you a speaker/researcher of a minority language and would like to upload
@@ -46,89 +133,3 @@ your parallel corpus? Contact us: *contacto at elotl.mx*
 * Twitter: [@elotlmx](https://twitter.com/elotlmx)
 * Site: [https://elotl.mx/](https://elotl.mx)
 * Email: *contacto at elotl.mx*
-
-## Docs
-
-For a full [installation
-guide](https://esquite.readthedocs.io/es/latest/install.html),
-[tutorials](https://esquite.readthedocs.io/es/latest/tutorials.html) and project
-structure you can check our
-[documentation](https://esquite.readthedocs.io/es/latest/).
-
-### Dependencies
-
-* `git`
-* [Elasticsearch
-  7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html)
-  or higher
-* `python3.6` or higher
-	* `pip`
-	* Optional: `virtualenv`: [virtualenv instalation guide](https://virtualenv.pypa.io/en/latest/installation.html)
-
-### Installation
-
-1. Install and run `elasticsearch`
-
-    **Note**: You can check the official page of
-	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-    to complete this step depending on your Operating System
-
-2. Clone this repo
-
-	```shell
-	$ git clone https://github.com/ElotlMX/Esquite
-	```
-
-3. Environment settings
-
-    Change to the directory's project, make a virtual environment of `python`
-    with `virtualenv` and activate
-
-	```shell
-	$ cd Esquite
-	$ virtualenv env -p /usr/bin/python3
-	$ source env/bin/activate
-	```
-
-4. Install dependencies
-
-	```shell
-	(env)$ pip install -r requirements.txt
-	```
-
-5. Launch the installation wizard and enter the data requested
-
-	```shell
-	(env)$ python wizard.py
-	```
-
-    **Note**: The wizard displays that we need an `elasticsearch` index previously
-    created. To create this index you can run the `curl` command below
-
-	```shell
-	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<nombre-de-tu-indice>
-	```
-
-    Replace `<your-index-name>` with the index  name that  will  be used by
-    installation wizard.
-
-6. Apply `django` migrations
-
-	```shell
-	(env)$ python manage.py migrate
-	```
-
-7. Run `django` in background
-
-	```shell
-	(env)$ python manage.py runserver 0.0.0.0:8000 &
-	```
-    
-# Docker image alternative: `Esquite-Docker`
-Alternatively, it is possible to use Esquite and deploy it in an easier way by using our official Docker image.
-
-Detailed documentation is available on:
-
-- Esquite-Docker Github : https://github.com/ElotlMX/Esquite-docker
-- Esquite-Docker Dockerhub : https://hub.docker.com/r/elotlmx/esquite
-
