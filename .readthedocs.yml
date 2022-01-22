@@ -13,6 +13,7 @@ formats:
 
 # Version de python del proyecto y dependencias
 python:
-  version: 3.7
+  version: 3.9
   install:
-    - requirements: requirements.txt
+    - method: pip
+      path: .
