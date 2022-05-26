@@ -135,6 +135,7 @@ def doc_preview(request, _id):
     """
     query = query_kreator("document_id:" + _id)
     # TODO: Agregar exception de error de conexion
+    # TODO: Parece que esto devuelve solo 10k renglones. Solucionar
     r = es.search(index=settings.INDEX, body=query)
     corpus = data_processor(r['hits'], "NONE", "")
     data = r['hits']['hits'][0]['_source']
