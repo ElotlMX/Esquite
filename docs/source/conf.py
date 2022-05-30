@@ -21,7 +21,7 @@ django.setup()
 # -- Project information -----------------------------------------------------
 
 project = 'Esquite'
-copyright = '2020, Comunidad Elotl'
+copyright = '2022, Comunidad Elotl'
 author = 'Comunidad Elotl'
 
 

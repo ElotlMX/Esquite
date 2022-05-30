@@ -7,6 +7,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
 from elasticsearch import exceptions as es_exceptions
 
 LOGGER = logging.getLogger(__name__)
@@ -111,6 +112,7 @@ def csv_writer(csv_file):
             f.write(chunk)
     return True
 
+
 def csv_reader(csv_filename):
     """**Lee datos del corpus paralelo de un archivo ``csv``**
 
@@ -154,7 +156,6 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     LOGGER.info(f"Subiendo al indice de Elasticsearch::{settings.INDEX}")
     with open(csv_name, 'r', encoding='utf-8') as f:
         raw_csv = f.read()
-    total_lines = 0
     # Si no existe el documento se crea un nuevo id
     if not doc_id:
         doc_id = str(uuid.uuid4()).replace('-', '')[:24]
@@ -169,30 +170,44 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
         # Agrega solo los campos existentes en el indice
         fields = get_index_config()["mappings"]["properties"]
         fields = set(header).intersection(set(fields))
-    for text in csv.reader(rows, delimiter=',', quotechar='"'):
+    res = bulk(es, data_generator(rows, fields, doc_name, pdf_file, doc_id, header))
+    LOGGER.info(f"Lineas agreadas::{res[0]}")
+    if res[1]:
+        LOGGER.warning(f"Lineas erroneas::{res[1]}")
+    LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
+    os.remove(csv_name)
+    return len(rows)
+
+
+def data_generator(data_rows, fields, doc_name, pdf_file, doc_id, header):
+    """**Genera los datos a ser indexados**
+
+    :param data_rows: Lista de lineas del archivo csv
+    :type data_rows: list
+    :param fields: Columnas del csv
+    :type fields: list
+    """
+    for text in csv.reader(data_rows, delimiter=',', quotechar='"'):
+        # Check blank line
         if text:
+            # If there are text in lang 1 and lang 2 then index data
             if text[header.index("l1")] and text[header.index("l2")]:
-                document = {"pdf_file": pdf_file,
-                            "document_id": doc_id,
-                            "document_name": doc_name
-                            }
+                document = {
+                    "_index": settings.INDEX,
+                    "pdf_file": pdf_file,
+                    "document_id": doc_id,
+                    "document_name": doc_name,
+
+                }
                 for field in fields:
                     if field in ["document_name", "pdf_file", "document_id"]:
                         continue
                     else:
                         document[field] = text[header.index(field)]
-                LOGGER.debug(f"Subiendo linea #{total_lines}::{document}")
-                # TODO: Change to bulk
-                res = es.index(index=settings.INDEX, body=document)
-                total_lines += 1
-                LOGGER.info(f"Upload estatus #{total_lines}::{res['result']}")
-            else:
-                msg = f"Omitiendo linea #{total_lines - 1} en blanco::{text}"
-                LOGGER.warning(msg)
-    LOGGER.info(f"Lineas agregadas::{total_lines}")
-    LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
-    os.remove(csv_name)
-    return total_lines
+                yield document
+        else:
+            msg = "Omitiendo linea en blanco"
+            LOGGER.warning(msg)
 
 
 def get_document_info(_id):
