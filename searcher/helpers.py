@@ -1,5 +1,6 @@
-import logging
 import csv
+import logging
+
 from django.conf import settings
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
