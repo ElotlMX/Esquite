@@ -95,6 +95,7 @@ def search(request):
             else:
                 data = []
             # TODO: Make a function for this
+            # Delete document_id and pdf_file. We don't want to show them in table results
             mappings = es.indices.get_mapping(index=settings.INDEX)
             del mappings[settings.INDEX]['mappings']['properties']['document_id']
             del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
@@ -102,15 +103,19 @@ def search(request):
             # Ordening fields
             fields.insert(0, fields.pop(fields.index("l1")))
             fields.insert(1, fields.pop(fields.index("l2")))
-            fields.insert(2, fields.pop(fields.index("variant")))
-            return render(request, "searcher/searcher.html",
-                          {'form': form, 'data': data,
-                           'total': documents_count,
-                           'idioma': idioma,
-                           'query_text': user_query,
-                           'total_variants': len(current_variants),
-                           'fields': fields
-                           })
+            if "variant" in fields:
+                fields.insert(2, fields.pop(fields.index("variant")))
+            else:
+                LOGGER.warning(f"'variant' field not found in DB mappings. Consider update schema")
+            return render(request, "searcher/searcher.html", {
+                'form': form,
+                'data': data,
+                'total': documents_count,
+                'idioma': idioma,
+                'query_text': user_query,
+                'total_variants': len(current_variants),
+                'fields': fields
+            })
         else:
             user_data = form.cleaned_data
             notification = "En la búsqueda no se adminten consultas vacías :|"
@@ -118,8 +123,11 @@ def search(request):
                 messages.warning(request, notification)
             else:
                 messages.error(request, "Error en el formulario de consulta.")
-            return render(request, "searcher/searcher.html",
-                          {"form": form, "total": 0, "form_error": True})
+            return render(request, "searcher/searcher.html", {
+                "form": form,
+                "total": 0,
+                "form_error": True
+            })
     else:
         # Si es metodo GET se redirige a la vista index
         return HttpResponseRedirect('/')

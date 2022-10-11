@@ -2,7 +2,7 @@
 name = "esquite"
 version = "0.1.0"
 description = "Framework para corpus paralelos | Framework for parallel corpora"
-authors = ["Diego B. <dbarriga@ciencias.unam.mx>"]
+authors = ["Diego B. <dbarriga@ciencias.unam.mx>", "Comunidad Elotl <contacto@elotl.mx>"]
 license = "MPL-2.0"
 
 [tool.poetry.dependencies]

@@ -135,6 +135,7 @@ def doc_preview(request, _id):
     """
     query = query_kreator("document_id:" + _id)
     # TODO: Agregar exception de error de conexion
+    # TODO: Parece que esto devuelve solo 10k renglones. Solucionar
     r = es.search(index=settings.INDEX, body=query)
     corpus = data_processor(r['hits'], "NONE", "")
     data = r['hits']['hits'][0]['_source']
@@ -154,7 +155,10 @@ def doc_preview(request, _id):
     # Ordening fields
     fields.insert(0, fields.pop(fields.index("l1")))
     fields.insert(1, fields.pop(fields.index("l2")))
-    fields.insert(2, fields.pop(fields.index("variant")))
+    if "variant" in fields:
+        fields.insert(2, fields.pop(fields.index("variant")))
+    else:
+        LOGGER.warning(f"'variant' field not found in DB mappings. Consider update schema")
     return render(request, "corpus-admin/doc-preview.html",
                   {
                       "doc_data": corpus, "doc_name": name,
