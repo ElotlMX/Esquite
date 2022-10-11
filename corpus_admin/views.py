@@ -155,7 +155,10 @@ def doc_preview(request, _id):
     # Ordening fields
     fields.insert(0, fields.pop(fields.index("l1")))
     fields.insert(1, fields.pop(fields.index("l2")))
-    fields.insert(2, fields.pop(fields.index("variant")))
+    if "variant" in fields:
+        fields.insert(2, fields.pop(fields.index("variant")))
+    else:
+        LOGGER.warning(f"'variant' field not found in DB mappings. Consider update schema")
     return render(request, "corpus-admin/doc-preview.html",
                   {
                       "doc_data": corpus, "doc_name": name,

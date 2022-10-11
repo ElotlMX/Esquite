@@ -105,6 +105,8 @@ def search(request):
             fields.insert(1, fields.pop(fields.index("l2")))
             if "variant" in fields:
                 fields.insert(2, fields.pop(fields.index("variant")))
+            else:
+                LOGGER.warning(f"'variant' field not found in DB mappings. Consider update schema")
             return render(request, "searcher/searcher.html", {
                 'form': form,
                 'data': data,
