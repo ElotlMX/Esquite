@@ -4,8 +4,12 @@ import csv
 import json
 import yaml
 import logging
+
+from typing import List, Tuple
+
 from django.conf import settings
 from django.contrib import messages
+from django.http import HttpRequest
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
 from elasticsearch import exceptions as es_exceptions
@@ -16,7 +20,7 @@ LOGGER = logging.getLogger(__name__)
 es = Elasticsearch([settings.ELASTIC_URL])
 
 
-def get_corpus_info(request):
+def get_corpus_info(request: HttpRequest) -> Tuple[int, List]:
     """**Función que obtiene la información general del corpus**
 
     Está función utiliza el framework de ``Elasticsearch`` llamado
@@ -50,24 +54,22 @@ def get_corpus_info(request):
             document = get_document_info(bucket['key'])
             document['count'] = bucket['doc_count']
             docs.append(document)
-    except es_exceptions.ConnectionError as e:
-        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
-        LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
-        LOGGER.error("URL::" + settings.ELASTIC_URL)
-        total = 0
-        docs = []
+    except es_exceptions.ConnectionError:
+        LOGGER.error(f"Connection error to elasticsearch index::{settings.INDEX} URL::{settings.ELASTIC_URL}")
         msg = f"No se pudo conectar al índice: <i>{settings.INDEX}</i>"
         messages.error(request, msg)
         msg = "TIP: ¿Está corriendo la instancia de Elasticsearch? ¿Existe el \
         índice?"
         messages.info(request, msg)
+        total, docs = 0, []
+        return total, docs
     except es_exceptions.NotFoundError:
         LOGGER.error("No se encontró el indice::" + settings.INDEX)
         LOGGER.error("URL::" + settings.ELASTIC_URL)
-        total = 0
-        docs = []
         msg = f"Parece que no existe el índice <b>{settings.INDEX}</b>"
         messages.warning(request, msg)
+        total, docs = 0, []
+        return total, docs
     return total, docs
 
 
