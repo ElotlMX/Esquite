@@ -7,7 +7,7 @@ license = "MPL-2.0"
 
 [tool.poetry.dependencies]
 python = "^3.7"
-Django = "^3.2.15"
+Django = "^3.2.18"
 django-google-analytics-app = "^5.0.3"
 djangorestframework = "^3.13.1"
 elasticsearch = "^7.16.3"
