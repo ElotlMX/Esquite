@@ -26,8 +26,8 @@ y frases en las dos lenguas.
 ### Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
 <p align="center">
-	<img src="https://elotl.mx/wp-content/uploads/2020/07/tsunkua.png" width="40%" height="40%" />
-	<img src="https://elotl.mx/wp-content/uploads/2020/07/export_csv.png" width="52%" height="52%" />
+	<img src="docs/source/static/img/tsunkua.png" width="40%" height="40%" />
+	<img src="docs/source/static/img/export_csv.png" width="52%" height="52%" />
 </p>
 
 ## Contacto
@@ -57,7 +57,7 @@ y estructura del proyecto puedes revisar nuestra
 ### Dependencias
 
 * `git`
-* [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) o mayor
+* [Elasticsearch 8.15](www.elastic.co/guide/en/elasticsearch/reference/8.15/elasticsearch-intro-what-is-es.html)
 * `python3.6` o mayor
 	* `pip`
 	* Opcional: `virtualenv`: [Guía de instalación virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)

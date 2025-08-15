@@ -27,8 +27,8 @@ languages.
 ### Example: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
 <p align="center">
-	<img src="https://elotl.mx/wp-content/uploads/2020/07/tsunkua.png" width="40%" height="40%" />
-	<img src="https://elotl.mx/wp-content/uploads/2020/07/export_csv.png" width="52%" height="52%" />
+	<img src="docs/source/static/img/tsunkua.png" width="40%" height="40%" />
+	<img src="docs/source/static/img/export_csv.png" width="52%" height="52%" />
 </p>
 
 ## Docs
@@ -39,26 +39,25 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 
 ## Dependencies
 
+* [Elasticsearch 8.15](www.elastic.co/guide/en/elasticsearch/reference/8.15/elasticsearch-intro-what-is-es.html)
+* `python 3.12` or higher
+* `uv`
 * `git`
-* [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) or higher
-* `python 3.7` or higher
-* `poetry`
 
 ## Installation
 
 1. Install and run `elasticsearch`
 
-    **Note**: Check the official page of
-	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-    to complete this step depending on your OS. Alternatively you can use
-    [docker](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) for easier installation.
+> [!NOTE]
+> Check the official page of [Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/8.15/install-elasticsearch.html) to complete this step depending on your OS. Alternatively you can use [docker](https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docker.html) for easier installation.
 
+> [!TIP]
+> Maybe you would want to disable elasticsearch default security features if you are running it in your local network or if you are just playing with esquite. You can modify the file in `/usr/share/elasticsearch/config/elasticsearch.yaml`.
 
-2. [Install](https://github.com/python-poetry/poetry#installation) `poetry` in
-   your system
+2. [Install](https://docs.astral.sh/uv/#installation) `uv` in your system
 
 	```shell
-	$ curl -sSL https://install.python-poetry.org | python3 -
+	$ curl -LsSf https://astral.sh/uv/install.sh | sh
 	```
 
 3. Clone this repo
@@ -74,20 +73,21 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 
 	```shell
 	$ cd Esquite
-	$ poetry install --no-dev --no root
-    $ poetry shell
+	$ uv sync --no-dev 
+    $ source .venv/bin/activate
 	```
 
 5. Launch the installation wizard and type the information requested
 
 	```shell
-	(env)$ python wizard.py
+	(esquite)$ python wizard.py
 	```
 
-    **Note**: The wizard automatically create an `elasticsearch` index.
-    Alternatively you can run the `curl` command below to create an index
-    manually before running the wizard.
-    Default configs can be founded in the file `elastic-config.json`
+> [!NOTE]
+> The wizard automatically create an `elasticsearch` index.
+
+> [!TIP]
+> Alternatively you can run the `curl` command below to create an index manually before running the wizard. Default configs can be founded in the file `elastic-config.json`
 
 	```shell
 	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<index-name>
@@ -96,18 +96,19 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 6. Apply `django` migrations
 
 	```shell
-	(env)$ python manage.py migrate
+	(esquite)$ python manage.py migrate
 	```
 
 7. Run `django` in background
 
 	```shell
-	(env)$ python manage.py runserver 0.0.0.0:8000 &
+	(esquite)$ python manage.py runserver 0.0.0.0:8000 &
 	```
 
 8. Go to your browser at `http://localhost:8000/` to see Esquite running :)
 
-    **Note:** For an in detail deployment guide see please contact us
+> [!NOTE]
+> For an in detail deployment guide see please contact us
 
 ## Docker image alternative: `Esquite-Docker`
 
@@ -135,4 +136,3 @@ your parallel corpus? Contact us: *contacto at elotl.mx*
 * Twitter: [@elotlmx](https://twitter.com/elotlmx)
 * Site: [https://elotl.mx/](https://elotl.mx)
 * Email: *contacto at elotl.mx*
-

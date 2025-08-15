@@ -56,7 +56,7 @@ def google_analytics(request):
 
 def user_templates(request):
     views = ["about", "help", "links", "participants"]
-    regex = re.compile("[\w+\.\\n+\b+]$", re.MULTILINE)
+    regex = re.compile(r"[\w+\.\\n+\b+]$", re.MULTILINE)
     user_views = {}
     for view in views:
         path = f"{settings.BASE_DIR}/templates/user/{view}-user.html"
