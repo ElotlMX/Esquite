@@ -26,9 +26,9 @@ languages.
 
 ### Example: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
-<p align="center">
-	<img src="docs/source/static/img/tsunkua.png" width="40%" height="40%" />
-	<img src="docs/source/static/img/export_csv.png" width="52%" height="52%" />
+<p aling="center">
+	<img src="docs/source/static/img/tsunkua.png" width=50% />
+	<img src="docs/source/static/img/export_csv.png" width=45% />
 </p>
 
 ## Docs
@@ -89,9 +89,9 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 > [!TIP]
 > Alternatively you can run the `curl` command below to create an index manually before running the wizard. Default configs can be founded in the file `elastic-config.json`
 
-	```shell
-	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<index-name>
-	```
+```shell
+$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<index-name>
+```
 
 6. Apply `django` migrations
 

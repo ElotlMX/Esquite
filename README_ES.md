@@ -18,7 +18,7 @@ y frases en las dos lenguas.
 * Personalización de la interfaz web
 	* Colores
 	* Teclado con caracteres especiales (útil para lenguas minorizadas)
-	* Agregar información personalizada a las vistas: **Ayuda**, **Acerca del Corpus**,
+	* Agregar `html` con información personalizada a las vistas: **Ayuda**, **Acerca del Corpus**,
 		**Links**, etc.
 * Nuevas características en desarrollo
 
@@ -26,14 +26,100 @@ y frases en las dos lenguas.
 ### Ejemplo: [Tsunkua Corpus Paralelo Español-Otomí](https://tsunkua.elotl.mx/)
 
 <p align="center">
-	<img src="docs/source/static/img/tsunkua.png" width="40%" height="40%" />
-	<img src="docs/source/static/img/export_csv.png" width="52%" height="52%" />
+	<img src="docs/source/static/img/tsunkua.png" width="50%" />
+	<img src="docs/source/static/img/export_csv.png" width="45%" />
 </p>
+
+## Documentación
+
+Para una [guía de instalación completa](https://esquite.readthedocs.io/es/latest/install.html), [tutoriales](https://esquite.readthedocs.io/es/latest/tutorials.html) y una explicación de la estructura del proyecto se puede revisar nuestra [documentación](https://esquite.readthedocs.io/es/latest/).
 
 ## Contacto
 
 ¿Eres hablante/estudioso de una lengua minorizada y te gustaría poner tu corpus
 paralelo en línea? Contactamos: *contacto at elotl.mx*
+
+## Dependencias
+
+* [Elasticsearch 8.15](www.elastic.co/guide/en/elasticsearch/reference/8.15/elasticsearch-intro-what-is-es.html)
+* `python 3.12` o mayor
+* `uv`
+* `git`
+
+## Installation
+
+1. Instala y ejecuta `elasticsearch`
+
+> [!NOTE]
+> Revisa la documentación oficial en la página de [Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/8.15/install-elasticsearch.html) para completar este paso dependiendo de tu Sistema Operativo. Alternativamente puedes usar [docker](https://www.elastic.co/guide/en/elasticsearch/reference/8.15/docker.html) para una instalación más sencilla.
+
+> [!TIP]
+> Quizá quieras deshabilitar las características de seguridad default de elasticsearch si estas corriendolo en tu red local o si solo estas realizando pruebas con esquite. Puede modificar el archivo en la ruta `/usr/share/elasticsearch/config/elasticsearch.yaml`.
+
+2. [Instala](https://docs.astral.sh/uv/#installation) `uv` en tu sistema
+
+	```shell
+	$ curl -LsSf https://astral.sh/uv/install.sh | sh
+	```
+
+3. Clona este repositorio de código
+
+	```shell
+	$ git clone https://github.com/ElotlMX/Esquite --depth=1
+	```
+
+4. Instala dependencias
+   
+   Cambiate al directorio del proyecto e instala las dependencias. Activa el entorno virutal del proyecto
+
+	```shell
+	$ cd Esquite
+	$ uv sync --no-dev 
+    $ source .venv/bin/activate
+	```
+
+5. Lanza el wizard de instalación e introduce la información requerida
+
+	```shell
+	(esquite)$ python wizard.py
+	```
+
+> [!NOTE]
+> El wizard creará un índice de `elasticsearch` automáticamente
+
+> [!TIP]
+> Alternativamente puedes correr el comando `curl` que está a continuación para crear el índice manualmente antes de correr el wizard. Las configuraciones por defecto pueden encontrarse en el archivo `elastic-config.json`.
+
+
+```shell
+$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<index-name>
+```
+
+6. Aplica las migraciones de `django`
+
+	```shell
+	(esquite)$ python manage.py migrate
+	```
+
+7. Corre `django` en segundo plano
+
+	```shell
+	(esquite)$ python manage.py runserver 0.0.0.0:8000 &
+	```
+
+8. Ve a la dirección `http://localhost:8000/` en tu navegador par ver Esquite corriendo :)
+
+> [!NOTE]
+> Para una guia detalla de puesta en producción por favor contactanos.
+
+## Docker image alternative: `Esquite-Docker`
+
+Alternativamente, es posible usar Esquite y ponerlo en producción de una forma más facil usando nuestra imagen oficial de docker.
+
+La documentación detallada esta disponible en los siguientes links:
+
+- Esquite-Docker Github : https://github.com/ElotlMX/Esquite-docker
+- Esquite-Docker Dockerhub : https://hub.docker.com/r/elotlmx/esquite
 
 ### Colaboradoras
 
@@ -46,79 +132,3 @@ paralelo en línea? Contactamos: *contacto at elotl.mx*
 * Twitter: [@elotlmx](https://twitter.com/elotlmx)
 * Sitio: [https://elotl.mx/](https://elotl.mx)
 * Email: *contacto at elotl.mx*
-
-## Documentación
-
-Para una [guía de instalación](https://esquite.readthedocs.io/es/latest/install.html)
-completa, [tutoriales](https://esquite.readthedocs.io/es/latest/tutorials.html)
-y estructura del proyecto puedes revisar nuestra
-[documentación](https://esquite.readthedocs.io/es/latest/).
-
-### Dependencias
-
-* `git`
-* [Elasticsearch 8.15](www.elastic.co/guide/en/elasticsearch/reference/8.15/elasticsearch-intro-what-is-es.html)
-* `python3.6` o mayor
-	* `pip`
-	* Opcional: `virtualenv`: [Guía de instalación virtualenv](https://virtualenv.pypa.io/en/latest/installation.html)
-
-### Instalación en servidor
-
-1. Instalar y correr `elasticsearch`
-
-	**Nota**: Puedes consultar la página oficial de
-	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-	para completar este paso dependiendo de tu Sistema Operativo
-
-2. Clona este repositorio
-
-	```shell
-	$ git clone https://github.com/ElotlMX/Esquite
-	```
-
-3. Preparación del entorno
-
-	Entrar a la carpeta del proyecto, crea un entorno virtual de `python` con
-	`virtualenv` y activarlo
-
-	```shell
-	$ cd Esquite
-	$ virtualenv env -p /usr/bin/python3
-	$ source env/bin/activate
-	```
-
-4. Instalar las dependencias
-
-	```shell
-	(env)$ pip install -r requirements.txt
-	```
-
-5. Iniciar el asistente de instalación e ingresar los datos que piden
-
-	```shell
-	(env)$ python wizard.py
-	```
-
-	**Nota**: El asistente menciona que debemos tener un índice de `elasticsearh`
-	previamente creado. Para crear dicho índice puede ejecutar el siguiente
-	comando.
-
-	```shell
-	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<nombre-de-tu-indice>
-	```
-
-	Donde dice `<nombre-de-tu-indice>` deberás poner el nombre que desees
-	y ese será el nombre del índice para poner en el asistente de instalación.
-
-6. Aplicar migraciones de `django`
-
-	```shell
-	(env)$ python manage.py migrate
-	```
-
-6. Correr `django` en segundo plano
-
-	```shell
-	(env)$ python manage.py runserver 0.0.0.0:8000 &
-	```
-
