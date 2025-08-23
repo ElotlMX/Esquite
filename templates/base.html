@@ -1,5 +1,4 @@
 {% load static %}
-{% load google_analytics_tags %}
 
 <!DOCTYPE html>
 <html class="h-100" lang="es">
@@ -135,11 +134,6 @@
   </style>
 </head>
 <body class="d-flex flex-column h-100">
-  {% if google_analytics_id %}
-  <div style="display:none">
-    <img src="{% google_analytics %}" width="0" height="0"/>
-  </div>
-  {% endif %}
 <main role="main" class="flex-shrink-0 mb-4">
     <div class="container">
         <header>
