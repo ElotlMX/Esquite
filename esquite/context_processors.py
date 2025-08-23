@@ -8,19 +8,18 @@ LOGGER = logging.getLogger(__name__)
 
 
 def keyboard(request):
-    """**Configura variable de entorno para teclaod personalizado**
-    """
-    return {'KEYBOARD': settings.KEYBOARD}
+    """**Configura variable de entorno para teclaod personalizado**"""
+    return {"KEYBOARD": settings.KEYBOARD}
 
 
 def languages(request):
     """**Configura variables de entorno de las lenguas**"""
-    return {'L1': settings.L1, 'L2': settings.L2}
+    return {"L1": settings.L1, "L2": settings.L2}
 
 
 def colors(request):
     """**Configura variables de entorno para los colores**"""
-    return {'COLORS': settings.COLORS}
+    return {"COLORS": settings.COLORS}
 
 
 def project_info(request):
@@ -33,25 +32,20 @@ def project_info(request):
     static_path = settings.STATICFILES_DIRS[0]
     default_banner = "img/banner.png"
     default_logo = "img/logo.png"
-    banner_path = get_user_file(static_path, 'user/img/banner.png') or default_banner
-    logo_path = get_user_file(static_path, 'user/img/logo.png') or default_logo
+    banner_path = get_user_file(static_path, "user/img/banner.png") or default_banner
+    logo_path = get_user_file(static_path, "user/img/logo.png") or default_logo
     return {
-        'PROJECT_NAME': settings.NAME,
-        'ORG_NAME': settings.ORG_NAME,
-        'COLABS': settings.COLABS,
-        'LINKS': settings.LINKS,
-        'META_DESC': settings.META_DESC,
-        'YEAR': current_year,
-        'BANNER_PATH': banner_path,
-        'LOGO_PATH': logo_path,
-        'USER_CSS_FILES': get_user_files(static_path, 'user/css/'),
-        'USER_JS_FILES': get_user_files(static_path, 'user/js/')
+        "PROJECT_NAME": settings.NAME,
+        "ORG_NAME": settings.ORG_NAME,
+        "COLABS": settings.COLABS,
+        "LINKS": settings.LINKS,
+        "META_DESC": settings.META_DESC,
+        "YEAR": current_year,
+        "BANNER_PATH": banner_path,
+        "LOGO_PATH": logo_path,
+        "USER_CSS_FILES": get_user_files(static_path, "user/css/"),
+        "USER_JS_FILES": get_user_files(static_path, "user/js/"),
     }
-
-
-def google_analytics(request):
-    """**Configura variables de entorno de google analytics**"""
-    return settings.GOOGLE_ANALYTICS
 
 
 def user_templates(request):
@@ -61,12 +55,14 @@ def user_templates(request):
     for view in views:
         path = f"{settings.BASE_DIR}/templates/user/{view}-user.html"
         try:
-            with open(path, 'r') as html:
+            with open(path, "r") as html:
                 html_view = html.read()
                 html_view = regex.sub("<br>", html_view)
                 html_view += "<br>"
         except FileNotFoundError:
-            LOGGER.warning(f"User template={view} not found. Path=templates/user/{view}-user.html")
+            LOGGER.warning(
+                f"User template={view} not found. Path=templates/user/{view}-user.html"
+            )
             html_view = ""
         name = view.upper() + "_USER"
         user_views[name] = html_view
