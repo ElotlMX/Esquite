@@ -41,24 +41,26 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 
 * `git`
 * [Elasticsearch 7.6](https://www.elastic.co/guide/en/elasticsearch/reference/7.6/getting-started-install.html) or higher
-* `python 3.7` or higher
-* `poetry`
+* `python 3.12` or higher
+* `uv`
 
 ## Installation
 
 1. Install and run `elasticsearch`
 
-    **Note**: Check the official page of
-	[Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
-    to complete this step depending on your OS. Alternatively you can use
-    [docker](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html) for easier installation.
+> [!NOTE]
+> Check the official page of
+> [Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
+> to complete this step depending on your OS. Alternatively you can use
+> [docker](https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html)
+> for easier installation.
 
 
-2. [Install](https://github.com/python-poetry/poetry#installation) `poetry` in
+2. [Install](https://docs.astral.sh/uv/getting-started/installation/) `uv` in
    your system
 
 	```shell
-	$ curl -sSL https://install.python-poetry.org | python3 -
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 	```
 
 3. Clone this repo
@@ -74,20 +76,21 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 
 	```shell
 	$ cd Esquite
-	$ poetry install --no-dev --no root
-    $ poetry shell
+	$ uv sync --no-dev --no-group docs
+    $ source ./venv/bin/activate
 	```
 
 5. Launch the installation wizard and type the information requested
 
 	```shell
-	(env)$ python wizard.py
+	(venv)$ python wizard.py
 	```
 
-    **Note**: The wizard automatically create an `elasticsearch` index.
-    Alternatively you can run the `curl` command below to create an index
-    manually before running the wizard.
-    Default configs can be founded in the file `elastic-config.json`
+> [!TIP]
+> The wizard automatically create an `elasticsearch` index.
+> Alternatively you can run the `curl` command below to create an index
+> manually before running the wizard.
+> Default configs can be founded in the file `elastic-config.json`
 
 	```shell
 	$ curl -X PUT -H "Content-Type: application/json" -d @elastic-config.json localhost:9200/<index-name>
@@ -107,7 +110,8 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 
 8. Go to your browser at `http://localhost:8000/` to see Esquite running :)
 
-    **Note:** For an in detail deployment guide see please contact us
+> [!NOTE]
+> For an in detail deployment guide see please contact us
 
 ## Docker image alternative: `Esquite-Docker`
 

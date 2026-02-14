@@ -30,12 +30,12 @@ def highlighter(hit, idioma, query):
     :rtype: list
     """
     if "highlight" in hit:
-        for key in hit['highlight'].keys():
-            hit['_source'][key] = hit['highlight'][key].pop()
+        for key in hit["highlight"].keys():
+            hit["_source"][key] = hit["highlight"][key].pop()
     elif idioma == "l2" and "highlight" not in hit:
-        string = hit['_source']['l2']
+        string = hit["_source"]["l2"]
         # Resaltado manual la lengua 2
-        hit['_source']['l2'] = string.replace(query, '<em>' + query + "</em>")
+        hit["_source"]["l2"] = string.replace(query, "<em>" + query + "</em>")
     return hit
 
 
@@ -59,20 +59,20 @@ def data_processor(raw_data, idioma, query):
     # TODO: Refactor
     LOGGER.info("Procesando datos de Elasticsearch")
     data = []
-    for hit in raw_data['hits']:
+    for hit in raw_data["hits"]:
         fields = hit["_source"].keys()
         if "l1" not in fields and "l2" not in fields:
-            hit["_source"]["l1"] = ''
-            hit["_source"]["l2"] = ''
+            hit["_source"]["l1"] = ""
+            hit["_source"]["l2"] = ""
         elif "l1" not in fields:
-            hit["_source"]["l1"] = ''
+            hit["_source"]["l1"] = ""
         elif "l2" not in fields:
-            hit["_source"]["l2"] = ''
+            hit["_source"]["l2"] = ""
         hit = highlighter(hit, idioma, query)
-        doc_name = hit['_source']['document_name']
-        doc_file = hit['_source']['pdf_file']
+        doc_name = hit["_source"]["document_name"]
+        doc_file = hit["_source"]["pdf_file"]
         try:
-            variant = hit['_source']['variant']
+            variant = hit["_source"]["variant"]
         except KeyError:
             variant = ""
         link = doc_file_to_link(doc_name, doc_file, settings.MEDIA_ROOT)
@@ -80,13 +80,13 @@ def data_processor(raw_data, idioma, query):
             # TODO: Este procesamiento es del preview del documento
             edit_btn = """<a href="#" class="btn btn-outline-info btn-block btn-sm disabled">Editar <i class="fa fa-edit"></i></a>"""
             delete_btn = """<a href="#" class="btn btn-outline-danger btn-block btn-sm disabled">Eliminar <i class="fa fa-close"></i></a>"""
-            hit['_source']['actions'] = edit_btn + delete_btn
-            hit['_source']['pdf_file'] = link
+            hit["_source"]["actions"] = edit_btn + delete_btn
+            hit["_source"]["pdf_file"] = link
         else:
-            hit['_source']['document_name'] = link
+            hit["_source"]["document_name"] = link
             if variant:
-                hit['_source']['variant'] = ethno_btn_maker(variant)
-        data.append(hit['_source'])
+                hit["_source"]["variant"] = ethno_btn_maker(variant)
+        data.append(hit["_source"])
     return data
 
 
@@ -112,31 +112,18 @@ def query_kreator(term):
         "docvalue_fields": [],
         "query": {
             "bool": {
-              "must": [
-                {
-                  "query_string": {
-                    "query": term,
-                    "analyze_wildcard": True
-                  }
-                }
-              ],
-              "filter": [],
-              "should": [],
-              "must_not": []
+                "must": [{"query_string": {"query": term, "analyze_wildcard": True}}],
+                "filter": [],
+                "should": [],
+                "must_not": [],
             }
         },
         "highlight": {
-            "pre_tags": [
-              "<em>"
-            ],
-            "post_tags": [
-              "</em>"
-            ],
-            "fields": {
-              "*": {}
-            },
-            "fragment_size": 2147483647
-        }
+            "pre_tags": ["<em>"],
+            "post_tags": ["</em>"],
+            "fields": {"*": {}},
+            "fragment_size": 2147483647,
+        },
     }
 
 
@@ -195,12 +182,12 @@ def results_to_csv(data, variants):
     file_name = "query-results.csv"
     path_to_save = settings.BASE_DIR + settings.MEDIA_ROOT + file_name
     mappings = es.indices.get_mapping(index=settings.INDEX)
-    del mappings[settings.INDEX]['mappings']['properties']['document_id']
-    del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
-    del mappings[settings.INDEX]['mappings']['properties']['document_name']
+    del mappings[settings.INDEX]["mappings"]["properties"]["document_id"]
+    del mappings[settings.INDEX]["mappings"]["properties"]["pdf_file"]
+    del mappings[settings.INDEX]["mappings"]["properties"]["document_name"]
     with open(path_to_save, "w") as csv_file:
         writer = csv.writer(csv_file)
-        csv_header = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+        csv_header = list(mappings[settings.INDEX]["mappings"]["properties"].keys())
         # Writing header
         writer.writerow(csv_header)
         for hit in data:
@@ -230,12 +217,12 @@ def ethno_table_maker(soup):
     :rtype: str
     """
     table = '<table class="table table-striped">'
-    base = soup.find('div', class_='title-wrapper')
-    title = soup.find('h1', id='page-title').text
-    fields = base.find_all_next('div', class_='views-field')
+    base = soup.find("div", class_="title-wrapper")
+    title = soup.find("h1", id="page-title").text
+    fields = base.find_all_next("div", class_="views-field")
     for i, field in enumerate(fields):
         if i == 0:
-            table += f'''
+            table += f"""
             <thead>
                 <tr class="table-info">
                     <th colspan="2"><h3>{title}</h3></th>
@@ -245,20 +232,20 @@ def ethno_table_maker(soup):
                 </tr>
             </thead>
             <tbody>
-            '''
+            """
             continue
-        content = field.find(class_='field-content').text
+        content = field.find(class_="field-content").text
         content = content if content else '<i class="fa fa-lock">'
-        table += f'''
+        table += f"""
             <tr>
                 <th scope="row">
-                    {field.find(class_='views-label').text}
+                    {field.find(class_="views-label").text}
                 </th>
                 <td>
                     {content}
                 </td>
             </tr>
-            '''
+            """
     table += "</tbody></table>"
     return table
 
@@ -275,15 +262,15 @@ def ethno_btn_maker(variante):
     :return: Cadenas con los botones en ``html``
     :rtype: str
     """
-    iso = variante[variante.find('(')+1:variante.find(')')]
-    btn_info = f'''
+    iso = variante[variante.find("(") + 1 : variante.find(")")]
+    btn_info = f"""
         <button type="button"
             class="badge badge-pill badge-info ethno-btn"
             data-toggle="modal" data-target="#ethnologue-table"
             onClick="ethnologueData('{iso}')"
             title="Ver información de la variante (Ethnologue)">
             <i class="fa fa-info"></i>
-        </button>'''
+        </button>"""
     return variante + btn_info
 
 
@@ -307,30 +294,30 @@ def get_variants():
                 "terms": {
                     # TODO: depende del header del CSV
                     "field": "variant",
-                    "size": 100  # TODO: Cambiar dinamicamente
+                    "size": 100,  # TODO: Cambiar dinamicamente
                 }
             }
-        }
+        },
     }
     try:
         response = es.search(index=settings.INDEX, body=variant_filters)
-        results = response['aggregations']['variants']['buckets']
+        results = response["aggregations"]["variants"]["buckets"]
         for data in results:
             # Si la variante no es cadena vacía
-            if data['key']:
-                variant = data['key']
+            if data["key"]:
+                variant = data["key"]
                 # TODO: Manejar caso donde no haya ISO
-                iso = variant[variant.find('(')+1:variant.find(')')]
+                iso = variant[variant.find("(") + 1 : variant.find(")")]
                 variants[iso] = variant
-        variants['status'] = 'success'
+        variants["status"] = "success"
     except es_exceptions.ConnectionError as e:
-        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
+        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e))
         LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
         LOGGER.error("URL::" + settings.ELASTIC_URL)
         # Diccionario porque se utilizara el metodo items() en forms
-        variants = {'status': 'error'}
+        variants = {"status": "error"}
     except es_exceptions.NotFoundError:
         LOGGER.error("No se encontró el indice::" + settings.INDEX)
         LOGGER.error("URL::" + settings.ELASTIC_URL)
-        variants = {'status': 'error'}
+        variants = {"status": "error"}
     return variants
