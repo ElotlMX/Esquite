@@ -1,26 +1,27 @@
-[tool.poetry]
+[project]
 name = "esquite"
-version = "0.1.0"
+version = "1.0.0"
 description = "Framework para corpus paralelos | Framework for parallel corpora"
+readme = "README.md"
 authors = ["Diego B. <dbarriga@ciencias.unam.mx>", "Comunidad Elotl <contacto@elotl.mx>"]
 license = "MPL-2.0"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "click>=8.3.1",
+    "django>=5.2,<6.0",
+    "djangorestframework>=3.16.1",
+    "elasticsearch>=9.3.0",
+    "gitpython>=3.1.46",
+    "pyyaml>=6.0.3",
+    "requests>=2.32.5",
+]
 
-[tool.poetry.dependencies]
-python = "^3.7"
-Django = "^3.2.15"
-django-google-analytics-app = "^5.0.3"
-djangorestframework = "^3.13.1"
-elasticsearch = "^7.16.3"
-GitPython = "^3.1.26"
-requests = "^2.27.1"
-click = "^8.0.3"
-PyYAML = "^6.0"
-drf-yasg = "^1.20.0"
-
-[tool.poetry.dev-dependencies]
-Sphinx = "^4.4.0"
-sphinxcontrib-redoc = "^1.6.0"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
+docs = [
+    "sphinx>=9.1.0",
+    "sphinxcontrib-redoc>=1.6.0",
+]
