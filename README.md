@@ -77,7 +77,7 @@ structure you can check our [documentation](https://esquite.readthedocs.io/es/la
 	```shell
 	$ cd Esquite
 	$ uv sync --no-dev --no-group docs
-    $ source ./venv/bin/activate
+    $ source .venv/bin/activate
 	```
 
 5. Launch the installation wizard and type the information requested
