@@ -12,7 +12,7 @@ dependencies = [
     "django>=5.2,<6.0",
     "djangorestframework>=3.16.1",
     "elasticsearch>=9.3.0",
-    "gitpython>=3.1.46",
+    "gitpython>=3.1.50",
     "pyyaml>=6.0.3",
     "requests>=2.32.5",
 ]
