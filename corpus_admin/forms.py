@@ -16,13 +16,15 @@ class NewDocumentForm(forms.Form):
     * pdf: Objeto de django forms que renderea un elemento input de html
         :type: ``form.FileField``
     """
-    nombre = forms.CharField(label='Nombre',
-                             widget=forms.TextInput(
-                                 attrs={'class': 'form-control',
-                                        'placeholder': 'Nombre del documento'})
-                             )
-    csv = forms.FileField(label='CSV')
-    pdf = forms.FileField(label='PDF')
+
+    nombre = forms.CharField(
+        label="Nombre",
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Nombre del documento"}
+        ),
+    )
+    csv = forms.FileField(label="CSV")
+    pdf = forms.FileField(label="PDF")
 
 
 class AddDocumentDataForm(forms.Form):
@@ -35,7 +37,8 @@ class AddDocumentDataForm(forms.Form):
     * csv: Objeto de django forms que renderea un elemento input de html
         :type: ``form.FileField``
     """
-    csv = forms.FileField(label='CSV')
+
+    csv = forms.FileField(label="CSV")
 
 
 class DocumentEditForm(forms.Form):
@@ -52,10 +55,13 @@ class DocumentEditForm(forms.Form):
     * pdf: Objeto de django forms que renderea un elemento input de html
         :type: ``form.FileField``
     """
+
     placeholder = "Ingresa el nuevo nombre del documento"
-    nombre = forms.CharField(label='Nombre',
-                             widget=forms.TextInput(
-                                 attrs={'class': 'form-control',
-                                        'placeholder': placeholder}),
-                             required=False)
+    nombre = forms.CharField(
+        label="Nombre",
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": placeholder}
+        ),
+        required=False,
+    )
     pdf = forms.FileField(label="PDF", required=False)
