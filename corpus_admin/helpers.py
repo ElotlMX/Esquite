@@ -2,11 +2,14 @@ import csv
 import json
 import logging
 import os
+import tempfile
 import uuid
+from pathlib import Path
 
 import yaml
 from django.conf import settings
 from django.contrib import messages
+from django.core.files.uploadedfile import UploadedFile
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
 from elasticsearch.helpers import bulk
@@ -33,7 +36,7 @@ def get_corpus_info(request):
         "aggs": {
             "ids": {
                 "terms": {
-                    "field": "doument_id",
+                    "field": "document_id",
                     "size": 1000,  # TODO: Modificar la cantidad dinamicamente
                 }
             }
@@ -93,7 +96,7 @@ def pdf_uploader(file, name):
     return True
 
 
-def csv_writer(csv_file):
+def save_csv_temporarily(csv_file: UploadedFile) -> Path | None:
     """**Escribe un archivo ``csv`` de forma temporal**
 
     Esta función escribe el ``csv`` en disco para posteriormente
@@ -106,15 +109,35 @@ def csv_writer(csv_file):
     :return: ``True`` si se guardo correctamente
     :rtype: bool
     """
+    if not hasattr(csv_file, "chunks"):
+        LOGGER.error(
+            f"Objeto de archivo inválido: Se esperaba un UploadedFile con método .chunks(), se recibió {type(csv_file)}"
+        )
+        return None
+
     LOGGER.debug(f"Guardando CSV temporal::{csv_file.name}")
-    # Guardando en disco ante de procesar los datos
-    with open(csv_file.name, "wb+") as f:
-        for chunk in csv_file.chunks():
-            f.write(chunk)
-    return True
+
+    try:
+        # Creamos un archivo temporal
+        # delete=False es necesario para que el archivo persista
+        # después de cerrar el contexto y pueda ser leído por Elasticsearch.
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp_file:
+            for chunk in csv_file.chunks():
+                tmp_file.write(chunk)
+
+            return Path(tmp_file.name)
+    except PermissionError:
+        LOGGER.error(
+            f"Permiso denegado al intentar escribir {csv_file.name}.csv en disco"
+        )
+    except OSError as e:
+        LOGGER.error(f"Error I/O del OS al guardar el CSV temporal: {e}")
+    except Exception as e:
+        LOGGER.exception(f"Error inesperado al guardar CSV temporal: {e}")
+    return None
 
 
-def csv_reader(csv_filename):
+def csv_reader(csv_filename: Path):
     """**Lee datos del corpus paralelo de un archivo ``csv``**
 
     Esta función lee datos del corpus paralelo desde un archivo ``csv``.

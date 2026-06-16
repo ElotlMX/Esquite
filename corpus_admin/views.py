@@ -1,11 +1,10 @@
 import csv
 import datetime
 import logging
-import os
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import render
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
@@ -17,11 +16,11 @@ from .helpers import (
     check_extra_fields,
     csv_reader,
     csv_uploader,
-    csv_writer,
     get_corpus_info,
     get_document_info,
     get_index_config,
     pdf_uploader,
+    save_csv_temporarily,
     update_config,
 )
 
@@ -92,59 +91,81 @@ def new_doc(request):
         form = NewDocumentForm(request.POST, request.FILES)
         if form.is_valid():
             data_form = form.cleaned_data
-            # Writing file on disk for performance propurses
-            # TODO Checar que el CSV sea CSV
-            csv_writer(data_form["csv"])
-            # TODO Checar que name no tenga un nombre malicioso
-            csv_file_name = data_form["csv"].name
-            # Reading from file
-            header, csv_file = csv_reader(csv_file_name)
-            # TODO: Checar que el pdf sea un pdf
-            pdf_uploader(data_form["pdf"], data_form["pdf"].name)
-            extra_fields = check_extra_fields(header)
-            if extra_fields:
-                pre_rows = []
-                # TODO checar una biblioteca que maneje mejor los csv
-                for row in csv.reader(
-                    csv_file.split("\n"),
-                    delimiter=",",
-                    quotechar='"',
-                ):
-                    if row:
-                        pre_rows.append([text.strip() for text in row])
-                total_lines = len(pre_rows)
-                notification = (
-                    f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
+            csv_file = data_form["csv"]
+            pdf_file = data_form["pdf"]
+            # TODO: Mejorar validaciones de archivos
+            if not csv_file.name.lower().endswith(".csv"):
+                messages.error(
+                    request, "El archivo de datos debe ser en formato <code>.csv</code>"
                 )
-                messages.warning(request, notification)
-                return render(
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
+            if not pdf_file.name.lower().endswith(".pdf"):
+                messages.error(
                     request,
-                    "corpus-admin/extra-fields.html",
-                    {
-                        "fields": extra_fields,
-                        "doc_name": data_form["nombre"],
-                        "pdf_file": data_form["pdf"].name,
-                        "total_lines": total_lines,
-                        "preview_lines": pre_rows[:5],
-                        "header": header,
-                        "csv_file_name": csv_file_name,
-                    },
+                    "El archivo de portada debe ser un formato <code>.pdf</code>",
                 )
-            # Upload the csv file as usual
-            else:
-                lines = csv_uploader(
-                    csv_file_name, data_form["nombre"], data_form["pdf"].name
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
+
+            # Writing temp file on disk for better performance
+            csv_tmp_path = save_csv_temporarily(data_form["csv"])
+            if not csv_tmp_path:
+                messages.error(
+                    request, "Error al procesar el archivo CSV en el servidor."
                 )
-                # TODO: Checar si existe el archivo antes de subirlo
-                notification = (
-                    "El documento <b>"
-                    + data_form["nombre"]
-                    + "</b> fue guardado correctamente. <b>"
-                    + str(lines)
-                    + " líneas</b> agregadas al corpus."
-                )
-                messages.add_message(request, messages.INFO, notification)
-                return HttpResponseRedirect("/corpus-admin/new/")
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
+
+            try:
+                # Reading from file
+                header, csv_file = csv_reader(csv_tmp_path)
+                pdf_uploader(pdf_file, pdf_file.name)
+                extra_fields = check_extra_fields(header)
+                if extra_fields:
+                    pre_rows = []
+                    # TODO checar una biblioteca que maneje mejor los csv
+                    for row in csv.reader(
+                        csv_file.split("\n"),
+                        delimiter=",",
+                        quotechar='"',
+                    ):
+                        if row:
+                            pre_rows.append([text.strip() for text in row])
+                    total_lines = len(pre_rows)
+                    notification = (
+                        f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
+                    )
+                    messages.warning(request, notification)
+                    return render(
+                        request,
+                        "corpus-admin/extra-fields.html",
+                        {
+                            "fields": extra_fields,
+                            "doc_name": data_form["nombre"],
+                            "pdf_file": data_form["pdf"].name,
+                            "total_lines": total_lines,
+                            "preview_lines": pre_rows[:5],
+                            "header": header,
+                            "csv_file_name": csv_tmp_path,
+                        },
+                    )
+                # Upload the csv file as usual
+                else:
+                    lines = csv_uploader(
+                        csv_tmp_path, data_form["nombre"], data_form["pdf"].name
+                    )
+                    # TODO: Checar si existe el archivo antes de subirlo
+                    notification = (
+                        "El documento <b>"
+                        + data_form["nombre"]
+                        + "</b> fue guardado correctamente. <b>"
+                        + str(lines)
+                        + " líneas</b> agregadas al corpus."
+                    )
+                    messages.add_message(request, messages.INFO, notification)
+                    return HttpResponseRedirect("/corpus-admin/new/")
+            finally:
+                # Borrando el archivo csv temporal creado
+                if csv_tmp_path and csv_tmp_path.exists():
+                    csv_tmp_path.unlink()
         else:
             if "nombre" in form.errors:
                 form.fields["nombre"].widget.attrs["class"] += " is-invalid"
@@ -289,7 +310,7 @@ def add_doc_data(request, _id):
         if form.is_valid():
             data_form = form.cleaned_data
             doc = get_document_info(_id)
-            csv_writer(data_form["csv"])
+            save_csv_temporarily(data_form["csv"])
             # TODO: Check extra fields
             lines = csv_uploader(data_form["csv"].name, doc["name"], doc["file"], _id)
             notification = (
