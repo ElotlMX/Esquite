@@ -1,14 +1,18 @@
-import os
-import uuid
 import csv
 import json
-import yaml
 import logging
+import os
+import tempfile
+import uuid
+from pathlib import Path
+
+import yaml
 from django.conf import settings
 from django.contrib import messages
+from django.core.files.uploadedfile import UploadedFile
 from elasticsearch import Elasticsearch
-from elasticsearch.helpers import bulk
 from elasticsearch import exceptions as es_exceptions
+from elasticsearch.helpers import bulk
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,25 +37,25 @@ def get_corpus_info(request):
             "ids": {
                 "terms": {
                     "field": "document_id",
-                    "size": 1000  # TODO: Modificar la cantidad dinamicamente
+                    "size": 1000,  # TODO: Modificar la cantidad dinamicamente
                 }
             }
-        }
+        },
     }
     docs = []
     total = 0
     LOGGER.info("Buscando documentos")
     try:
         r = es.search(index=settings.INDEX, body=ids_filters)
-        buckets = r['aggregations']['ids']['buckets']
+        buckets = r["aggregations"]["ids"]["buckets"]
         LOGGER.info("Documentos actuales::" + str(len(buckets)))
         for bucket in buckets:
             total += int(bucket["doc_count"])
-            document = get_document_info(bucket['key'])
-            document['count'] = bucket['doc_count']
+            document = get_document_info(bucket["key"])
+            document["count"] = bucket["doc_count"]
             docs.append(document)
     except es_exceptions.ConnectionError as e:
-        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e.info))
+        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e))
         LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
         LOGGER.error("URL::" + settings.ELASTIC_URL)
         total = 0
@@ -86,13 +90,13 @@ def pdf_uploader(file, name):
     LOGGER.info("Subiendo archivo PDF::{}".format(name))
     path_to_save = settings.BASE_DIR + settings.MEDIA_ROOT + name
     LOGGER.debug("Path de PDF::{}".format(path_to_save))
-    with open(path_to_save, 'wb+') as destination:
+    with open(path_to_save, "wb+") as destination:
         for i, chunk in enumerate(file.chunks()):
             destination.write(chunk)
     return True
 
 
-def csv_writer(csv_file):
+def save_csv_temporarily(csv_file: UploadedFile) -> Path | None:
     """**Escribe un archivo ``csv`` de forma temporal**
 
     Esta función escribe el ``csv`` en disco para posteriormente
@@ -105,15 +109,35 @@ def csv_writer(csv_file):
     :return: ``True`` si se guardo correctamente
     :rtype: bool
     """
+    if not hasattr(csv_file, "chunks"):
+        LOGGER.error(
+            f"Objeto de archivo inválido: Se esperaba un UploadedFile con método .chunks(), se recibió {type(csv_file)}"
+        )
+        return None
+
     LOGGER.debug(f"Guardando CSV temporal::{csv_file.name}")
-    # Guardando en disco ante de procesar los datos
-    with open(csv_file.name, 'wb+') as f:
-        for chunk in csv_file.chunks():
-            f.write(chunk)
-    return True
+
+    try:
+        # Creamos un archivo temporal
+        # delete=False es necesario para que el archivo persista
+        # después de cerrar el contexto y pueda ser leído por Elasticsearch.
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".csv") as tmp_file:
+            for chunk in csv_file.chunks():
+                tmp_file.write(chunk)
+
+            return Path(tmp_file.name)
+    except PermissionError:
+        LOGGER.error(
+            f"Permiso denegado al intentar escribir {csv_file.name}.csv en disco"
+        )
+    except OSError as e:
+        LOGGER.error(f"Error I/O del OS al guardar el CSV temporal: {e}")
+    except Exception as e:
+        LOGGER.exception(f"Error inesperado al guardar CSV temporal: {e}")
+    return None
 
 
-def csv_reader(csv_filename):
+def csv_reader(csv_filename: Path):
     """**Lee datos del corpus paralelo de un archivo ``csv``**
 
     Esta función lee datos del corpus paralelo desde un archivo ``csv``.
@@ -126,10 +150,10 @@ def csv_reader(csv_filename):
     :rtype: list, str
     """
     # TODO add exception
-    with open(csv_filename, 'r', encoding='utf-8') as f:
-        header = f.readline().lower().strip('\n').split(',')
+    with open(csv_filename, "r", encoding="utf-8") as f:
+        header = f.readline().lower().strip("\n").split(",")
         # Removing last new line
-        csv_data = f.read().strip('\n')
+        csv_data = f.read().strip("\n")
     return header, csv_data
 
 
@@ -154,12 +178,12 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     LOGGER.info(f"Subiendo nuevo CSV::{csv_name}")
     # Subiendo al indice de Elasticsearch
     LOGGER.info(f"Subiendo al indice de Elasticsearch::{settings.INDEX}")
-    with open(csv_name, 'r', encoding='utf-8') as f:
+    with open(csv_name, "r", encoding="utf-8") as f:
         raw_csv = f.read()
     # Si no existe el documento se crea un nuevo id
     if not doc_id:
-        doc_id = str(uuid.uuid4()).replace('-', '')[:24]
-    rows = raw_csv.split('\n')
+        doc_id = str(uuid.uuid4()).replace("-", "")[:24]
+    rows = raw_csv.split("\n")
     header = rows[0].lower().split(",")
     # Quitando cabecera del csv
     rows.pop(0)
@@ -187,7 +211,7 @@ def data_generator(data_rows, fields, doc_name, pdf_file, doc_id, header):
     :param fields: Columnas del csv
     :type fields: list
     """
-    for text in csv.reader(data_rows, delimiter=',', quotechar='"'):
+    for text in csv.reader(data_rows, delimiter=",", quotechar='"'):
         # Check blank line
         if text:
             # If there are text in lang 1 and lang 2 then index data
@@ -197,7 +221,6 @@ def data_generator(data_rows, fields, doc_name, pdf_file, doc_id, header):
                     "pdf_file": pdf_file,
                     "document_id": doc_id,
                     "document_name": doc_name,
-
                 }
                 for field in fields:
                     if field in ["document_name", "pdf_file", "document_id"]:
@@ -223,23 +246,24 @@ def get_document_info(_id):
     :rtype: dict
     """
     query_base = {
-        "version": True, "size": 1,
+        "version": True,
+        "size": 1,
         "query": {
-            "query_string": {
-                "query": 'document_id:' + _id,
-                "analyze_wildcard": True
-            }
-        }
+            "query_string": {"query": "document_id:" + _id, "analyze_wildcard": True}
+        },
     }
     r = es.search(index=settings.INDEX, body=query_base)
-    if r['hits']['hits']:
-        data = r['hits']['hits'][0]['_source']
+    if r["hits"]["hits"]:
+        data = r["hits"]["hits"][0]["_source"]
     else:
         LOGGER.error("Data not found ID::{}".format(_id))
-        data = {"name": "Not Found", "pdf_file": "Not Found",
-                "document_name": "Not_Found"}
-    name = data['document_name']
-    file = data['pdf_file']
+        data = {
+            "name": "Not Found",
+            "pdf_file": "Not Found",
+            "document_name": "Not_Found",
+        }
+    name = data["document_name"]
+    file = data["pdf_file"]
     # TODO: Agregar mas información útil
     return {"name": name, "file": file, "id": _id}
 
@@ -256,19 +280,19 @@ def check_extra_fields(fields, full=False):
     :rtype: set
     """
     # If user already create custom configurations
-    if os.path.isfile('user-elastic-config.json'):
-        with open('user-elastic-config.json') as json_file:
+    if os.path.isfile("user-elastic-config.json"):
+        with open("user-elastic-config.json") as json_file:
             configs = json.loads(json_file.read())
     # Using default configurations
     else:
-        with open('elastic-config.json') as json_file:
+        with open("elastic-config.json") as json_file:
             configs = json.loads(json_file.read())
-    default_fields = configs['mappings']['properties'].keys()
+    default_fields = configs["mappings"]["properties"].keys()
     if full:
         # Remove additional fields
-        del default_fields['document_id']
-        del default_fields['document_name']
-        del default_fields['pdf_file']
+        del default_fields["document_id"]
+        del default_fields["document_name"]
+        del default_fields["pdf_file"]
     # Aditional fields
     if set(fields) - set(default_fields) != set():
         aditional_fields = set(fields) - set(default_fields)
@@ -278,19 +302,17 @@ def check_extra_fields(fields, full=False):
 
 
 def update_config(config):
-    """Actualiza las configuraciones locales de elasticsearch
-
-    """
-    with open('user-elastic-config.json', 'w') as json_file:
+    """Actualiza las configuraciones locales de elasticsearch"""
+    with open("user-elastic-config.json", "w") as json_file:
         json.dump(config, json_file, indent=2)
     return 0
 
 
 def update_index_name(new_index_name):
-    with open("env.yaml", 'r') as f:
+    with open("env.yaml", "r") as f:
         env_configs = yaml.load(f, Loader=yaml.FullLoader)
-        env_configs['INDEX'] = new_index_name
-    with open("env.yaml", 'w') as f:
+        env_configs["INDEX"] = new_index_name
+    with open("env.yaml", "w") as f:
         yaml.dump(env_configs, f)
     settings.INDEX = new_index_name
     return 0
@@ -298,11 +320,11 @@ def update_index_name(new_index_name):
 
 def get_index_config():
     # If user already create custom configurations
-    if os.path.isfile('user-elastic-config.json'):
-        with open('user-elastic-config.json') as json_file:
+    if os.path.isfile("user-elastic-config.json"):
+        with open("user-elastic-config.json") as json_file:
             configs = json.loads(json_file.read())
     # Using default configurations
     else:
-        with open('elastic-config.json') as json_file:
+        with open("elastic-config.json") as json_file:
             configs = json.loads(json_file.read())
     return configs

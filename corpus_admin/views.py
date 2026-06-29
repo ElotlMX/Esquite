@@ -1,18 +1,28 @@
-import os
 import csv
-import logging
 import datetime
-from django.shortcuts import render
+import logging
+
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponseRedirect, HttpResponse
-from .forms import NewDocumentForm, DocumentEditForm, AddDocumentDataForm
-from .helpers import (get_corpus_info, pdf_uploader, csv_uploader,
-                      get_document_info, csv_writer, check_extra_fields,
-                      update_config, get_index_config, csv_reader)
-from searcher.helpers import data_processor, get_variants, query_kreator
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import render
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
+
+from searcher.helpers import data_processor, get_variants, query_kreator
+
+from .forms import AddDocumentDataForm, DocumentEditForm, NewDocumentForm
+from .helpers import (
+    check_extra_fields,
+    csv_reader,
+    csv_uploader,
+    get_corpus_info,
+    get_document_info,
+    get_index_config,
+    pdf_uploader,
+    save_csv_temporarily,
+    update_config,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -31,24 +41,34 @@ def list_docs(request):
     * `:return:` Lista de documentos del corpus con acciones por documento
     """
     # Errores en las variables de entorno del proyecto
-    if settings.WRONG_CONFIGS['error']:
+    if settings.WRONG_CONFIGS["error"]:
         msg = "Configuraciones necesarias para sitio no se encuentran en \
         el archivo <code>env.yaml</code>."
-        str_fields = ", ".join(settings.WRONG_CONFIGS['error'])
+        str_fields = ", ".join(settings.WRONG_CONFIGS["error"])
         msg += f" Modifica los campos: {str_fields} o ejecuta el asistente \
             <code>wizard.py</code>."
         messages.error(request, msg)
-        conf_docs_link = "https://esquite.readthedocs.io/es/latest/wizard.html#configuraciones"
-        messages.info(request, f"TIP: Revisar la documentación <a href='{conf_docs_link}'>aqui<a>")
-    if "COLORS" in settings.WRONG_CONFIGS['warn']:
-        messages.warning(request, "Los colores del proyecto no fueron \
-                         configurados")
+        conf_docs_link = (
+            "https://esquite.readthedocs.io/es/latest/wizard.html#configuraciones"
+        )
+        messages.info(
+            request, f"TIP: Revisar la documentación <a href='{conf_docs_link}'>aqui<a>"
+        )
+    if "COLORS" in settings.WRONG_CONFIGS["warn"]:
+        messages.warning(
+            request,
+            "Los colores del proyecto no fueron \
+                         configurados",
+        )
     total, docs = get_corpus_info(request)
     variants = get_variants()
-    del variants['status']
+    del variants["status"]
     LOGGER.info("Total::{}".format(total))
-    return render(request, "corpus-admin/docs-list.html",
-                  {'total': total, 'docs': docs, 'variants': variants})
+    return render(
+        request,
+        "corpus-admin/docs-list.html",
+        {"total": total, "docs": docs, "variants": variants},
+    )
 
 
 def new_doc(request):
@@ -71,52 +91,91 @@ def new_doc(request):
         form = NewDocumentForm(request.POST, request.FILES)
         if form.is_valid():
             data_form = form.cleaned_data
-            # Writing file on disk for performance propurses
-            # TODO Checar que el CSV sea CSV
-            csv_writer(data_form['csv'])
-            # TODO Checar que name no tenga un nombre malicioso
-            csv_file_name = data_form['csv'].name
-            # Reading from file
-            header, csv_file = csv_reader(csv_file_name)
-            # TODO: Checar que el pdf sea un pdf
-            pdf_uploader(data_form['pdf'], data_form['pdf'].name)
-            extra_fields = check_extra_fields(header)
-            if extra_fields:
-                pre_rows = []
-                # TODO checar una biblioteca que maneje mejor los csv
-                for row in csv.reader(csv_file.split('\n'), delimiter=',', quotechar='"', ):
-                    if row:
-                        pre_rows.append([text.strip() for text in row])
-                total_lines = len(pre_rows)
-                notification = f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
-                messages.warning(request, notification)
-                return render(request, "corpus-admin/extra-fields.html",
-                              {"fields": extra_fields, 'doc_name':
-                               data_form['nombre'], 'pdf_file':
-                               data_form['pdf'].name, 'total_lines':
-                               total_lines, 'preview_lines': pre_rows[:5],
-                               'header': header,
-                               'csv_file_name': csv_file_name})
-            # Upload the csv file as usual
-            else:
-                lines = csv_uploader(csv_file_name, data_form['nombre'],
-                                     data_form['pdf'].name)
-                # TODO: Checar si existe el archivo antes de subirlo
-                notification = 'El documento <b>' + data_form['nombre'] + \
-                               '</b> fue guardado correctamente. <b>' + \
-                               str(lines) + ' líneas</b> agregadas al corpus.'
-                messages.add_message(request, messages.INFO, notification)
-                return HttpResponseRedirect('/corpus-admin/new/')
+            csv_file = data_form["csv"]
+            pdf_file = data_form["pdf"]
+            # TODO: Mejorar validaciones de archivos
+            if not csv_file.name.lower().endswith(".csv"):
+                messages.error(
+                    request, "El archivo de datos debe ser en formato <code>.csv</code>"
+                )
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
+            if not pdf_file.name.lower().endswith(".pdf"):
+                messages.error(
+                    request,
+                    "El archivo de portada debe ser un formato <code>.pdf</code>",
+                )
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
+
+            # Writing temp file on disk for better performance
+            csv_tmp_path = save_csv_temporarily(data_form["csv"])
+            if not csv_tmp_path:
+                messages.error(
+                    request, "Error al procesar el archivo CSV en el servidor."
+                )
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
+
+            try:
+                # Reading from file
+                header, csv_file = csv_reader(csv_tmp_path)
+                pdf_uploader(pdf_file, pdf_file.name)
+                extra_fields = check_extra_fields(header)
+                if extra_fields:
+                    pre_rows = []
+                    # TODO checar una biblioteca que maneje mejor los csv
+                    for row in csv.reader(
+                        csv_file.split("\n"),
+                        delimiter=",",
+                        quotechar='"',
+                    ):
+                        if row:
+                            pre_rows.append([text.strip() for text in row])
+                    total_lines = len(pre_rows)
+                    notification = (
+                        f"Detectamos los campos adicionales: {', '.join(extra_fields)}"
+                    )
+                    messages.warning(request, notification)
+                    return render(
+                        request,
+                        "corpus-admin/extra-fields.html",
+                        {
+                            "fields": extra_fields,
+                            "doc_name": data_form["nombre"],
+                            "pdf_file": data_form["pdf"].name,
+                            "total_lines": total_lines,
+                            "preview_lines": pre_rows[:5],
+                            "header": header,
+                            "csv_file_name": csv_tmp_path,
+                        },
+                    )
+                # Upload the csv file as usual
+                else:
+                    lines = csv_uploader(
+                        csv_tmp_path, data_form["nombre"], data_form["pdf"].name
+                    )
+                    # TODO: Checar si existe el archivo antes de subirlo
+                    notification = (
+                        "El documento <b>"
+                        + data_form["nombre"]
+                        + "</b> fue guardado correctamente. <b>"
+                        + str(lines)
+                        + " líneas</b> agregadas al corpus."
+                    )
+                    messages.add_message(request, messages.INFO, notification)
+                    return HttpResponseRedirect("/corpus-admin/new/")
+            finally:
+                # Borrando el archivo csv temporal creado
+                if csv_tmp_path and csv_tmp_path.exists():
+                    csv_tmp_path.unlink()
         else:
             if "nombre" in form.errors:
                 form.fields["nombre"].widget.attrs["class"] += " is-invalid"
             else:
                 form.fields["nombre"].widget.attrs["class"] += " is-valid"
             messages.error(request, "Llena todos los campos")
-            return render(request, "corpus-admin/new-doc.html", {'form': form})
+            return render(request, "corpus-admin/new-doc.html", {"form": form})
     else:
         form = NewDocumentForm()
-        return render(request, "corpus-admin/new-doc.html", {'form': form})
+        return render(request, "corpus-admin/new-doc.html", {"form": form})
 
 
 def doc_preview(request, _id):
@@ -137,35 +196,43 @@ def doc_preview(request, _id):
     # TODO: Agregar exception de error de conexion
     # TODO: Parece que esto devuelve solo 10k renglones. Solucionar
     r = es.search(index=settings.INDEX, body=query)
-    corpus = data_processor(r['hits'], "NONE", "")
-    data = r['hits']['hits'][0]['_source']
-    name = data['document_name']
+    corpus = data_processor(r["hits"], "NONE", "")
+    data = r["hits"]["hits"][0]["_source"]
+    name = data["document_name"]
     doc = get_document_info(_id)
-    file = doc['file']
+    file = doc["file"]
     # TODO: Refactor variants across the backend
     current_variants = get_variants()
     if len(current_variants) == 1:
         current_variants = {}
     # TODO: Make a function for this
     mappings = es.indices.get_mapping(index=settings.INDEX)
-    del mappings[settings.INDEX]['mappings']['properties']['document_id']
-    del mappings[settings.INDEX]['mappings']['properties']['pdf_file']
-    del mappings[settings.INDEX]['mappings']['properties']['document_name']
-    fields = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+    del mappings[settings.INDEX]["mappings"]["properties"]["document_id"]
+    del mappings[settings.INDEX]["mappings"]["properties"]["pdf_file"]
+    del mappings[settings.INDEX]["mappings"]["properties"]["document_name"]
+    fields = list(mappings[settings.INDEX]["mappings"]["properties"].keys())
     # Ordening fields
     fields.insert(0, fields.pop(fields.index("l1")))
     fields.insert(1, fields.pop(fields.index("l2")))
     if "variant" in fields:
         fields.insert(2, fields.pop(fields.index("variant")))
     else:
-        LOGGER.warning(f"'variant' field not found in DB mappings. Consider update schema")
-    return render(request, "corpus-admin/doc-preview.html",
-                  {
-                      "doc_data": corpus, "doc_name": name,
-                      "doc_file": file, "total": len(corpus),
-                      "id": _id, "total_variants": len(current_variants),
-                      "fields": fields
-                  })
+        LOGGER.warning(
+            "'variant' field not found in DB mappings. Consider update schema"
+        )
+    return render(
+        request,
+        "corpus-admin/doc-preview.html",
+        {
+            "doc_data": corpus,
+            "doc_name": name,
+            "doc_file": file,
+            "total": len(corpus),
+            "id": _id,
+            "total_variants": len(current_variants),
+            "fields": fields,
+        },
+    )
 
 
 def doc_edit(request, _id):
@@ -185,51 +252,45 @@ def doc_edit(request, _id):
         if form.is_valid():
             data_form = form.cleaned_data
             # Script que se ejecutara en Elasticsearch
-            if data_form['nombre'] != '':
-                doc_name = data_form['nombre']
+            if data_form["nombre"] != "":
+                doc_name = data_form["nombre"]
                 set_name = f"ctx._source.put('document_name', '{doc_name}');"
                 notification = f"""El documento <b>{_id}</b> cambió el nombre
                 a <b>{doc_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
             else:
-                set_name = ''
-            if data_form['pdf'] is not None:
-                pdf_name = data_form['pdf'].name
+                set_name = ""
+            if data_form["pdf"] is not None:
+                pdf_name = data_form["pdf"].name
                 set_file = f"ctx._source.put('pdf_file', '{pdf_name}');"
-                pdf_uploader(data_form['pdf'], pdf_name)
+                pdf_uploader(data_form["pdf"], pdf_name)
                 notification = f"""El archivo del documento <b>{_id}</b> PDF
                 cambió a <b>{pdf_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
             else:
-                set_file = ''
+                set_file = ""
             if set_file or set_name:
                 update_rules = {
-                    "script": {
-                        "source": set_name + set_file,
-                        "lang": "painless"
-                    },
-                    "query": {
-                        "term": {
-                            "document_id": _id
-                        }
-                    }
+                    "script": {"source": set_name + set_file, "lang": "painless"},
+                    "query": {"term": {"document_id": _id}},
                 }
                 es.update_by_query(index=settings.INDEX, body=update_rules)
-                return HttpResponseRedirect('/corpus-admin/')
+                return HttpResponseRedirect("/corpus-admin/")
             else:
-                notification = "Se debe modificar <b>al menos un campo</b>. " \
-                               "Documento sin cambios :("
+                notification = (
+                    "Se debe modificar <b>al menos un campo</b>. "
+                    "Documento sin cambios :("
+                )
                 messages.add_message(request, messages.WARNING, notification)
-                return HttpResponseRedirect('/corpus-admin/edit/' + _id)
+                return HttpResponseRedirect("/corpus-admin/edit/" + _id)
     else:
         form = DocumentEditForm()
         doc = get_document_info(_id)
-        return render(request, "corpus-admin/doc-edit.html",
-                      {
-                          "form": form, "doc_name": doc['name'],
-                          "doc_file": doc['file'],
-                          "id": _id
-                      })
+        return render(
+            request,
+            "corpus-admin/doc-edit.html",
+            {"form": form, "doc_name": doc["name"], "doc_file": doc["file"], "id": _id},
+        )
 
 
 def add_doc_data(request, _id):
@@ -249,26 +310,26 @@ def add_doc_data(request, _id):
         if form.is_valid():
             data_form = form.cleaned_data
             doc = get_document_info(_id)
-            csv_writer(data_form['csv'])
+            save_csv_temporarily(data_form["csv"])
             # TODO: Check extra fields
-            lines = csv_uploader(data_form['csv'].name,
-                                 doc['name'],
-                                 doc['file'],
-                                 _id)
-            notification = 'El documento <b>' + doc['name'] + \
-                           '</b> fue actualizado correctamente. <b>' + \
-                           str(lines) + ' líneas</b> agregadas.'
+            lines = csv_uploader(data_form["csv"].name, doc["name"], doc["file"], _id)
+            notification = (
+                "El documento <b>"
+                + doc["name"]
+                + "</b> fue actualizado correctamente. <b>"
+                + str(lines)
+                + " líneas</b> agregadas."
+            )
             messages.add_message(request, messages.INFO, notification)
             return HttpResponseRedirect("/corpus-admin/")
     else:
         form = AddDocumentDataForm()
         doc = get_document_info(_id)
-        return render(request, "corpus-admin/add-rows.html",
-                      {
-                          "form": form, "doc_name": doc['name'],
-                          "doc_file": doc['file'],
-                          "id": _id
-                      })
+        return render(
+            request,
+            "corpus-admin/add-rows.html",
+            {"form": form, "doc_name": doc["name"], "doc_file": doc["file"], "id": _id},
+        )
 
 
 def delete_doc(request):
@@ -280,10 +341,10 @@ def delete_doc(request):
     """
     # TODO: Agregar excepcion cuando haya error de conexion
     if request.method == "POST":
-        document_id = request.POST.get('doc_id')
+        document_id = request.POST.get("doc_id")
         query = {"query": {"term": {"document_id": document_id}}}
         r = es.delete_by_query(index=settings.INDEX, body=query, refresh=True)
-        LOGGER.debug("# lineas borradas::{}".format(r['deleted']))
+        LOGGER.debug("# lineas borradas::{}".format(r["deleted"]))
         notification = f"{r['deleted']} líneas borradas de {document_id}"
         messages.info(request, notification)
         return HttpResponseRedirect("/corpus-admin/")
@@ -305,10 +366,12 @@ def export_data(request):
     response = HttpResponse(content_type="text/csv")
     date = datetime.datetime.now()
     format_date = date.strftime("%d-%m-%Y")
-    response['Content-Disposition'] = f"attachment;filename={project_name}-bkp-{format_date}.csv"
+    response["Content-Disposition"] = (
+        f"attachment;filename={project_name}-bkp-{format_date}.csv"
+    )
     writer = csv.writer(response)
     mappings = es.indices.get_mapping(index=settings.INDEX)
-    csv_header = list(mappings[settings.INDEX]['mappings']['properties'].keys())
+    csv_header = list(mappings[settings.INDEX]["mappings"]["properties"].keys())
     # Getting all data from index
     query = '{"query": {"match_all": {}}}'
     r = es.search(index=settings.INDEX, body=query, scroll="1m", size=1000)
@@ -324,7 +387,7 @@ def export_data(request):
     writer.writerow(csv_header)
     for hit in data_response["hits"]:
         row = []
-        data = hit['_source']
+        data = hit["_source"]
         fields = data.keys()
         if "l1" not in fields or "l2" not in fields:
             LOGGER.warning(f"Linea {hit['_id']} en blanco. Se omite")
@@ -358,33 +421,39 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
         has_extra_fields = False
         if "config-fields-switch" in request.POST:
             data = dict(request.POST)
-            del data['config-fields-switch']
-            del data['csrfmiddlewaretoken']
+            del data["config-fields-switch"]
+            del data["csrfmiddlewaretoken"]
             configs = get_index_config()
             for field, field_type in data.items():
-                configs['mappings']['properties'][field] = {'type': field_type[0]}
+                configs["mappings"]["properties"][field] = {"type": field_type[0]}
             try:
-                es.indices.put_mapping(configs['mappings'],
-                                       index=settings.INDEX)
+                es.indices.put_mapping(configs["mappings"], index=settings.INDEX)
             except es_exceptions.RequestError as e:
                 messages.error(request, "Error al configurar índice :(")
                 messages.error(request, e)
             new_mappings = es.indices.get_mapping(index=settings.INDEX)
-            configs['mappings'] = new_mappings[settings.INDEX]['mappings']
+            configs["mappings"] = new_mappings[settings.INDEX]["mappings"]
             update_config(configs)
             has_extra_fields = True
-            messages.add_message(request,
-                                 messages.SUCCESS,
-                                 f"Los campos extra <b>\
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                f"Los campos extra <b>\
                                  {', '.join(data.keys())}\
-                                 </b>fueron configurados exitosamente")
+                                 </b>fueron configurados exitosamente",
+            )
         # Upload document as usual
-        lines = csv_uploader(csv_file_name, document_name, pdf_file_name,
-                             extra_fields=has_extra_fields)
-        notification = 'El documento <b>' + document_name + \
-                       '</b> fue guardado correctamente. <b>' + \
-                       str(lines) + ' líneas</b> agregadas al corpus.'
+        lines = csv_uploader(
+            csv_file_name, document_name, pdf_file_name, extra_fields=has_extra_fields
+        )
+        notification = (
+            "El documento <b>"
+            + document_name
+            + "</b> fue guardado correctamente. <b>"
+            + str(lines)
+            + " líneas</b> agregadas al corpus."
+        )
         messages.add_message(request, messages.INFO, notification)
-        return HttpResponseRedirect('/corpus-admin/new/')
+        return HttpResponseRedirect("/corpus-admin/new/")
     else:
         return HttpResponseRedirect("/corpus-admin/new/")
