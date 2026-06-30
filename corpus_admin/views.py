@@ -164,7 +164,7 @@ def new_doc(request):
                     return HttpResponseRedirect("/corpus-admin/new/")
             finally:
                 # Borrando el archivo csv temporal creado
-                if csv_tmp_path and csv_tmp_path.exists():
+                if not extra_fields and csv_tmp_path and csv_tmp_path.exists():
                     csv_tmp_path.unlink()
         else:
             if "nombre" in form.errors:
@@ -373,7 +373,7 @@ def export_data(request):
     mappings = es.indices.get_mapping(index=settings.INDEX)
     csv_header = list(mappings[settings.INDEX]["mappings"]["properties"].keys())
     # Getting all data from index
-    query = '{"query": {"match_all": {}}}'
+    query = {"query": {"match_all": {}}}
     r = es.search(index=settings.INDEX, body=query, scroll="1m", size=1000)
     data_response = r["hits"]
     scroll_id = r["_scroll_id"]
@@ -427,7 +427,7 @@ def extra_fields(request, csv_file_name, document_name, pdf_file_name):
             for field, field_type in data.items():
                 configs["mappings"]["properties"][field] = {"type": field_type[0]}
             try:
-                es.indices.put_mapping(configs["mappings"], index=settings.INDEX)
+                es.indices.put_mapping(body=configs["mappings"], index=settings.INDEX)
             except es_exceptions.RequestError as e:
                 messages.error(request, "Error al configurar índice :(")
                 messages.error(request, e)
