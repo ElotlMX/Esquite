@@ -157,7 +157,7 @@ def csv_reader(csv_filename: Path):
     return header, csv_data
 
 
-def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
+def csv_uploader(csv_path, doc_name, pdf_file, doc_id="", extra_fields=False):
     """**Función encargada de cargar nuevas líneas al corpus**
 
     Manipula los archivos mandados desde formulario y los carga al
@@ -175,10 +175,10 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     :return: Número de líneas cargadas al corpus
     :rtype: int
     """
-    LOGGER.info(f"Subiendo nuevo CSV::{csv_name}")
+    LOGGER.info(f"Subiendo nuevo CSV::{csv_path}")
     # Subiendo al indice de Elasticsearch
     LOGGER.info(f"Subiendo al indice de Elasticsearch::{settings.INDEX}")
-    with open(csv_name, "r", encoding="utf-8") as f:
+    with open(csv_path, "r", encoding="utf-8") as f:
         raw_csv = f.read()
     # Si no existe el documento se crea un nuevo id
     if not doc_id:
@@ -198,8 +198,8 @@ def csv_uploader(csv_name, doc_name, pdf_file, doc_id="", extra_fields=False):
     LOGGER.info(f"Lineas agreadas::{res[0]}")
     if res[1]:
         LOGGER.warning(f"Lineas erroneas::{res[1]}")
-    LOGGER.debug(f"Eliminando csv temporal::{csv_name}")
-    os.remove(csv_name)
+    LOGGER.debug(f"Eliminando csv temporal::{csv_path}")
+    os.remove(csv_path)
     return len(rows)
 
 
@@ -268,7 +268,7 @@ def get_document_info(_id):
     return {"name": name, "file": file, "id": _id}
 
 
-def check_extra_fields(fields, full=False):
+def check_extra_fields(fields, full=False) -> set:
     """Revisa si existen campos adicionales a los default
 
     :param fields: Campos del usuario presentes en la cabecera del ``csv``
