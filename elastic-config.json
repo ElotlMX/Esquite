@@ -10,7 +10,7 @@
 						},
 					"spanish_stemmer": {
 						"type": "stemmer",
-						"language": "light_spanish"
+						"language": "spanish"
 					}
 				},
 				"analyzer": {
