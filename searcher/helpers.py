@@ -85,7 +85,7 @@ def data_processor(raw_data, idioma, query):
         else:
             hit["_source"]["document_name"] = link
             if variant:
-                hit["_source"]["variant"] = ethno_btn_maker(variant)
+                hit["_source"]["variant"] = variant
         data.append(hit["_source"])
     return data
 
