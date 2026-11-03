@@ -4,7 +4,7 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as es_exceptions
@@ -114,6 +114,8 @@ def new_doc(request):
                 )
                 return render(request, "corpus-admin/new-doc.html", {"form": form})
 
+            # Definido antes del try para que finally siempre pueda leerlo
+            extra_fields = False
             try:
                 # Reading from file
                 header, csv_file = csv_reader(csv_tmp_path)
@@ -162,6 +164,9 @@ def new_doc(request):
                     )
                     messages.add_message(request, messages.INFO, notification)
                     return HttpResponseRedirect("/corpus-admin/new/")
+            except ValueError as e:
+                messages.error(request, f"El archivo CSV no es válido: {e}")
+                return render(request, "corpus-admin/new-doc.html", {"form": form})
             finally:
                 # Borrando el archivo csv temporal creado
                 if not extra_fields and csv_tmp_path and csv_tmp_path.exists():
