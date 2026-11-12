@@ -119,7 +119,7 @@ def new_doc(request):
             try:
                 # Reading from file
                 header, csv_file = csv_reader(csv_tmp_path)
-                pdf_uploader(pdf_file, pdf_file.name)
+                pdf_name = pdf_uploader(pdf_file, pdf_file.name)
                 extra_fields = check_extra_fields(header)
                 if extra_fields:
                     pre_rows = []
@@ -142,7 +142,7 @@ def new_doc(request):
                         {
                             "fields": extra_fields,
                             "doc_name": data_form["nombre"],
-                            "pdf_file": data_form["pdf"].name,
+                            "pdf_file": pdf_name,
                             "total_lines": total_lines,
                             "preview_lines": pre_rows[:5],
                             "header": header,
@@ -151,9 +151,7 @@ def new_doc(request):
                     )
                 # Upload the csv file as usual
                 else:
-                    lines = csv_uploader(
-                        csv_tmp_path, data_form["nombre"], data_form["pdf"].name
-                    )
+                    lines = csv_uploader(csv_tmp_path, data_form["nombre"], pdf_name)
                     # TODO: Checar si existe el archivo antes de subirlo
                     notification = (
                         "El documento <b>"
@@ -266,9 +264,8 @@ def doc_edit(request, _id):
             else:
                 set_name = ""
             if data_form["pdf"] is not None:
-                pdf_name = data_form["pdf"].name
+                pdf_name = pdf_uploader(data_form["pdf"], data_form["pdf"].name)
                 set_file = f"ctx._source.put('pdf_file', '{pdf_name}');"
-                pdf_uploader(data_form["pdf"], pdf_name)
                 notification = f"""El archivo del documento <b>{_id}</b> PDF
                 cambió a <b>{pdf_name}</b>."""
                 messages.add_message(request, messages.WARNING, notification)
