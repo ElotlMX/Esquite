@@ -137,7 +137,65 @@ def save_csv_temporarily(csv_file: UploadedFile) -> Path | None:
     return None
 
 
-def csv_reader(csv_filename: Path):
+def header_normalizer(header: str) -> list:
+    """**Normaliza la cabecera del archivo ``csv``**
+
+    Esta función normaliza la cabecera del archivo ``csv``. Convierte
+    todos los caracteres a minúsculas y elimina espacios en blanco.
+    Además rechaza nombres vacíos, columnas duplicadas y cabeceras sin
+    las columnas obligatorias ``l1`` y ``l2``.
+
+    :param header: Cabecera del archivo ``csv``
+    :type: str
+    :return: Cabecera normalizada como lista
+    :rtype: list
+    """
+    if not isinstance(header, str):
+        LOGGER.error(
+            f"Se esperaba un string para la cabecera, se recibió {type(header)}"
+        )
+        raise ValueError("La cabecera debe ser un string")
+
+    if not header:
+        LOGGER.warning("Se recibió una cabecera vacía")
+        raise ValueError("La cabecera no puede estar vacía")
+
+    header_list = [h.strip().lower() for h in next(csv.reader([header]), [])]
+
+    # Reject blank column names (e.g. trailing comma or ",," in the line)
+    if any(not name for name in header_list):
+        LOGGER.error(
+            f"La cabecera del CSV contiene nombres de columna vacíos. Columnas encontradas: {header_list}"
+        )
+        raise ValueError("La cabecera del CSV contiene nombres de columna vacíos")
+
+    # Check if the header is empty after normalization
+    if not header_list:
+        LOGGER.error("La cabecera del CSV está vacía después de la normalización")
+        raise ValueError(
+            "La cabecera del CSV no puede estar vacía después de la normalización"
+        )
+
+    # Check l1 and l2 columns
+    if "l1" not in header_list or "l2" not in header_list:
+        LOGGER.error(
+            f"La cabecera del CSV debe contener las columnas 'l1' y 'l2'. Columnas encontradas: {format(header_list)}"
+        )
+        raise ValueError(
+            f"La cabecera del CSV debe contener las columnas 'l1' y 'l2'. Columnas encontradas: {format(format(header_list))}"
+        )
+
+    # Reject duplicate columns in the header
+    if len(header_list) != len(set(header_list)):
+        LOGGER.error(
+            f"La cabecera del CSV contiene columnas duplicadas. Columnas encontradas: {format(header_list)}"
+        )
+        raise ValueError("La cabecera del CSV contiene columnas duplicadas")
+
+    return header_list
+
+
+def csv_reader(csv_filename: Path) -> tuple[list, str]:
     """**Lee datos del corpus paralelo de un archivo ``csv``**
 
     Esta función lee datos del corpus paralelo desde un archivo ``csv``.
@@ -149,11 +207,16 @@ def csv_reader(csv_filename: Path):
     :return: Header del archivo y el contenido como texto plano
     :rtype: list, str
     """
-    # TODO add exception
-    with open(csv_filename, "r", encoding="utf-8") as f:
-        header = f.readline().lower().strip("\n").split(",")
-        # Removing last new line
-        csv_data = f.read().strip("\n")
+    try:
+        with open(csv_filename, "r", encoding="utf-8") as f:
+            header = header_normalizer(f.readline())
+            csv_data = f.read().strip("\n")
+    except FileNotFoundError:
+        LOGGER.error(f"Archivo CSV no encontrado: {csv_filename}")
+        raise
+    except Exception as e:
+        LOGGER.exception(f"Error al leer el archivo CSV {csv_filename}: {e}")
+        raise
     return header, csv_data
 
 
@@ -178,15 +241,12 @@ def csv_uploader(csv_path, doc_name, pdf_file, doc_id="", extra_fields=False):
     LOGGER.info(f"Subiendo nuevo CSV::{csv_path}")
     # Subiendo al indice de Elasticsearch
     LOGGER.info(f"Subiendo al indice de Elasticsearch::{settings.INDEX}")
-    with open(csv_path, "r", encoding="utf-8") as f:
-        raw_csv = f.read()
+    header, csv_data = csv_reader(csv_path)
+
     # Si no existe el documento se crea un nuevo id
     if not doc_id:
         doc_id = str(uuid.uuid4()).replace("-", "")[:24]
-    rows = raw_csv.split("\n")
-    header = rows[0].lower().split(",")
-    # Quitando cabecera del csv
-    rows.pop(0)
+
     if extra_fields:
         # Toma en cuenta los campos del header del csv
         fields = header
@@ -194,6 +254,9 @@ def csv_uploader(csv_path, doc_name, pdf_file, doc_id="", extra_fields=False):
         # Agrega solo los campos existentes en el indice
         fields = get_index_config()["mappings"]["properties"]
         fields = set(header).intersection(set(fields))
+
+    # Convierte el contenido del csv en una lista de lineas
+    rows = csv_data.split("\n")
     res = bulk(es, data_generator(rows, fields, doc_name, pdf_file, doc_id, header))
     LOGGER.info(f"Lineas agreadas::{res[0]}")
     if res[1]:
@@ -203,13 +266,30 @@ def csv_uploader(csv_path, doc_name, pdf_file, doc_id="", extra_fields=False):
     return len(rows)
 
 
-def data_generator(data_rows, fields, doc_name, pdf_file, doc_id, header):
+def data_generator(
+    data_rows: list,
+    fields: list,
+    doc_name: str,
+    pdf_file: str,
+    doc_id: str,
+    header: list,
+):
     """**Genera los datos a ser indexados**
 
     :param data_rows: Lista de lineas del archivo csv
     :type data_rows: list
     :param fields: Columnas del csv
     :type fields: list
+    :param doc_name: Nombre del documento
+    :type doc_name: str
+    :param pdf_file: Nombre del archivo PDF
+    :type pdf_file: str
+    :param doc_id: Identificador del documento
+    :type doc_id: str
+    :param header: Cabecera del archivo csv
+    :type header: list
+    :yield: Diccionario con los datos a indexar
+    :rtype: dict
     """
     for text in csv.reader(data_rows, delimiter=",", quotechar='"'):
         # Check blank line
@@ -293,6 +373,7 @@ def check_extra_fields(fields, full=False) -> set:
         del default_fields["document_id"]
         del default_fields["document_name"]
         del default_fields["pdf_file"]
+
     # Aditional fields
     if set(fields) - set(default_fields) != set():
         aditional_fields = set(fields) - set(default_fields)
