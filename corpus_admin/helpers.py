@@ -55,9 +55,9 @@ def get_corpus_info(request):
             document["count"] = bucket["doc_count"]
             docs.append(document)
     except es_exceptions.ConnectionError as e:
-        LOGGER.error("No hay conexión a Elasticsearch::{}".format(e))
-        LOGGER.error("No se pudo conectar al indice::" + settings.INDEX)
-        LOGGER.error("URL::" + settings.ELASTIC_URL)
+        LOGGER.error(f"No hay conexión a Elasticsearch:: {e}")
+        LOGGER.error(f"No se pudo conectar al indice:: {settings.INDEX}")
+        LOGGER.error(f"URL:: {settings.ELASTIC_URL}")
         total = 0
         docs = []
         msg = f"No se pudo conectar al índice: <i>{settings.INDEX}</i>"
@@ -83,17 +83,23 @@ def pdf_uploader(file, name):
     :type: ``FileField``
     :param name: Nombre del archivo PDF
     :type: str
-    :return: Verdadero si se pudo cargar el archivo, falso en caso
-        contrario
-    :rtype: bool
+    :return: Nombre real del archivo guardado; si ya existía un PDF con el
+        mismo nombre se agrega un sufijo (``nombre_1.pdf``) para no
+        sobrescribirlo
+    :rtype: str
     """
-    LOGGER.info("Subiendo archivo PDF::{}".format(name))
+    LOGGER.info(f"Subiendo archivo PDF:: {name}")
+    stem, ext = os.path.splitext(name)
+    counter = 1
     path_to_save = settings.BASE_DIR + settings.MEDIA_ROOT + name
-    LOGGER.debug("Path de PDF::{}".format(path_to_save))
+    while os.path.exists(path_to_save):
+        name = f"{stem}_{counter}{ext}"
+        path_to_save = settings.BASE_DIR + settings.MEDIA_ROOT + name
+        counter += 1
+    LOGGER.debug(f"Path de PDF:: {path_to_save}")
     with open(path_to_save, "wb+") as destination:
-        for i, chunk in enumerate(file.chunks()):
-            destination.write(chunk)
-    return True
+        destination.writelines(file.chunks())
+    return name
 
 
 def save_csv_temporarily(csv_file: UploadedFile) -> Path | None:

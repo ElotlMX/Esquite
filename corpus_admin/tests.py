@@ -5,9 +5,10 @@ import os
 import tempfile
 from pathlib import Path
 
-from django.test import SimpleTestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import SimpleTestCase, override_settings
 
-from .helpers import check_extra_fields, csv_reader, header_normalizer
+from .helpers import check_extra_fields, csv_reader, header_normalizer, pdf_uploader
 
 
 class HeaderNormalizerTests(SimpleTestCase):
@@ -100,3 +101,24 @@ class CheckExtraFieldsTests(SimpleTestCase):
     def test_no_detecta_extra_una_columna_ya_configurada(self):
         header = header_normalizer(" l1,l2 , variant ")
         self.assertEqual(check_extra_fields(header), set())
+
+
+class PdfUploaderTests(SimpleTestCase):
+    """``pdf_uploader`` no debe sobrescribir un PDF existente con el mismo nombre."""
+
+    def setUp(self):
+        tmp_dir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp_dir.cleanup)
+        self.media = Path(tmp_dir.name, "media")
+        self.media.mkdir()
+        self.override = override_settings(BASE_DIR=tmp_dir.name, MEDIA_ROOT="/media/")
+        self.override.enable()
+        self.addCleanup(self.override.disable)
+
+    def test_nombre_repetido_se_guarda_con_sufijo_sin_sobrescribir(self):
+        primero = pdf_uploader(SimpleUploadedFile("x.pdf", b"uno"), "x.pdf")
+        segundo = pdf_uploader(SimpleUploadedFile("x.pdf", b"dos"), "x.pdf")
+        self.assertEqual(primero, "x.pdf")
+        self.assertEqual(segundo, "x_1.pdf")
+        self.assertEqual((self.media / "x.pdf").read_bytes(), b"uno")
+        self.assertEqual((self.media / "x_1.pdf").read_bytes(), b"dos")
